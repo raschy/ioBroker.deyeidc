@@ -1,5 +1,6 @@
 {
-    "deyeidc adapter settings": "Adapterinstellingen voor deyeidc",
-    "option1": "Optie 1",
-    "option2": "Optie 2"
+	"deyeidc adapter settings": "Adapterinstellingen voor deyeidc",
+	"ipaddress": "IP adres",
+	"port": "Port",
+	"logger": "Logger"
 }

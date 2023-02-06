@@ -1,5 +1,6 @@
 {
-    "deyeidc adapter settings": "Налаштування адаптера для deyeidc",
-    "option1": "варіант1",
-    "option2": "варіант2"
+	"deyeidc adapter settings": "Налаштування адаптера для deyeidc",
+	"ipaddress": "IP-адреса",
+	"port": "Порт",
+	"logger": "Лісоруб"
 }

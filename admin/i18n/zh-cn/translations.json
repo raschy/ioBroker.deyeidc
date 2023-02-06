@@ -1,5 +1,6 @@
 {
-    "deyeidc adapter settings": "deyeidc的适配器设置",
-    "option1": "选项1",
-    "option2": "选项2"
+	"deyeidc adapter settings": "deyeidc的适配器设置",
+	"ipaddress": "IP地址",
+	"port": "港口",
+	"logger": "记录仪"
 }

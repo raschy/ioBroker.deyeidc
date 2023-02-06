@@ -1,5 +1,6 @@
 {
-    "deyeidc adapter settings": "Настройки адаптера для deyeidc",
-    "option1": "Опция 1",
-    "option2": "вариант 2"
+	"deyeidc adapter settings": "Настройки адаптера для deyeidc",
+	"ipaddress": "Айпи адрес",
+	"port": "Порт",
+	"logger": "Регистратор"
 }
