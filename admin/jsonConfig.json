@@ -1,0 +1,34 @@
+{
+	"i18n": true,
+	"type": "tabs",
+	"items": {
+		"_credentials": {
+			"type": "panel",
+			"label": "Credentials",
+			"items": {
+				"ipaddress": {
+					"type": "text",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "IP-Address from Inverter"
+				},
+				"port": {
+					"type": "number",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "Port ( usually 8899 )"
+				},
+				"logger": {
+					"type": "number",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "Serial Number Data Logger",
+					"newLine": true
+				}
+			}
+		}
+	}
+}
