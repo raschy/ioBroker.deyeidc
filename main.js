@@ -74,7 +74,7 @@ class Deyeidc extends utils.Adapter {
 			this.idc.readRegisterset();
 		} catch (e) {
 			this.internDataReady = false;
-			this.log.error(`}readRegisterset: ${e}`);
+			this.log.error(`[readRegisterset] ${e}`);
 		}
 		//
 		//  Laden der Coils
