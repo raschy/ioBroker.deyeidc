@@ -1,0 +1,30 @@
+[
+	{
+		"values": ["DV1", "DC1"],
+		"key": "DP1",
+		"name": "DC Power PV1",
+		"factor": 2,
+		"unit": "W"
+	},
+	{
+		"values": ["DV2", "DC2"],
+		"key": "DP2",
+		"name": "DC Power PV2",
+		"factor": 2,
+		"unit": "W"
+	},
+	{
+		"values": ["DV3", "DC3"],
+		"key": "DP3",
+		"name": "DC Power PV3",
+		"factor": 2,
+		"unit": "W"
+	},
+	{
+		"values": ["DV4", "DC4"],
+		"key": "DP4",
+		"name": "DC Power PV4",
+		"factor": 2,
+		"unit": "W"
+	}
+]

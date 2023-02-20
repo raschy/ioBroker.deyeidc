@@ -1,5 +1,4 @@
 'use strict';
-
 /*
  * Created with @iobroker/create-adapter v2.3.0
  */
@@ -7,11 +6,20 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
+const fs = require('fs');
+const net = require('net');
+const idcCore = require('./lib/idc-core.js');
+//
+const fnCompute = './compute.json';
 
-// Load your modules here, e.g.:
-// const fs = require("fs");
-const adapterName = require('./package.json').name;
-const adapterVersion = require('./package.json').version;
+const netConnection = {
+	serverConfigIp: '',
+	serverConfigPort: 8899,
+	inverterLoggerSn: 0,
+	connectionActive: false,
+	connectionNeeded: true,
+	connectionPolling: 60,
+};
 
 class Deyeidc extends utils.Adapter {
 	/**
@@ -20,74 +28,344 @@ class Deyeidc extends utils.Adapter {
 	constructor(options) {
 		super({
 			...options,
-			name: 'deyeidc',
+			name: 'deyeidc', //adapterName
 		});
 		this.on('ready', this.onReady.bind(this));
-		//this.on('stateChange', this.onStateChange.bind(this));
+		this.on('stateChange', this.onStateChange.bind(this));
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		// this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
+
+		// -----------------  Timeout variables -----------------
+		this.requestTimeout = null;
+		this.sync_milliseconds = 60000; // 1min
+		this.refreshStatus = false;
+		// -----------------  Global variables -----------------
+		this.idc = new idcCore();
+		this.client = new net.Socket();
+		this.client.setTimeout(20000);
+		this.internDataReady = true;
+		this.counter = 0;
+		this.req = 0;
 	}
 
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		// Initialize your adapter here
-		this.log.info('Adaptername: ' + adapterName);
-		this.log.info('Adapterversion: ' + adapterVersion);
+		// Reset the connection indicator during startup
+		this.createAdapterObjects();
+		this.setState('info.connection', false, true);
+
+		// Initialize your adapter Here
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.info('config IP-Address: ' + this.config.ipaddress);
-		this.log.info('config Port2: ' + this.config.port);
-		this.log.info('config Logger SN: ' + this.config.logger);
+		this.idc.setLoggerSn(this.config.logger);
+		this.log.debug(`config IP-Address: ${this.config.ipaddress}`);
+		this.log.debug(`config Port: ${this.config.port}`);
+		this.log.debug(`config Logger SN: ${this.config.logger}`);
+		this.log.debug(`config Pollinterval: ${this.config.pollInterval}`);
+		//
+		//	About User changes
+		await this.checkUserData();
 
-		/*
-		For every state in the system there has to be also an object of type state
-		Here a simple template for a boolean variable named "testVariable"
-		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
-		await this.setObjectNotExistsAsync('testVariable', {
+		//	Laden der Register
+		try {
+			this.idc.readRegisterset();
+		} catch (e) {
+			this.internDataReady = false;
+			this.log.error(`}readRegisterset: ${e}`);
+		}
+		//
+		//  Laden der Coils
+		try {
+			this.idc.readCoilset();
+		} catch (err) {
+			this.internDataReady = false;
+			this.log.error(`[readCoilset] ${err}`);
+		}
+
+		//
+		if (this.internDataReady) {
+			// Start connection handler to created & monitor websocket connection
+			await this.connectionHandler();
+			await this.requestData();
+			// Beobachten der zu berechnenden Daten
+			this.watchStates();
+		}
+		//
+	}
+
+	/**
+		 * Is called if a subscribed state changes
+		 * @param {string} id
+		 * @param {ioBroker.State | null | undefined} state
+		 */
+	async onStateChange(id, state) {
+		//console.log(id, state);
+		const pos = id.lastIndexOf('.');
+		const basedir = id.substring(0, pos);
+		const name = id.substring(pos + 1);
+
+		const jsonResult = []; // leeres Array
+		if (state) {
+			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
+
+			for (let i = 0; i < changes.length; i++) {
+				let product = 1;
+				for (let j = 0; j < changes[i].values.length; j++) {
+					const state = await this.getStateAsync(basedir + '.' + changes[i].values[j]);
+
+					if (typeof state?.val === 'number') {
+						const value = state?.val;
+						product *= value;
+						if (j == changes[i].values.length - 1) {
+							const product1 = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
+							const jsonObj = { key: changes[i].key, value: product1, unit: changes[i].unit, name: changes[i].name };
+							jsonResult.push(jsonObj);
+							this.updateData(jsonObj);
+						}
+					}
+				}
+			}
+		} else {
+			// The state was deleted
+			this.log.info(`state ${id} deleted`);
+		}
+		this.updateData(jsonResult);
+	}
+
+	async requestData() {
+		try {
+			if (this.requestTimeout) clearTimeout(this.requestTimeout);
+			// Abrufen der Daten
+			this.req = 0;
+			this.counter++;
+			this.log.debug(`[requestData] Data request ${this.counter}`);
+			this.sendRequest(this.req); // 1.Aufruf
+			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
+			// start the timer for the next request
+			this.requestTimeout = setTimeout(async () => {
+				await this.setStateAsync(`info.status`, {
+					val: 'automatic request',
+					ack: true,
+				});
+				await this.requestData();
+			}, this.sync_milliseconds);
+		} catch (error) {
+			this.log.debug(`[ requestData ] error: ${error} stack: ${error.stack}`);
+		}
+	}
+
+	connect() {
+		console.log(`C O N N E C T`);
+		this.client.connect({ host: '192.168.68.240', port: 8899 }); //, timeout: 50000 });
+	}
+
+	async connectionHandler() {
+		this.client.on('connect', () => {
+			netConnection.connectionActive = true;
+			this.setState('info.connection', true, true);
+		});
+
+		this.client.on('timeout', () => {
+			this.client.destroy();
+			netConnection.connectionActive = false;
+			this.setState('info.connection', false, true);
+		});
+
+		this.client.on('error', (err) => {
+			this.client.destroy();
+			netConnection.connectionActive = false;
+			this.setState('info.connection', false, true);
+			if (err) console.log(`Fehler bei Verbindung ${err.message}`);
+		});
+
+		this.client.on('end', () => {
+			console.log('Verbindung mit Server beendet');
+			netConnection.connectionActive = false;
+			this.setState('info.connection', false, true);
+		});
+
+		this.client.on('data', (data) => {
+			if (this.req < this.idc.Registers.length) {
+				try {
+					this.mb = this.idc.checkDataFrame(data);
+					this.createDPsForInstances();
+				} catch (err) {
+					this.log.error(`${err}`);
+				}
+
+				// Analyse Data
+				if (this.mb) {
+					const output = this.idc.readCoils(this.idc.Registers, this.idc.Coils, this.mb);
+					this.updateData(output);
+				}
+
+				// Nächste Anfrage senden
+				if (data.length > 0) {
+					this.req++;
+					this.sendRequest(this.req);
+				}
+			}
+		});
+	}
+
+	sendRequest(req) {
+		if (!netConnection.connectionActive) this.connect();
+		//
+		if (req > this.idc.Registers.length - 1) return;
+
+		console.log('Anfrage Registersatz: ' + (req + 1)); // human readable
+		const request = this.idc.request_frame(req);
+		this.client.write(request);
+	}
+
+	watchStates() {
+		try {
+			const jsonData = fs.readFileSync(fnCompute, { encoding: 'utf8', flag: 'r' });
+			this.CalcValues = JSON.parse(jsonData); //now it is an object
+			this.CalcValues.forEach(e => {
+				e.values.forEach(value => this.subscribeStates(this.config.logger + '.' + value));
+			});
+		} catch (err) {
+			console.warn(err);
+			this.log.warn(`[watchStates] Cannot read JSON file: ${fnCompute}`);
+		}
+	}
+
+	async checkUserData() {
+		// polling min 5min
+		// check if the sync time is a number, if not, the string is parsed to a number
+		this.sync_milliseconds =
+			typeof this.config.pollInterval === 'number'
+				? this.config.pollInterval * 1000
+				: parseInt(this.config.pollInterval, 10) * 1000;
+
+		if (isNaN(this.sync_milliseconds) || this.sync_milliseconds < 0.5 * 1000) {
+			this.sync_milliseconds = 300000; // is set as the minimum interval
+			this.log.warn(`Sync time was too short (${this.config.pollInterval}). New sync time is 1 min`);
+		}
+		this.log.info(`Sync time set to ${this.sync_milliseconds} ms`);
+
+		// check if the IP-Address seems korrect
+
+		console.log(`checkUserData is ready`);
+		return;
+	}
+
+	/**
+	 * create needet Datapoints for Instances
+	 */
+	async createAdapterObjects() {
+		await this.setObjectNotExistsAsync('info.connection', {
 			type: 'state',
 			common: {
-				name: 'testVariable',
+				name: 'Connection to Device##',
 				type: 'boolean',
 				role: 'indicator',
 				read: true,
-				write: true,
+				write: false,
 			},
 			native: {},
 		});
+		await this.setObjectNotExistsAsync('info.status', {
+			type: 'state',
+			common: {
+				name: 'Status',
+				type: 'string',
+				role: 'state',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
+		await this.setObjectNotExistsAsync('info.lastUpdate', {
+			type: 'state',
+			common: {
+				name: 'Last Update',
+				type: 'number',
+				role: 'state',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
+	}
 
-		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates('testVariable');
-		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-		// this.subscribeStates('lights.*');
-		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-		// this.subscribeStates('*');
+	/**
+	 * create Object für datavalues
+	 */
+	async createDPsForInstances() {
+		const _loggerSn = String(this.config.logger);
+		await this.setObjectNotExistsAsync(_loggerSn, {
+			type: 'channel',
+			common: {
+				name: {
+					en: 'Adapter and Instances',
+					de: 'Adapter und Instanzen',
+					ru: 'Адаптер и Instances',
+					pt: 'Adaptador e instâncias',
+					nl: 'Adapter en Instance',
+					fr: 'Adaptateur et instances',
+					it: 'Adattatore e istanze',
+					es: 'Adaptador e instalaciones',
+					pl: 'Adapter and Instances',
+					uk: 'Адаптер та інстанції',
+					'zh-cn': '道歉和案',
+				},
+			},
+			native: {},
+		});
+	}
 
-		/*
-			setState examples
-			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		/*
-		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync('testVariable', true);
+	// prepare data vor ioBroker
+	async updateData(data) {
+		//console.log(`[updateData] JSON: ${JSON.stringify(data)}`);
 
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync('testVariable', { val: true, ack: true });
+		// define keys that shall not be updated (works in dataList only)
+		const noUpdateKeys = JSON.parse(JSON.stringify(this.config.deviceBlacklist.split(',')));
 
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
+		Object.keys(data).forEach(pos => {
+			const result = noUpdateKeys.includes(data[pos].key);
+			//console.log(`updateData ${data[pos].key} ${result}`);
+			if (!result) { // || data[pos].value == 'none'
+				this.persistData(data[pos].key, data[pos].name, data[pos].value, 'state', data[pos].unit);
+			}
+		});
+	}
 
-		// examples for the checkPassword/checkGroup functions
-		let result = await this.checkPasswordAsync('admin', 'iobroker');
-		this.log.info('check user admin pw iobroker: ' + result);
+	async persistData(key, name, value, role, unit) {
+		const dp_Device = String(this.config.logger) + '.' + key;
+		// Type-Erkennung
+		let type = 'string';
+		if (this.idc.isNumber(value)) {
+			type = 'number';
+			value = parseFloat(value);
+		}
+		if (typeof value === 'object') {
+			type = 'string';
+			value = JSON.stringify(value);
+		}
+		//this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}`);
 
-		result = await this.checkGroupAsync('admin', 'admin');
-		this.log.info('check group user admin group admin: ' + result);
-		*/
+		await this.setObjectNotExistsAsync(dp_Device, {
+			type: 'state',
+			common: {
+				name: name,
+				role: role,
+				// @ts-ignore
+				type: type,
+				// @ts-ignore
+				unit: unit,
+				read: true,
+				write: false
+			},
+			native: {}
+		});
+
+		await this.setStateAsync(dp_Device, { val: value, ack: true });
 	}
 
 	/**
@@ -96,68 +374,25 @@ class Deyeidc extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
+			this.log.debug('[onUnload] cleaned everything up...');
+			this.setState('info.connection', false, true);
 			// Here you must clear all timeouts or intervals that may still be active
-			// clearTimeout(timeout1);
-			// clearTimeout(timeout2);
 			// ...
-			// clearInterval(interval1);
-
+			//clearInterval(this.intervalId);
+			if (this.requestTimeout) clearInterval(this.requestTimeout);
+			//
+			this.client.destroy();
+			this.setStateAsync(`info.status`, {
+				val: 'offline',
+				ack: true,
+			});
 			callback();
 		} catch (e) {
 			callback();
 		}
 	}
-
-	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-	// /**
-	//  * Is called if a subscribed object changes
-	//  * @param {string} id
-	//  * @param {ioBroker.Object | null | undefined} obj
-	//  */
-	// onObjectChange(id, obj) {
-	// 	if (obj) {
-	// 		// The object was changed
-	// 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	// 	} else {
-	// 		// The object was deleted
-	// 		this.log.info(`object ${id} deleted`);
-	// 	}
-	// }
-
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	onStateChange(id, state) {
-		if (state) {
-			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
-		}
-	}
-
-	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-	// /**
-	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	//  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-	//  * @param {ioBroker.Message} obj
-	//  */
-	// onMessage(obj) {
-	// 	if (typeof obj === 'object' && obj.message) {
-	// 		if (obj.command === 'send') {
-	// 			// e.g. send email or pushover or whatever
-	// 			this.log.info('send command');
-
-	// 			// Send response in callback if required
-	// 			if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-	// 		}
-	// 	}
-	// }
 }
+// ##########  END  CLASS  ############
 
 if (require.main !== module) {
 	// Export the constructor in compact mode

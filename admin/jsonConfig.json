@@ -2,7 +2,7 @@
 	"i18n": true,
 	"type": "tabs",
 	"items": {
-		"_credentials": {
+		"_configuration": {
 			"type": "panel",
 			"label": "Credentials",
 			"items": {
@@ -27,6 +27,32 @@
 					"lg": 6,
 					"label": "Serial Number Data Logger",
 					"newLine": true
+				},
+				"pollInterval": {
+					"type": "number",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "Intervall Poll Data"
+				}
+			}
+		},
+		"_blacklist": {
+			"type": "panel",
+			"label": "Blacklist",
+			"items": {
+				"headerDevices": {
+					"newLine": true,
+					"type": "header",
+					"text": "Devices Blacklist",
+					"size": 2
+				},
+				"deviceBlacklist": {
+					"type": "text",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "Terms to be excluded"
 				}
 			}
 		}

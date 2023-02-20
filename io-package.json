@@ -1,87 +1,111 @@
 {
-    "common": {
-        "name": "deyeidc",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版",
-                "uk": "початковий випуск"
-            }
-        },
-        "title": "Deye Inverter Data Collector",
-        "titleLang": {
-            "en": "Deye Inverter Data Collector",
-            "de": "Datensammler für Wechselrichter von Deye",
-            "ru": "Сборщик данных инвертора Дейе",
-            "pt": "Coletor de Dados do Inversor Deye",
-            "nl": "Deye Inverter-gegevensverzamelaar",
-            "fr": "Collecteur de données Deye Inverter",
-            "it": "Deye Inverter Data Collector",
-            "es": "Colector de datos del inversor Deye",
-            "pl": "Kolektor danych falownika Deye",
-            "zh-cn": "德业逆变器数据采集器",
-            "uk": "Збірник даних інвертора Deye"
-        },
-        "desc": {
-            "en": "Data Collector vor Deye-compatible Inverter",
-            "de": "Datensammler für Deye-kompatible Wechselrichter",
-            "ru": "Сборщик данных с инвертором, совместимым с Дейе",
-            "pt": "Coletor de dados para inversor compatível com Deye",
-            "nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
-            "fr": "Collecteur de données pour onduleur compatible Deye",
-            "it": "Data Collector per Inverter compatibile con Deye",
-            "es": "Colector de datos para inversor compatible con Deye",
-            "pl": "Data Collector dla falownika kompatybilnego z Deye",
-            "zh-cn": "数据收集器 vor Deye 兼容逆变器",
-            "uk": "Збирач даних або інвертор, сумісний з Deye"
-        },
-        "authors": [
-            "raschy <raschy@gmx.de>"
-        ],
-        "keywords": [
-            "Deye Bosswerk"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "deyeidc.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
-        "readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "energy",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=3.3.22"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=5.1.13"
-            }
-        ]
-    },
-    "native": {
-        "ipaddress": "",
-        "port": 8899,
-        "logger": null
-    },
-    "objects": [],
-    "instanceObjects": []
+	"common": {
+		"name": "deyeidc",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版",
+				"uk": "початковий випуск"
+			}
+		},
+		"title": "Deye Inverter Data Collector",
+		"titleLang": {
+			"en": "Deye Inverter Data Collector",
+			"de": "Datensammler für Wechselrichter von Deye",
+			"ru": "Сборщик данных инвертора Дейе",
+			"pt": "Coletor de Dados do Inversor Deye",
+			"nl": "Deye Inverter-gegevensverzamelaar",
+			"fr": "Collecteur de données Deye Inverter",
+			"it": "Deye Inverter Data Collector",
+			"es": "Colector de datos del inversor Deye",
+			"pl": "Kolektor danych falownika Deye",
+			"zh-cn": "德业逆变器数据采集器",
+			"uk": "Збірник даних інвертора Deye"
+		},
+		"desc": {
+			"en": "Data Collector vor Deye-compatible Inverter",
+			"de": "Datensammler für Deye-kompatible Wechselrichter",
+			"ru": "Сборщик данных с инвертором, совместимым с Дейе",
+			"pt": "Coletor de dados para inversor compatível com Deye",
+			"nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
+			"fr": "Collecteur de données pour onduleur compatible Deye",
+			"it": "Data Collector per Inverter compatibile con Deye",
+			"es": "Colector de datos para inversor compatible con Deye",
+			"pl": "Data Collector dla falownika kompatybilnego z Deye",
+			"zh-cn": "数据收集器 vor Deye 兼容逆变器",
+			"uk": "Збирач даних або інвертор, сумісний з Deye"
+		},
+		"authors": [
+			"raschy <raschy@gmx.de>"
+		],
+		"keywords": [
+			"Deye Bosswerk"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "deyeidc.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
+		"readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "energy",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=3.3.22"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
+	},
+	"native": {
+		"ipaddress": "",
+		"port": 8899,
+		"logger": 0,
+		"pollInterval": 60,
+		"deviceBlacklist": ""
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
 }
