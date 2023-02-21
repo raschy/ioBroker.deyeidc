@@ -53,7 +53,7 @@
   "main": "main.js",
   "files": [
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).json",
-    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js,json}",
     "lib/",
     "www/",
     "io-package.json",

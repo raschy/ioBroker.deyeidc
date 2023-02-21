@@ -1,6 +1,6 @@
 {
-	"deyeidc adapter settings": "Paramètres d'adaptateur pour deyeidc",
-	"ipaddress": "Adresse IP",
-	"port": "Port",
-	"logger": "Enregistreur"
+    "deyeidc adapter settings": "Paramètres d'adaptateur pour deyeidc",
+    "ipaddress": "Adresse IP",
+    "port": "Port",
+    "logger": "Enregistreur"
 }
