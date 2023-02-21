@@ -71,7 +71,11 @@ class Deyeidc extends utils.Adapter {
 
 		//	Laden der Register
 		try {
-			this.idc.readRegisterset();
+			const registersConfig = this.config.registers;
+			if (registersConfig && Array.isArray(registersConfig)) {
+				//console.log(`[readRegisterset]  ${JSON.stringify(registersConfig)}`);
+				this.idc.setRegisters(registersConfig);
+			}
 		} catch (e) {
 			this.internDataReady = false;
 			this.log.error(`[readRegisterset] ${e}`);
@@ -79,7 +83,11 @@ class Deyeidc extends utils.Adapter {
 		//
 		//  Laden der Coils
 		try {
-			this.idc.readCoilset();
+			const coilConfig = this.config.coils;
+			if (coilConfig && Array.isArray(coilConfig)) {
+				//console.log(`[readCoilset]  ${JSON.stringify(coilConfig)}`);
+				this.idc.setCoils(coilConfig);
+			}
 		} catch (err) {
 			this.internDataReady = false;
 			this.log.error(`[readCoilset] ${err}`);
@@ -91,7 +99,7 @@ class Deyeidc extends utils.Adapter {
 			await this.connectionHandler();
 			await this.requestData();
 			// Beobachten der zu berechnenden Daten
-			this.watchStates();
+			//this.watchStates();
 		}
 		//
 	}
@@ -191,6 +199,7 @@ class Deyeidc extends utils.Adapter {
 		this.client.on('data', (data) => {
 			if (this.req < this.idc.Registers.length) {
 				try {
+					//console.log(`${this.idc.toHexString(data)}`);
 					this.mb = this.idc.checkDataFrame(data);
 					this.createDPsForInstances();
 				} catch (err) {
@@ -202,6 +211,7 @@ class Deyeidc extends utils.Adapter {
 					const output = this.idc.readCoils(this.idc.Registers, this.idc.Coils, this.mb);
 					this.updateData(output);
 				}
+
 
 				// Nächste Anfrage senden
 				if (data.length > 0) {
@@ -216,9 +226,8 @@ class Deyeidc extends utils.Adapter {
 		if (!netConnection.connectionActive) this.connect();
 		//
 		if (req > this.idc.Registers.length - 1) return;
-
-		console.log('Anfrage Registersatz: ' + (req + 1)); // human readable
 		const request = this.idc.request_frame(req);
+		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
 
@@ -234,6 +243,18 @@ class Deyeidc extends utils.Adapter {
 			this.log.warn(`[watchStates] Cannot read JSON file: ${fnCompute}`);
 		}
 	}
+
+	_getRegisters() {
+		const registersConfig = this.config.registers;
+
+		if (registersConfig && Array.isArray(registersConfig)) {
+			console.log(`registersConfig  ${JSON.stringify(registersConfig)}`);
+			this.idc.setRegisters(registersConfig);
+			//return trashTypesConfig.map((trashType) => ({ ...trashType, name: trashType.name.trim(), nameClean: this.cleanNamespace(trashType.name.trim()) }));
+		}
+		return registersConfig;
+	}
+
 
 	async checkUserData() {
 		// polling min 5min
@@ -322,11 +343,8 @@ class Deyeidc extends utils.Adapter {
 
 	// prepare data vor ioBroker
 	async updateData(data) {
-		//console.log(`[updateData] JSON: ${JSON.stringify(data)}`);
-
-		// define keys that shall not be updated (works in dataList only)
+		// define keys that shall not be updated
 		const noUpdateKeys = JSON.parse(JSON.stringify(this.config.deviceBlacklist.split(',')));
-
 		Object.keys(data).forEach(pos => {
 			const result = noUpdateKeys.includes(data[pos].key);
 			//console.log(`updateData ${data[pos].key} ${result}`);

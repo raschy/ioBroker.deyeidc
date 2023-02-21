@@ -4,8 +4,14 @@
 	"items": {
 		"_configuration": {
 			"type": "panel",
-			"label": "Credentials",
+			"label": "Settings",
 			"items": {
+				"_headerSettings": {
+					"newLine": true,
+					"type": "header",
+					"text": "Settings",
+					"size": 2
+				},
 				"ipaddress": {
 					"type": "text",
 					"sm": 12,
@@ -37,6 +43,199 @@
 				}
 			}
 		},
+		"_registers": {
+			"type": "panel",
+			"label": "Register",
+			"items": {
+				"_headerRegister": {
+					"newLine": true,
+					"type": "header",
+					"text": "Registerbereiche",
+					"size": 2
+				},
+				"registers": {
+					"type": "table",
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"items": [
+						{
+							"type": "number",
+							"attr": "registerStart",
+							"width": "35%",
+							"title": "Register Start",
+							"default": ""
+						},
+						{
+							"type": "number",
+							"attr": "registerEnd",
+							"width": "35%",
+							"title": "Register End",
+							"default": ""
+						}
+					]
+				},
+				"_help1": {
+					"newLine": true,
+					"type": "staticText",
+					"text": "table register help",
+					"sm": 12,
+					"md": 4,
+					"lg": 4
+				}
+			}
+		},
+		"_coils": {
+			"type": "panel",
+			"label": "Coils",
+			"items": {
+				"_headerCoils": {
+					"newLine": true,
+					"type": "header",
+					"text": "Register vom Inverter",
+					"size": 2
+				},
+				"coils": {
+					"type": "table",
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"items": [
+						{
+							"type": "number",
+							"attr": "register",
+							"width": "15%",
+							"title": "Register",
+							"default": ""
+						},
+						{
+							"type": "number",
+							"trim": false,
+							"attr": "rules",
+							"width": "15%",
+							"title": "Rule",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": false,
+							"attr": "key",
+							"width": "20%",
+							"title": "Key",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": false,
+							"attr": "name",
+							"width": "30%",
+							"title": "Name",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": false,
+							"attr": "unit",
+							"width": "15%",
+							"title": "Unit",
+							"default": ""
+						},
+						{
+							"type": "number",
+							"trim": false,
+							"attr": "factor",
+							"width": "15%",
+							"title": "Factor",
+							"default": 0
+						}
+					]
+				},
+				"_help1": {
+					"newLine": true,
+					"type": "staticText",
+					"text": "table name help",
+					"sm": 12,
+					"md": 4,
+					"lg": 4
+				}
+			}
+		},
+		"_compute": {
+			"type": "panel",
+			"label": "Compute",
+			"items": {
+				"_headerCompute": {
+					"newLine": true,
+					"type": "header",
+					"text": "Berechnen von Werten",
+					"size": 2
+				},
+				"compute": {
+					"type": "table",
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"items": [
+						{
+							"type": "text",
+							"trim": true,
+							"attr": "value1",
+							"width": "15%",
+							"title": "Value 1",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": true,
+							"attr": "value2",
+							"width": "15%",
+							"title": "Value 2",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": true,
+							"attr": "key",
+							"width": "20%",
+							"title": "Key",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": false,
+							"attr": "name",
+							"width": "30%",
+							"title": "Name",
+							"default": ""
+						},
+						{
+							"type": "text",
+							"trim": false,
+							"attr": "unit",
+							"width": "15%",
+							"title": "Unit",
+							"default": ""
+						},
+						{
+							"type": "number",
+							"trim": false,
+							"attr": "factor",
+							"width": "15%",
+							"title": "Factor",
+							"default": 0
+						}
+					]
+				},
+				"_help1": {
+					"newLine": true,
+					"type": "staticText",
+					"text": "table compute help",
+					"sm": 12,
+					"md": 4,
+					"lg": 4
+				}
+			}
+		},
 		"_blacklist": {
 			"type": "panel",
 			"label": "Blacklist",
@@ -50,8 +249,8 @@
 				"deviceBlacklist": {
 					"type": "text",
 					"sm": 12,
-					"md": 6,
-					"lg": 6,
+					"md": 12,
+					"lg": 12,
 					"label": "Terms to be excluded"
 				}
 			}
