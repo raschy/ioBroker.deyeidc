@@ -235,25 +235,6 @@
 					"lg": 4
 				}
 			}
-		},
-		"_blacklist": {
-			"type": "panel",
-			"label": "Blacklist",
-			"items": {
-				"headerDevices": {
-					"newLine": true,
-					"type": "header",
-					"text": "Devices Blacklist",
-					"size": 2
-				},
-				"deviceBlacklist": {
-					"type": "text",
-					"sm": 12,
-					"md": 12,
-					"lg": 12,
-					"label": "Terms to be excluded"
-				}
-			}
 		}
 	}
 }

@@ -64,7 +64,7 @@
 		},
 		"dependencies": [
 			{
-				"js-controller": ">=3.3.22"
+				"js-controller": ">=4.0.0"
 			}
 		],
 		"globalDependencies": [
@@ -78,10 +78,9 @@
 		"port": 8899,
 		"logger": null,
 		"pollInterval": 60,
-		"registers": "",
-		"coils": "",
-		"compute": "[{'values': ['DV1', 'DC1'],'key': 'DP1','name': 'DC Power PV1','factor': 2,'unit': 'W}]",
-		"deviceBlacklist": ""
+		"registers": "['registers': {'registerStart': 0,'registerEnd': 128}],",
+		"coils": "[{'register': 86,'rules': 2,'key': 'Apo_t1','name': 'Total AC Output Power (Active)','unit': 'W','factor': 1}]",
+		"compute": "[{'value1': 'AC1', 'value2': 'DC1', 'key': 'DP1', 'name': 'DC Power PV1', 'unit': 'W', 'factor': 2}]"
 	},
 	"objects": [],
 	"instanceObjects": [
@@ -115,7 +114,7 @@
 				"type": "number",
 				"read": true,
 				"write": false,
-				"def": false
+				"def": 0
 			},
 			"native": {}
 		},
@@ -128,7 +127,7 @@
 				"type": "string",
 				"read": true,
 				"write": false,
-				"def": false
+				"def": ""
 			},
 			"native": {}
 		}

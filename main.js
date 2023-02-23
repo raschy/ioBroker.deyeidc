@@ -6,11 +6,9 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const fs = require('fs');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
 //
-const fnCompute = './compute.json';
 
 const netConnection = {
 	serverConfigIp: '',
@@ -47,6 +45,7 @@ class Deyeidc extends utils.Adapter {
 		this.internDataReady = true;
 		this.counter = 0;
 		this.req = 0;
+		this.CalcValues = [];
 	}
 
 	/**
@@ -54,7 +53,6 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async onReady() {
 		// Reset the connection indicator during startup
-		this.createAdapterObjects();
 		this.setState('info.connection', false, true);
 
 		// Initialize your adapter Here
@@ -93,78 +91,71 @@ class Deyeidc extends utils.Adapter {
 			this.log.error(`[readCoilset] ${err}`);
 		}
 
+		//  Laden der Computes
+		this.readComputeAndWatch();
+
 		//
 		if (this.internDataReady) {
 			// Start connection handler to created & monitor websocket connection
 			await this.connectionHandler();
 			await this.requestData();
-			// Beobachten der zu berechnenden Daten
-			//this.watchStates();
 		}
 		//
 	}
 
-	/**
-		 * Is called if a subscribed state changes
-		 * @param {string} id
-		 * @param {ioBroker.State | null | undefined} state
-		 */
-	async onStateChange(id, state) {
-		//console.log(id, state);
+	/*	*
+		* Is called if a subscribed state changes
+		* @param {string} id
+		* @param {ioBroker.State | null | undefined} state
+		*/
+	onStateChange(id, state) {
+		if (state) {
+			// The state was changed
+			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.computeData(id, state);
+		} else {
+			// The state was deleted
+			this.log.info(`state ${id} deleted`);
+		}
+	}
+
+	async computeData(id, state) {
+		//console.log(`[onStateChange] ${id} <${JSON.stringify(state)}>`);
 		const pos = id.lastIndexOf('.');
 		const basedir = id.substring(0, pos);
 		const name = id.substring(pos + 1);
 
 		const jsonResult = []; // leeres Array
 		if (state) {
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.log.info(`state ${id} name: ${name}  changed: ${state.val} (ack = ${state.ack})`);
+
 			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
+			//console.log(`[onStateChange] <${changes.length}> ${JSON.stringify(changes)}`);
 
 			for (let i = 0; i < changes.length; i++) {
 				let product = 1;
 				for (let j = 0; j < changes[i].values.length; j++) {
 					const state = await this.getStateAsync(basedir + '.' + changes[i].values[j]);
+					//console.log(`[ #onStateChange# ##${i}#${j}## ] ${JSON.stringify(state)}`);
 
 					if (typeof state?.val === 'number') {
 						const value = state?.val;
+						//console.log(`[ ##${i}#${j}## ] <${changes[i].values[j]}> ${JSON.stringify(state)}`);
 						product *= value;
 						if (j == changes[i].values.length - 1) {
 							const product1 = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
 							const jsonObj = { key: changes[i].key, value: product1, unit: changes[i].unit, name: changes[i].name };
+							console.log(`Ergebnis = ${product1}  ${JSON.stringify(jsonObj)}`);
 							jsonResult.push(jsonObj);
-							this.updateData(jsonObj);
 						}
 					}
+
 				}
 			}
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
 		}
 		this.updateData(jsonResult);
 	}
 
-	async requestData() {
-		try {
-			if (this.requestTimeout) clearTimeout(this.requestTimeout);
-			// Abrufen der Daten
-			this.req = 0;
-			this.counter++;
-			this.log.debug(`[requestData] Data request ${this.counter}`);
-			this.sendRequest(this.req); // 1.Aufruf
-			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
-			// start the timer for the next request
-			this.requestTimeout = setTimeout(async () => {
-				await this.setStateAsync(`info.status`, {
-					val: 'automatic request',
-					ack: true,
-				});
-				await this.requestData();
-			}, this.sync_milliseconds);
-		} catch (error) {
-			this.log.debug(`[ requestData ] error: ${error} stack: ${error.stack}`);
-		}
-	}
 
 	connect() {
 		console.log(`C O N N E C T`);
@@ -222,6 +213,25 @@ class Deyeidc extends utils.Adapter {
 		});
 	}
 
+	async requestData() {
+		try {
+			if (this.requestTimeout) clearTimeout(this.requestTimeout);
+			// Abrufen der Daten
+			this.req = 0;
+			this.counter++;
+			this.log.debug(`[requestData] Data request ${this.counter}`);
+			this.sendRequest(this.req); // 1.Aufruf
+			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
+			// start the timer for the next request
+			this.requestTimeout = setTimeout(async () => {
+				await this.setStateAsync(`info.status`, { val: 'automatic request', ack: true });
+				await this.requestData();
+			}, this.sync_milliseconds);
+		} catch (error) {
+			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
+		}
+	}
+
 	sendRequest(req) {
 		if (!netConnection.connectionActive) this.connect();
 		//
@@ -231,30 +241,25 @@ class Deyeidc extends utils.Adapter {
 		this.client.write(request);
 	}
 
-	watchStates() {
-		try {
-			const jsonData = fs.readFileSync(fnCompute, { encoding: 'utf8', flag: 'r' });
-			this.CalcValues = JSON.parse(jsonData); //now it is an object
-			this.CalcValues.forEach(e => {
-				e.values.forEach(value => this.subscribeStates(this.config.logger + '.' + value));
+	readComputeAndWatch() {
+		const jsonResult = [];
+		const computeConfig = this.config.compute;
+		if (computeConfig && Array.isArray(computeConfig)) {
+			console.log(`[readCompute ##1]  ${JSON.stringify(computeConfig)}`);
+			computeConfig.forEach(e => {
+				console.log(`[readCompute ##2] ${e.value1} ${e.value2}`);
+				this.log.debug(`[watchStates] set to ${e.value1} and ${e.value2}`);
+				this.subscribeStates(this.config.logger + '.' + e.value1);
+				this.subscribeStates(this.config.logger + '.' + e.value2);
+				//
+				const value = JSON.parse('["' + e.value1 + '","' + e.value2 + '"]');
+				const jsonString = { values: value, key: e.key, name: e.name, unit: e.unit, factor: e.factor };
+				jsonResult.push(jsonString);
 			});
-		} catch (err) {
-			console.warn(err);
-			this.log.warn(`[watchStates] Cannot read JSON file: ${fnCompute}`);
+			console.log(`[readCompute ##3]  ${JSON.stringify(jsonResult)}`);
+			this.CalcValues = jsonResult;
 		}
 	}
-
-	_getRegisters() {
-		const registersConfig = this.config.registers;
-
-		if (registersConfig && Array.isArray(registersConfig)) {
-			console.log(`registersConfig  ${JSON.stringify(registersConfig)}`);
-			this.idc.setRegisters(registersConfig);
-			//return trashTypesConfig.map((trashType) => ({ ...trashType, name: trashType.name.trim(), nameClean: this.cleanNamespace(trashType.name.trim()) }));
-		}
-		return registersConfig;
-	}
-
 
 	async checkUserData() {
 		// polling min 5min
@@ -272,51 +277,12 @@ class Deyeidc extends utils.Adapter {
 
 		// check if the IP-Address seems korrect
 
-		console.log(`checkUserData is ready`);
+		this.log.debug(`checkUserData is ready`);
 		return;
 	}
 
 	/**
-	 * create needet Datapoints for Instances
-	 */
-	async createAdapterObjects() {
-		await this.setObjectNotExistsAsync('info.connection', {
-			type: 'state',
-			common: {
-				name: 'Connection to Device##',
-				type: 'boolean',
-				role: 'indicator',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
-		await this.setObjectNotExistsAsync('info.status', {
-			type: 'state',
-			common: {
-				name: 'Status',
-				type: 'string',
-				role: 'state',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
-		await this.setObjectNotExistsAsync('info.lastUpdate', {
-			type: 'state',
-			common: {
-				name: 'Last Update',
-				type: 'number',
-				role: 'state',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
-	}
-
-	/**
-	 * create Object für datavalues
+	 * create object für datavalues
 	 */
 	async createDPsForInstances() {
 		const _loggerSn = String(this.config.logger);
@@ -343,18 +309,17 @@ class Deyeidc extends utils.Adapter {
 
 	// prepare data vor ioBroker
 	async updateData(data) {
-		// define keys that shall not be updated
-		const noUpdateKeys = JSON.parse(JSON.stringify(this.config.deviceBlacklist.split(',')));
-		Object.keys(data).forEach(pos => {
-			const result = noUpdateKeys.includes(data[pos].key);
-			//console.log(`updateData ${data[pos].key} ${result}`);
-			if (!result) { // || data[pos].value == 'none'
-				this.persistData(data[pos].key, data[pos].name, data[pos].value, 'state', data[pos].unit);
+		//console.log(`[updataData] ${JSON.stringify(data)}`);
+		data.forEach(async (obj) => {
+			if (obj.value != 'none') {
+				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);	//'state'
 			}
 		});
 	}
 
+	// save data in ioBroker datapoints
 	async persistData(key, name, value, role, unit) {
+		//console.log(`[persistData] ${key}`);
 		const dp_Device = String(this.config.logger) + '.' + key;
 		// Type-Erkennung
 		let type = 'string';
@@ -400,10 +365,7 @@ class Deyeidc extends utils.Adapter {
 			if (this.requestTimeout) clearInterval(this.requestTimeout);
 			//
 			this.client.destroy();
-			this.setStateAsync(`info.status`, {
-				val: 'offline',
-				ack: true,
-			});
+			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
 			callback();
 		} catch (e) {
 			callback();
