@@ -16,7 +16,7 @@
     "url": "https://github.com/raschy/ioBroker.deyeidc.git"
   },
   "engines": {
-    "node": ">= 14"
+    "node": ">= 16"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.7",
@@ -53,7 +53,7 @@
   "main": "main.js",
   "files": [
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).json",
-    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js,json}",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
     "lib/",
     "www/",
     "io-package.json",

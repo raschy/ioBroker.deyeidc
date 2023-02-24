@@ -10,12 +10,12 @@ const net = require('net');
 const idcCore = require('./lib/idc-core.js');
 //
 
-const netConnection = {
+const my = {
 	serverConfigIp: '',
 	serverConfigPort: 8899,
 	inverterLoggerSn: 0,
+	numberRegisterSets: 0,
 	connectionActive: false,
-	connectionNeeded: true,
 	connectionPolling: 60,
 };
 
@@ -69,10 +69,11 @@ class Deyeidc extends utils.Adapter {
 
 		//	Laden der Register
 		try {
-			const registersConfig = this.config.registers;
-			if (registersConfig && Array.isArray(registersConfig)) {
-				//console.log(`[readRegisterset]  ${JSON.stringify(registersConfig)}`);
-				this.idc.setRegisters(registersConfig);
+			const RegisterSets = this.config.registers;
+			if (RegisterSets && Array.isArray(RegisterSets)) {
+				console.log(`[readRegisterset]  ${JSON.stringify(RegisterSets)}`);
+				my.numberRegisterSets = RegisterSets.length;
+				this.idc.setRegisters(RegisterSets);
 			}
 		} catch (e) {
 			this.internDataReady = false;
@@ -156,7 +157,6 @@ class Deyeidc extends utils.Adapter {
 		this.updateData(jsonResult);
 	}
 
-
 	connect() {
 		console.log(`C O N N E C T`);
 		this.client.connect({ host: '192.168.68.240', port: 8899 }); //, timeout: 50000 });
@@ -164,31 +164,31 @@ class Deyeidc extends utils.Adapter {
 
 	async connectionHandler() {
 		this.client.on('connect', () => {
-			netConnection.connectionActive = true;
+			my.connectionActive = true;
 			this.setState('info.connection', true, true);
 		});
 
 		this.client.on('timeout', () => {
 			this.client.destroy();
-			netConnection.connectionActive = false;
+			my.connectionActive = false;
 			this.setState('info.connection', false, true);
 		});
 
 		this.client.on('error', (err) => {
 			this.client.destroy();
-			netConnection.connectionActive = false;
+			my.connectionActive = false;
 			this.setState('info.connection', false, true);
 			if (err) console.log(`Fehler bei Verbindung ${err.message}`);
 		});
 
 		this.client.on('end', () => {
 			console.log('Verbindung mit Server beendet');
-			netConnection.connectionActive = false;
+			my.connectionActive = false;
 			this.setState('info.connection', false, true);
 		});
 
 		this.client.on('data', (data) => {
-			if (this.req < this.idc.Registers.length) {
+			if (this.req < my.numberRegisterSets) {
 				try {
 					//console.log(`${this.idc.toHexString(data)}`);
 					this.mb = this.idc.checkDataFrame(data);
@@ -233,9 +233,10 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	sendRequest(req) {
-		if (!netConnection.connectionActive) this.connect();
+		if (!my.connectionActive) this.connect();
 		//
-		if (req > this.idc.Registers.length - 1) return;
+		console.log(`Length ${my.numberRegisterSets}`);
+		if (req > my.numberRegisterSets - 1) return;
 		const request = this.idc.request_frame(req);
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
@@ -243,7 +244,7 @@ class Deyeidc extends utils.Adapter {
 
 	readComputeAndWatch() {
 		const jsonResult = [];
-		const computeConfig = this.config.compute;
+		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
 			console.log(`[readCompute ##1]  ${JSON.stringify(computeConfig)}`);
 			computeConfig.forEach(e => {

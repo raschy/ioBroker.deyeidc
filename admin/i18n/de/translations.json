@@ -1,6 +1,26 @@
 {
-    "deyeidc adapter settings": "Adaptereinstellungen für deyeidc",
+    "deyeidc adapter settings": "Adaptereinstellungen für Deye-IDC",
+    "Settings": "Einstellungen",
     "ipaddress": "IP Adresse",
+    "IP-Address from Inverter": "IP-Adresse vom Wechselrichter",
     "port": "Port",
-    "logger": "Logger"
+    "Port ( usually 8899 )": "Port ( normalerweise 8899 )",
+    "logger": "Logger",
+    "Serial Number Data Logger": "Seriennummer Datenlogger",
+    "Register": "Register",
+    "Coils": "Spulen",
+    "Compute": "Berechnen",
+    "Polling rate": "Abfragerate",
+    "Register Sections": "Register Bereiche",
+    "Register Start": "Register Start",
+    "Register End": "Register Ende",
+    "Register from inverter": "Vom Wechselrichter registrieren",
+    "Rule": "Regel",
+    "Key": "Key",
+    "Name": "Name",
+    "Unit": "Einheit",
+    "Factor": "Faktor",
+    "Calculate values": "Werte berechnen",
+    "Value 1": "Wert 1",
+    "Value 2": "Wert 2"
 }

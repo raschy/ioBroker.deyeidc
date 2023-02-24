@@ -39,7 +39,7 @@
 					"sm": 12,
 					"md": 6,
 					"lg": 6,
-					"label": "Intervall Poll Data"
+					"label": "Polling rate"
 				}
 			}
 		},
@@ -50,7 +50,7 @@
 				"_headerRegister": {
 					"newLine": true,
 					"type": "header",
-					"text": "Registerbereiche",
+					"text": "Register Sections",
 					"size": 2
 				},
 				"registers": {
@@ -92,7 +92,7 @@
 				"_headerCoils": {
 					"newLine": true,
 					"type": "header",
-					"text": "Register vom Inverter",
+					"text": "Register from inverter",
 					"size": 2
 				},
 				"coils": {
@@ -160,17 +160,17 @@
 				}
 			}
 		},
-		"_compute": {
+		"_computes": {
 			"type": "panel",
 			"label": "Compute",
 			"items": {
 				"_headerCompute": {
 					"newLine": true,
 					"type": "header",
-					"text": "Berechnen von Werten",
+					"text": "Calculate values",
 					"size": 2
 				},
-				"compute": {
+				"computes": {
 					"type": "table",
 					"sm": 12,
 					"md": 12,

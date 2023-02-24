@@ -1,6 +1,26 @@
 {
-	"deyeidc adapter settings": "Adapter settings for deyeidc",
+	"deyeidc adapter settings": "Adapter settings for Deye-IDC",
+	"Settings": "Settings",
 	"ipaddress": "IP-Address",
+	"IP-Address from Inverter": "IP-Address from Inverter",
 	"port": "Port",
-	"logger": "Logger"
+	"Port ( usually 8899 )": "Port ( usually 8899 )",
+	"logger": "Logger",
+	"Serial Number Data Logger": "Serial Number Data Logger",
+	"Register": "Register",
+	"Coils": "Coils",
+	"Compute": "Compute",
+	"Polling rate": "Polling Rate",
+	"Register Sections": "Register Sections",
+	"Register Start": "Register Start",
+	"Register End": "Register End",
+	"Register from inverter": "Register from inverter",
+	"Rule": "Rule",
+	"Key": "Key",
+	"Name": "Name",
+	"Unit": "Unit",
+	"Factor": "Factor",
+	"Calculate values": "Calculate values",
+	"Value 1": "Value 1",
+	"Value 2": "Value 2"
 }
