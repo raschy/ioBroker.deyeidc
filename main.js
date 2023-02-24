@@ -15,6 +15,7 @@ const my = {
 	serverConfigPort: 8899,
 	inverterLoggerSn: 0,
 	numberRegisterSets: 0,
+	numberCoils: 0,
 	connectionActive: false,
 	connectionPolling: 60,
 };
@@ -71,7 +72,7 @@ class Deyeidc extends utils.Adapter {
 		try {
 			const RegisterSets = this.config.registers;
 			if (RegisterSets && Array.isArray(RegisterSets)) {
-				console.log(`[readRegisterset]  ${JSON.stringify(RegisterSets)}`);
+				//console.log(`[readRegisterset]  ${JSON.stringify(RegisterSets)}`);
 				my.numberRegisterSets = RegisterSets.length;
 				this.idc.setRegisters(RegisterSets);
 			}
@@ -82,10 +83,11 @@ class Deyeidc extends utils.Adapter {
 		//
 		//  Laden der Coils
 		try {
-			const coilConfig = this.config.coils;
-			if (coilConfig && Array.isArray(coilConfig)) {
-				//console.log(`[readCoilset]  ${JSON.stringify(coilConfig)}`);
-				this.idc.setCoils(coilConfig);
+			const Coils = this.config.coils;
+			if (Coils && Array.isArray(Coils)) {
+				//console.log(`[readCoilset]  ${JSON.stringify(Coils)}`);
+				my.numberCoils = Coils.length;
+				this.idc.setCoils(Coils);
 			}
 		} catch (err) {
 			this.internDataReady = false;
@@ -289,21 +291,7 @@ class Deyeidc extends utils.Adapter {
 		const _loggerSn = String(this.config.logger);
 		await this.setObjectNotExistsAsync(_loggerSn, {
 			type: 'channel',
-			common: {
-				name: {
-					en: 'Adapter and Instances',
-					de: 'Adapter und Instanzen',
-					ru: 'Адаптер и Instances',
-					pt: 'Adaptador e instâncias',
-					nl: 'Adapter en Instance',
-					fr: 'Adaptateur et instances',
-					it: 'Adattatore e istanze',
-					es: 'Adaptador e instalaciones',
-					pl: 'Adapter and Instances',
-					uk: 'Адаптер та інстанції',
-					'zh-cn': '道歉和案',
-				},
-			},
+			common: { name: 'Values from Adapter and Instances' },
 			native: {},
 		});
 	}
