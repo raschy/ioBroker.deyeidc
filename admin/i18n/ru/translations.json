@@ -28,5 +28,6 @@
     "Compute": "Вычислить",
     "Register Sections": "Разделы регистрации",
     "Register Start": "Зарегистрироваться Начать",
-    "Register End": "Регистрация Конец"
+    "Register End": "Регистрация Конец",
+    "Values from Adapter and Instances": "Значения адаптера и экземпляров"
 }
