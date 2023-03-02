@@ -80,10 +80,8 @@
 		"pollInterval": 60,
 		"registers": [
 			{
-				"register": {
-					"registerStart": 0,
-					"registerEnd": 128
-				}
+				"registerStart": 0,
+				"registerEnd": 30
 			}
 		],
 		"coils": [
