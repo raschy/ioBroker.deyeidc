@@ -114,49 +114,12 @@ class Deyeidc extends utils.Adapter {
 	onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			this.computeData(id, state);
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
 		}
-	}
-
-	async computeData(id, state) {
-		//console.log(`[onStateChange] ${id} <${JSON.stringify(state)}>`);
-		const pos = id.lastIndexOf('.');
-		const basedir = id.substring(0, pos);
-		const name = id.substring(pos + 1);
-
-		const jsonResult = []; // leeres Array
-		if (state) {
-			this.log.info(`state ${id} name: ${name}  changed: ${state.val} (ack = ${state.ack})`);
-
-			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
-			//console.log(`[onStateChange] <${changes.length}> ${JSON.stringify(changes)}`);
-
-			for (let i = 0; i < changes.length; i++) {
-				let product = 1;
-				for (let j = 0; j < changes[i].values.length; j++) {
-					const state = await this.getStateAsync(basedir + '.' + changes[i].values[j]);
-					//console.log(`[ #onStateChange# ##${i}#${j}## ] ${JSON.stringify(state)}`);
-
-					if (typeof state?.val === 'number') {
-						const value = state?.val;
-						//console.log(`[ ##${i}#${j}## ] <${changes[i].values[j]}> ${JSON.stringify(state)}`);
-						product *= value;
-						if (j == changes[i].values.length - 1) {
-							const product1 = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
-							const jsonObj = { key: changes[i].key, value: product1, unit: changes[i].unit, name: changes[i].name };
-							console.log(`Ergebnis = ${product1}  ${JSON.stringify(jsonObj)}`);
-							jsonResult.push(jsonObj);
-						}
-					}
-
-				}
-			}
-		}
-		this.updateData(jsonResult);
 	}
 
 	connect() {
@@ -201,7 +164,8 @@ class Deyeidc extends utils.Adapter {
 
 				// Analyse Data
 				if (this.mb) {
-					const output = this.idc.readCoils(this.idc.Registers, this.idc.Coils, this.mb);
+					//const output = this.idc.readCoils(this.idc.Registers, this.idc.Coils, this.mb);
+					const output = this.idc.readCoils(this.mb);
 					this.updateData(output);
 				}
 
@@ -216,22 +180,22 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	async requestData() {
-		try {
-			if (this.requestTimeout) clearTimeout(this.requestTimeout);
-			// Abrufen der Daten
-			this.req = 0;
-			this.counter++;
-			this.log.debug(`[requestData] Data request ${this.counter}`);
-			this.sendRequest(this.req); // 1.Aufruf
-			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
-			// start the timer for the next request
-			this.requestTimeout = setTimeout(async () => {
-				await this.setStateAsync(`info.status`, { val: 'automatic request', ack: true });
-				await this.requestData();
-			}, this.sync_milliseconds);
-		} catch (error) {
-			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
-		}
+		//try {
+		if (this.requestTimeout) clearTimeout(this.requestTimeout);
+		// Abrufen der Daten
+		this.req = 0;
+		this.counter++;
+		this.log.debug(`[requestData] Data request ${this.counter}`);
+		this.sendRequest(this.req); // 1.Aufruf
+		await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
+		// start the timer for the next request
+		this.requestTimeout = setTimeout(async () => {
+			await this.setStateAsync(`info.status`, { val: 'automatic request', ack: true });
+			await this.requestData();
+		}, this.sync_milliseconds);
+		//} catch (error) {
+		//	this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
+		//}
 	}
 
 	sendRequest(req) {
@@ -242,6 +206,43 @@ class Deyeidc extends utils.Adapter {
 		const request = this.idc.request_frame(req);
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
+	}
+
+	async computeData(id, state) {
+		//console.log(`[onStateChange] ${id} <${JSON.stringify(state)}>`);
+		const pos = id.lastIndexOf('.');
+		const basedir = id.substring(0, pos);
+		const name = id.substring(pos + 1);
+
+		const jsonResult = []; // leeres Array
+		if (state) {
+			this.log.info(`state ${id} name: ${name}  changed: ${state.val} (ack = ${state.ack})`);
+
+			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
+			//console.log(`[onStateChange] <${changes.length}> ${JSON.stringify(changes)}`);
+
+			for (let i = 0; i < changes.length; i++) {
+				let product = 1;
+				for (let j = 0; j < changes[i].values.length; j++) {
+					const state = await this.getStateAsync(basedir + '.' + changes[i].values[j]);
+					//console.log(`[ #onStateChange# ##${i}#${j}## ] ${JSON.stringify(state)}`);
+
+					if (typeof state?.val === 'number') {
+						const value = state?.val;
+						console.log(`[ ##${i}#${j}## ] <${changes[i].values[j]}> ${JSON.stringify(state)}`);
+						product *= value;
+						if (j == changes[i].values.length - 1) {
+							console.log(`[###${i}#${j}###] <${product}> `);
+							const product_hr = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
+							const jsonObj = { key: changes[i].key, value: product_hr, unit: changes[i].unit, name: changes[i].name };
+							console.log(`Ergebnis = ${product_hr}  ${JSON.stringify(jsonObj)}`);
+							jsonResult.push(jsonObj);
+						}
+					}
+				}
+			}
+		}
+		this.updateData(jsonResult);
 	}
 
 	readComputeAndWatch() {
@@ -255,55 +256,13 @@ class Deyeidc extends utils.Adapter {
 				this.subscribeStates(this.config.logger + '.' + e.value1);
 				this.subscribeStates(this.config.logger + '.' + e.value2);
 				//
-				const value = JSON.parse('["' + e.value1 + '","' + e.value2 + '"]');
-				const jsonString = { values: value, key: e.key, name: e.name, unit: e.unit, factor: e.factor };
+				const values = JSON.parse('["' + e.value1 + '","' + e.value2 + '"]');
+				const jsonString = { values: values, key: e.key, name: e.name, unit: e.unit, factor: e.factor };
 				jsonResult.push(jsonString);
 			});
 			console.log(`[readCompute ##3]  ${JSON.stringify(jsonResult)}`);
 			this.CalcValues = jsonResult;
 		}
-	}
-
-	async checkUserData() {
-		// polling min 5min
-		// check if the sync time is a number, if not, the string is parsed to a number
-		this.sync_milliseconds =
-			typeof this.config.pollInterval === 'number'
-				? this.config.pollInterval * 1000
-				: parseInt(this.config.pollInterval, 10) * 1000;
-
-		if (isNaN(this.sync_milliseconds) || this.sync_milliseconds < 0.5 * 1000) {
-			this.sync_milliseconds = 300000; // is set as the minimum interval
-			this.log.warn(`Sync time was too short (${this.config.pollInterval}). New sync time is 1 min`);
-		}
-		this.log.info(`Sync time set to ${this.sync_milliseconds} ms`);
-
-		// check if the IP-Address seems korrect
-
-		this.log.debug(`checkUserData is ready`);
-		return;
-	}
-
-	/**
-	 * create object für datavalues
-	 */
-	async createDPsForInstances() {
-		const _loggerSn = String(this.config.logger);
-		await this.setObjectNotExistsAsync(_loggerSn, {
-			type: 'channel',
-			common: { name: 'Values from Adapter and Instances' },
-			native: {},
-		});
-	}
-
-	// prepare data vor ioBroker
-	async updateData(data) {
-		//console.log(`[updataData] ${JSON.stringify(data)}`);
-		data.forEach(async (obj) => {
-			if (obj.value != 'none') {
-				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);	//'state'
-			}
-		});
 	}
 
 	// save data in ioBroker datapoints
@@ -340,6 +299,47 @@ class Deyeidc extends utils.Adapter {
 		await this.setStateAsync(dp_Device, { val: value, ack: true });
 	}
 
+	// prepare data vor ioBroker
+	async updateData(data) {
+		//console.log(`[updataData] ${JSON.stringify(data)}`);
+		data.forEach(async (obj) => {
+			if (obj.value != 'none') {
+				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);	//'state'
+			}
+		});
+	}
+
+	// create object für datavalues
+	async createDPsForInstances() {
+		const _loggerSn = String(this.config.logger);
+		await this.setObjectNotExistsAsync(_loggerSn, {
+			type: 'channel',
+			common: { name: 'Values from Adapter and Instances' },
+			native: {},
+		});
+	}
+
+	// check data from UI
+	async checkUserData() {
+		// polling min 5min
+		// check if the sync time is a number, if not, the string is parsed to a number
+		this.sync_milliseconds =
+			typeof this.config.pollInterval === 'number'
+				? this.config.pollInterval * 1000
+				: parseInt(this.config.pollInterval, 10) * 1000;
+
+		if (isNaN(this.sync_milliseconds) || this.sync_milliseconds < 0.5 * 1000) {
+			this.sync_milliseconds = 300000; // is set as the minimum interval
+			this.log.warn(`Sync time was too short (${this.config.pollInterval}). New sync time is 1 min`);
+		}
+		this.log.info(`Sync time set to ${this.sync_milliseconds} ms`);
+
+		// check if the IP-Address seems korrect
+
+		this.log.debug(`checkUserData is ready`);
+		return;
+	}
+
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 * @param {() => void} callback
@@ -350,7 +350,6 @@ class Deyeidc extends utils.Adapter {
 			this.setState('info.connection', false, true);
 			// Here you must clear all timeouts or intervals that may still be active
 			// ...
-			//clearInterval(this.intervalId);
 			if (this.requestTimeout) clearInterval(this.requestTimeout);
 			//
 			this.client.destroy();
