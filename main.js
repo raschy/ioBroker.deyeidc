@@ -9,17 +9,6 @@ const utils = require('@iobroker/adapter-core');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
 //
-
-const my = {
-	serverConfigIp: '',
-	serverConfigPort: 8899,
-	inverterLoggerSn: 0,
-	numberRegisterSets: 0,
-	numberCoils: 0,
-	connectionActive: false,
-	connectionPolling: 60,
-};
-
 class Deyeidc extends utils.Adapter {
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -34,16 +23,18 @@ class Deyeidc extends utils.Adapter {
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		// this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-
+		//
+		this.idc = new idcCore();
+		this.client = new net.Socket();
+		this.client.setTimeout(10000);
 		// -----------------  Timeout variables -----------------
 		this.requestTimeout = null;
 		this.sync_milliseconds = 60000; // 1min
-		this.refreshStatus = false;
 		// -----------------  Global variables -----------------
-		this.idc = new idcCore();
-		this.client = new net.Socket();
-		this.client.setTimeout(20000);
+		this.connectionActive = false;
 		this.internDataReady = true;
+		this.numberRegisterSets = 0;
+		this.numberCoils = 0;
 		this.counter = 0;
 		this.req = 0;
 		this.CalcValues = [];
@@ -55,17 +46,15 @@ class Deyeidc extends utils.Adapter {
 	async onReady() {
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
-
-		// Initialize your adapter Here
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.idc.setLoggerSn(this.config.logger);
-		this.log.debug(`config IP-Address: ${this.config.ipaddress}`);
-		this.log.debug(`config Port: ${this.config.port}`);
-		this.log.debug(`config Logger SN: ${this.config.logger}`);
-		this.log.debug(`config Pollinterval: ${this.config.pollInterval}`);
-		//
-		//	About User changes
+		//this.log.debug(`config IP-Address: ${this.config.ipaddress}`);
+		//this.log.debug(`config Port: ${this.config.port}`);
+		//this.log.debug(`config Logger SN: ${this.config.logger}`);
+		//this.log.debug(`config Pollinterval: ${this.config.pollInterval}`);
+
+		// Initialize your adapter Here
+		// About User changes
 		await this.checkUserData();
 
 		//	Laden der Register
@@ -73,7 +62,7 @@ class Deyeidc extends utils.Adapter {
 			const RegisterSets = this.config.registers;
 			if (RegisterSets && Array.isArray(RegisterSets)) {
 				//console.log(`[readRegisterset]  ${JSON.stringify(RegisterSets)}`);
-				my.numberRegisterSets = RegisterSets.length;
+				this.numberRegisterSets = RegisterSets.length;
 				this.idc.setRegisters(RegisterSets);
 			}
 		} catch (e) {
@@ -86,7 +75,7 @@ class Deyeidc extends utils.Adapter {
 			const Coils = this.config.coils;
 			if (Coils && Array.isArray(Coils)) {
 				//console.log(`[readCoilset]  ${JSON.stringify(Coils)}`);
-				my.numberCoils = Coils.length;
+				this.numberCoils = Coils.length;
 				this.idc.setCoils(Coils);
 			}
 		} catch (err) {
@@ -94,16 +83,14 @@ class Deyeidc extends utils.Adapter {
 			this.log.error(`[readCoilset] ${err}`);
 		}
 
-		//  Laden der Computes
-		this.readComputeAndWatch();
-
-		//
 		if (this.internDataReady) {
 			// Start connection handler to created & monitor websocket connection
 			await this.connectionHandler();
+			// request
 			await this.requestData();
+			// read to computed values and set subscriptions
+			await this.readComputeAndWatch();
 		}
-		//
 	}
 
 	/*	*
@@ -111,12 +98,11 @@ class Deyeidc extends utils.Adapter {
 		* @param {string} id
 		* @param {ioBroker.State | null | undefined} state
 		*/
-	onStateChange(id, state) {
+	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			//this.computeData(id, state);
-			this.updateData(this.computeData(id, state));
+			//this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.updateData(await this.computeData(id, state));
 
 		} else {
 			// The state was deleted
@@ -126,36 +112,36 @@ class Deyeidc extends utils.Adapter {
 
 	connect() {
 		console.log(`C O N N E C T`);
-		this.client.connect({ host: '192.168.68.240', port: 8899 }); //, timeout: 50000 });
+		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
 	}
 
 	async connectionHandler() {
 		this.client.on('connect', () => {
-			my.connectionActive = true;
-			this.setState('info.connection', true, true);
+			this.connectionActive = true;
+			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('timeout', () => {
 			this.client.destroy();
-			my.connectionActive = false;
-			this.setState('info.connection', false, true);
+			this.connectionActive = false;
+			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('error', (err) => {
 			this.client.destroy();
-			my.connectionActive = false;
-			this.setState('info.connection', false, true);
+			this.connectionActive = false;
+			this.setState('info.connection', this.connectionActive, true);
 			if (err) console.log(`Fehler bei Verbindung ${err.message}`);
 		});
 
 		this.client.on('end', () => {
 			console.log('Verbindung mit Server beendet');
-			my.connectionActive = false;
-			this.setState('info.connection', false, true);
+			this.connectionActive = false;
+			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('data', (data) => {
-			if (this.req < my.numberRegisterSets) {
+			if (this.req < this.numberRegisterSets) {
 				try {
 					//console.log(`${this.idc.toHexString(data)}`);
 					this.mb = this.idc.checkDataFrame(data);
@@ -164,15 +150,10 @@ class Deyeidc extends utils.Adapter {
 					this.log.error(`${err}`);
 				}
 
-				// Analyse Data
+				// Preparation of the data
 				if (this.mb) {
-					//const output = this.idc.readCoils(this.idc.Registers, this.idc.Coils, this.mb);
-					//const output = this.idc.readCoils(this.mb);
-					//console.log(`MB Output: ${JSON.stringify(output)}`);
-					//this.updateData(output);
 					this.updateData(this.idc.readCoils(this.mb));
 				}
-
 
 				// Nächste Anfrage senden
 				if (data.length > 0) {
@@ -189,7 +170,8 @@ class Deyeidc extends utils.Adapter {
 			// Abrufen der Daten
 			this.req = 0;
 			this.counter++;
-			this.log.debug(`[requestData] Data request ${this.counter}`);
+			//this.log.debug(`[requestData] Data request ${this.counter}`);
+			await this.setStateAsync(`info.status`, { val: `Data request ${this.counter}`, ack: true });	//, expire: 15
 			this.sendRequest(this.req); // 1.Aufruf
 			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
 			// start the timer for the next request
@@ -203,24 +185,23 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	sendRequest(req) {
-		if (!my.connectionActive) this.connect();
+		//console.log(`SocketState: ${this.client}`); //    readyState
+		if (!this.connectionActive) this.connect();
 		//
-		console.log(`Length ${my.numberRegisterSets}`);
-		if (req > my.numberRegisterSets - 1) return;
+		if (req > this.numberRegisterSets - 1) return;
 		const request = this.idc.request_frame(req);
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
 
 	async computeData(id, state) {
-		//console.log(`[onStateChange] ${id} <${JSON.stringify(state)}>`);
 		const pos = id.lastIndexOf('.');
 		const basedir = id.substring(0, pos);
 		const name = id.substring(pos + 1);
 
 		const jsonResult = []; // leeres Array
 		if (state) {
-			this.log.info(`state ${id} name: ${name}  changed: ${state.val} (ack = ${state.ack})`);
+			//this.log.info(`state ${id} name: ${name}  changed: ${state.val} (ack = ${state.ack})`);
 
 			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
 			//console.log(`[onStateChange] <${changes.length}> ${JSON.stringify(changes)}`);
@@ -233,25 +214,24 @@ class Deyeidc extends utils.Adapter {
 
 					if (typeof state?.val === 'number') {
 						const value = state?.val;
-						console.log(`[ ##${i}#${j}## ] <${changes[i].values[j]}> ${JSON.stringify(state)}`);
+						//console.log(`[ ##${i}#${j}## ] <${changes[i].values[j]}> ${JSON.stringify(state)}`);
 						product *= value;
 						if (j == changes[i].values.length - 1) {
-							console.log(`[###${i}#${j}###] <${product}> `);
-							const product_hr = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
+							//console.log(`[###${i}#${j}###] <${product}> `);
+							//const product_hr = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
+							const product_hr = product.toFixed(changes[i].factor);
 							const jsonObj = { key: changes[i].key, value: product_hr, unit: changes[i].unit, name: changes[i].name };
-							console.log(`Ergebnis = ${product_hr}  ${JSON.stringify(jsonObj)}`);
+							//console.log(`Ergebnis = ${product_hr}  ${JSON.stringify(jsonObj)}`);
 							jsonResult.push(jsonObj);
 						}
 					}
 				}
 			}
 		}
-		//this.updateData(jsonResult);
-		console.log(`[computeData] Result ${JSON.stringify(jsonResult)}`);
 		return (jsonResult);
 	}
 
-	readComputeAndWatch() {
+	async readComputeAndWatch() {
 		const jsonResult = [];
 		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
@@ -336,7 +316,49 @@ class Deyeidc extends utils.Adapter {
 
 	// check data from UI
 	async checkUserData() {
-		// polling min 5min
+		// The adapters config (in the instance object everything under the attribute "native") is accessible via
+		// this.config:
+		//this.idc.setLoggerSn(this.config.logger);
+		//this.log.debug(`config IP-Address: ${this.config.ipaddress}`);
+		//this.log.debug(`config Port: ${this.config.port}`);
+		//this.log.debug(`config Logger SN: ${this.config.logger}`);
+		//this.log.debug(`config Pollinterval: ${this.config.pollInterval}`);
+		// __________________
+		// check if the IP-Address available
+		if (!this.config.ipaddress) {
+			this.log.error(`keine Inverter Ip angegeben [${this.config.ipaddress}] .`);
+			this.internDataReady = false;
+			return;
+		}
+		// check if the IP-Address seems korrect
+		if (validateIP(this.config.ipaddress)) {
+			this.log.debug(`Die IP-Adresse scheint gültig [${this.config.ipaddress}] .`);
+		} else {
+			this.log.error(`Die IP-Adresse ist ungültig [${this.config.ipaddress}] !`);
+			this.internDataReady = false;
+			return;
+		}
+		// __________________
+		// check if portnumber is setted
+		if (this.config.port < 1024) {
+			this.log.error(`keine Port Nr angegeben [${this.config.port}] .`);
+			this.config.port = 8899;
+			this.log.info(`Standard-Port wird verwendet [${this.config.port}] .`);
+		}
+		// __________________
+		// InverterNr is plausible
+		if (!this.config.logger) {
+			this.log.error(`keine Logger Nummer angegeben [${this.config.logger}] .`);
+			this.internDataReady = false;
+			return;
+		}
+		if (this.config.logger < 4000000000) {
+			this.log.error(`Logger Nummer scheint falsch zu sein [${this.config.logger}] .`);
+			this.internDataReady = false;
+			return;
+		}
+		this.idc.setLoggerSn(this.config.logger);
+		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
 		this.sync_milliseconds =
 			typeof this.config.pollInterval === 'number'
@@ -348,11 +370,14 @@ class Deyeidc extends utils.Adapter {
 			this.log.warn(`Sync time was too short (${this.config.pollInterval}). New sync time is 1 min`);
 		}
 		this.log.info(`Sync time set to ${this.sync_milliseconds} ms`);
-
-		// check if the IP-Address seems korrect
-
+		//
 		this.log.debug(`checkUserData is ready`);
 		return;
+		//
+		function validateIP(ip) {
+			const pattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+			return pattern.test(ip);
+		}
 	}
 
 	/**
