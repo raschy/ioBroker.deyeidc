@@ -29,5 +29,12 @@
     "Register Sections": "Sections d'enregistrement",
     "Register Start": "S'inscrire Démarrer",
     "Register End": "Fin du registre",
-    "Values from Adapter and Instances": "Valeurs de l'adaptateur et des instances"
+    "Values from Adapter and Instances": "Valeurs de l'adaptateur et des instances",
+    "Calculated values": "Valeurs calculées",
+    "connection": "connexion",
+    "Device or service connected": "Appareil ou service connecté",
+    "lastUpdate": "dernière mise à jour",
+    "Last update": "Dernière mise à jour",
+    "status": "statut",
+    "Status": "Statut"
 }

@@ -115,7 +115,9 @@ class Deyeidc extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			this.computeData(id, state);
+			//this.computeData(id, state);
+			this.updateData(this.computeData(id, state));
+
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
@@ -165,8 +167,10 @@ class Deyeidc extends utils.Adapter {
 				// Analyse Data
 				if (this.mb) {
 					//const output = this.idc.readCoils(this.idc.Registers, this.idc.Coils, this.mb);
-					const output = this.idc.readCoils(this.mb);
-					this.updateData(output);
+					//const output = this.idc.readCoils(this.mb);
+					//console.log(`MB Output: ${JSON.stringify(output)}`);
+					//this.updateData(output);
+					this.updateData(this.idc.readCoils(this.mb));
 				}
 
 
@@ -180,22 +184,22 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	async requestData() {
-		//try {
-		if (this.requestTimeout) clearTimeout(this.requestTimeout);
-		// Abrufen der Daten
-		this.req = 0;
-		this.counter++;
-		this.log.debug(`[requestData] Data request ${this.counter}`);
-		this.sendRequest(this.req); // 1.Aufruf
-		await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
-		// start the timer for the next request
-		this.requestTimeout = setTimeout(async () => {
-			await this.setStateAsync(`info.status`, { val: 'automatic request', ack: true });
-			await this.requestData();
-		}, this.sync_milliseconds);
-		//} catch (error) {
-		//	this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
-		//}
+		try {
+			if (this.requestTimeout) clearTimeout(this.requestTimeout);
+			// Abrufen der Daten
+			this.req = 0;
+			this.counter++;
+			this.log.debug(`[requestData] Data request ${this.counter}`);
+			this.sendRequest(this.req); // 1.Aufruf
+			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
+			// start the timer for the next request
+			this.requestTimeout = setTimeout(async () => {
+				await this.setStateAsync(`info.status`, { val: 'automatic request', ack: true });
+				await this.requestData();
+			}, this.sync_milliseconds);
+		} catch (error) {
+			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
+		}
 	}
 
 	sendRequest(req) {
@@ -242,21 +246,32 @@ class Deyeidc extends utils.Adapter {
 				}
 			}
 		}
-		this.updateData(jsonResult);
+		//this.updateData(jsonResult);
+		console.log(`[computeData] Result ${JSON.stringify(jsonResult)}`);
+		return (jsonResult);
 	}
 
 	readComputeAndWatch() {
 		const jsonResult = [];
 		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
-			console.log(`[readCompute ##1]  ${JSON.stringify(computeConfig)}`);
+			console.log(`[readCompute ##1] ${JSON.stringify(computeConfig)}`);
 			computeConfig.forEach(e => {
 				console.log(`[readCompute ##2] ${e.value1} ${e.value2}`);
+				if (e.value1 != 'none' && e.value1.length < 2) {
+					this.log.warn(`[watchStates] Value1 "${e.value1}" is not valid!`);
+					return;
+				}
+				if (e.value2 != 'none' && e.value2.length < 2) {
+					this.log.warn(`[watchStates] Value2 "${e.value2}" is not valid!`);
+					return;
+				}
 				this.log.debug(`[watchStates] set to ${e.value1} and ${e.value2}`);
 				this.subscribeStates(this.config.logger + '.' + e.value1);
 				this.subscribeStates(this.config.logger + '.' + e.value2);
 				//
 				const values = JSON.parse('["' + e.value1 + '","' + e.value2 + '"]');
+				console.log(`[readCompute Values]  ${JSON.stringify(values)}`);
 				const jsonString = { values: values, key: e.key, name: e.name, unit: e.unit, factor: e.factor };
 				jsonResult.push(jsonString);
 			});

@@ -14,14 +14,20 @@
     "Register Sections": "Register Bereiche",
     "Register Start": "Register Start",
     "Register End": "Register Ende",
-    "Register from inverter": "Vom Wechselrichter registrieren",
+    "Register from inverter": "ausgewählte Register vom Wechselrichter",
     "Rule": "Regel",
     "Key": "Key",
     "Name": "Name",
     "Unit": "Einheit",
     "Factor": "Faktor",
-    "Calculate values": "Werte berechnen",
     "Value 1": "Wert 1",
     "Value 2": "Wert 2",
-    "Values from Adapter and Instances": "Werte von Adapter und Instanzen"
+    "Values from Adapter and Instances": "Werte von Adapter und Instanzen",
+    "Calculated values": "Berechnete Werte",
+    "connection": "Verbindung",
+    "Device or service connected": "Gerät oder Dienst verbunden",
+    "lastUpdate": "letztes Update",
+    "Last update": "Letztes Update",
+    "status": "Status",
+    "Status": "Status"
 }

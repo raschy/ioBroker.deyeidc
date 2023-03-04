@@ -29,5 +29,12 @@
     "Register Sections": "Реєстрація розділів",
     "Register Start": "Реєстрація Початок",
     "Register End": "Кінець реєстрації",
-    "Values from Adapter and Instances": "Значення з адаптера та екземплярів"
+    "Values from Adapter and Instances": "Значення з адаптера та екземплярів",
+    "Calculated values": "Розраховані значення",
+    "connection": "підключення",
+    "Device or service connected": "Пристрій або послугу підключено",
+    "lastUpdate": "Останнє оновлення",
+    "Last update": "Останнє оновлення",
+    "status": "статус",
+    "Status": "Статус"
 }

@@ -29,5 +29,12 @@
     "Register Sections": "Разделы регистрации",
     "Register Start": "Зарегистрироваться Начать",
     "Register End": "Регистрация Конец",
-    "Values from Adapter and Instances": "Значения адаптера и экземпляров"
+    "Values from Adapter and Instances": "Значения адаптера и экземпляров",
+    "Calculated values": "Расчетные значения",
+    "connection": "связь",
+    "Device or service connected": "Устройство или служба подключены",
+    "lastUpdate": "последнее обновление",
+    "Last update": "Последнее обновление",
+    "status": "положение дел",
+    "Status": "Положение дел"
 }

@@ -21,7 +21,13 @@
 	"Name": "Name",
 	"Unit": "Unit",
 	"Factor": "Factor",
-	"Calculate values": "Calculate values",
+	"Calculated values": "Calculated values",
 	"Value 1": "Value 1",
-	"Value 2": "Value 2"
+	"Value 2": "Value 2",
+	"connection": "connection",
+	"Device or service connected": "Device or service connected",
+	"lastUpdate": "lastUpdate",
+	"Last update": "Last update",
+	"status": "status",
+	"Status": "Status"
 }

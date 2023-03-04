@@ -29,5 +29,12 @@
     "Register Sections": "注册部分",
     "Register Start": "注册开始",
     "Register End": "注册结束",
-    "Values from Adapter and Instances": "来自适配器和实例的值"
+    "Values from Adapter and Instances": "来自适配器和实例的值",
+    "Calculated values": "计算值",
+    "connection": "联系",
+    "Device or service connected": "连接的设备或服务",
+    "lastUpdate": "最后更新",
+    "Last update": "最后更新",
+    "status": "地位",
+    "Status": "地位"
 }

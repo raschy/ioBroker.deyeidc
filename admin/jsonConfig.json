@@ -167,7 +167,7 @@
 				"_headerCompute": {
 					"newLine": true,
 					"type": "header",
-					"text": "Calculate values",
+					"text": "Calculated values",
 					"size": 2
 				},
 				"computes": {

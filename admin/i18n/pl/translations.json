@@ -29,5 +29,12 @@
     "Register Sections": "Zarejestruj sekcje",
     "Register Start": "Zarejestruj się",
     "Register End": "Koniec rejestracji",
-    "Values from Adapter and Instances": "Wartości z adaptera i instancji"
+    "Values from Adapter and Instances": "Wartości z adaptera i instancji",
+    "Calculated values": "Obliczone wartości",
+    "connection": "połączenie",
+    "Device or service connected": "Urządzenie lub usługa połączona",
+    "lastUpdate": "Ostatnia aktualizacja",
+    "Last update": "Ostatnia aktualizacja",
+    "status": "status",
+    "Status": "Status"
 }
