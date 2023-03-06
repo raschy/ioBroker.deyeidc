@@ -141,9 +141,10 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('data', (data) => {
+			console.log(`Request ${this.req}`);
 			if (this.req < this.numberRegisterSets) {
 				try {
-					//console.log(`${this.idc.toHexString(data)}`);
+					console.log(`${this.idc.toHexString(data)}`);
 					this.mb = this.idc.checkDataFrame(data);
 					this.createDPsForInstances();
 				} catch (err) {
@@ -161,6 +162,9 @@ class Deyeidc extends utils.Adapter {
 					this.sendRequest(this.req);
 				}
 			}
+			if (this.req >= this.numberRegisterSets - 1) {
+				this.setStateAsync(`info.status`, { val: 'idle', ack: true });
+			}
 		});
 	}
 
@@ -170,8 +174,6 @@ class Deyeidc extends utils.Adapter {
 			// Abrufen der Daten
 			this.req = 0;
 			this.counter++;
-			//this.log.debug(`[requestData] Data request ${this.counter}`);
-			await this.setStateAsync(`info.status`, { val: `Data request ${this.counter}`, ack: true });	//, expire: 15
 			this.sendRequest(this.req); // 1.Aufruf
 			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
 			// start the timer for the next request
@@ -185,14 +187,18 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	sendRequest(req) {
-		//console.log(`SocketState: ${this.client}`); //    readyState
 		if (!this.connectionActive) this.connect();
 		//
 		if (req > this.numberRegisterSets - 1) return;
 		const request = this.idc.request_frame(req);
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
+		this.client.write(request, this.bspfunc.bind(this));
 	}
+
+	bspfunc() {
+		console.log(`Callback ${this.req}`);
+	}
+
 
 	async computeData(id, state) {
 		const pos = id.lastIndexOf('.');
