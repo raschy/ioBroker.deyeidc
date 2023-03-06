@@ -17,16 +17,16 @@ Data Collector vor Deye-compatible Inverter
 
 ## Developer manual
 
-This adapter requires three control files: The 'register.json' contains the ranges of the Modbus registers that are to be read out. A second 'coils.json' describes exactly which ports are to be read out according to which procedure for which data point. The third file 'compute.json' contains the calculation rule according to which values that cannot be read out are to be calculated within the adapter.
+To commission the adapter, the register ranges and coils must be entered in the GUI in addition to the IP address and the logger serial number in the following pages. There is already an example entry for this.
+Certain values are not supplied by the inverter and must be calculated independently. For this purpose, two values per line can be entered in the 'compute' table, which are then multiplied.
 
 ### DISCLAIMER
 
-Please make sure that you consider copyrights and trademarks when you use names or logos of a company and add a disclaimer to your README.
-You can check other adapters for examples or ask in the developer community. Using a name or logo of a company without permission may cause legal problems for you.
+All product and company names or logos are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them or any associated subsidiaries! This personal project is maintained in spare time and has no business goal. DEYE is a trademark of Copyright © 2023 Ningbo Deye Technology Co., Ltd., No.26 South Yongjiang Road, Beilun, Ningbo, Zhejiang, 315806 VR China.
 
 ### Getting started
 
-This adapter makes it possible to read out data from an inverter in the local network. This data is retrieved via the known Modbus ports and stored in the data points.
+This adapter makes it possible to read out data from an inverter in the local network. This data is retrieved via the known Modbus ports and stored in the data points. This was developed and tested on a "Deye-compatible" inverter. The registers to be queried may therefore differ on other models.
 For this, only the IP of the inverter and the serial number of the logger must be entered. If the port differs from the default value, it can also be adjusted. 60 seconds has been preset as a practicable value for the sampling rate.
 
 ## Changelog
