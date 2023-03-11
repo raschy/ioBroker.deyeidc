@@ -48,10 +48,6 @@ class Deyeidc extends utils.Adapter {
 		this.setState('info.connection', false, true);
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		//this.log.debug(`config IP-Address: ${this.config.ipaddress}`);
-		//this.log.debug(`config Port: ${this.config.port}`);
-		//this.log.debug(`config Logger SN: ${this.config.logger}`);
-		//this.log.debug(`config Pollinterval: ${this.config.pollInterval}`);
 
 		// Initialize your adapter Here
 		// About User changes
@@ -144,7 +140,7 @@ class Deyeidc extends utils.Adapter {
 			console.log(`Request ${this.req}`);
 			if (this.req < this.numberRegisterSets) {
 				try {
-					console.log(`${this.idc.toHexString(data)}`);
+					//console.log(`${this.idc.toHexString(data)}`);
 					this.mb = this.idc.checkDataFrame(data);
 					this.createDPsForInstances();
 				} catch (err) {
@@ -192,7 +188,10 @@ class Deyeidc extends utils.Adapter {
 		if (req > this.numberRegisterSets - 1) return;
 		const request = this.idc.request_frame(req);
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request, this.bspfunc.bind(this));
+		this.client.write(request);
+		//this.client.write(request, this.bspfunc.bind(this));
+		//this.client.write(request, () => await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
+
 	}
 
 	bspfunc() {
@@ -324,11 +323,6 @@ class Deyeidc extends utils.Adapter {
 	async checkUserData() {
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		//this.idc.setLoggerSn(this.config.logger);
-		//this.log.debug(`config IP-Address: ${this.config.ipaddress}`);
-		//this.log.debug(`config Port: ${this.config.port}`);
-		//this.log.debug(`config Logger SN: ${this.config.logger}`);
-		//this.log.debug(`config Pollinterval: ${this.config.pollInterval}`);
 		// __________________
 		// check if the IP-Address available
 		if (!this.config.ipaddress) {
@@ -347,7 +341,7 @@ class Deyeidc extends utils.Adapter {
 		// __________________
 		// check if portnumber is setted
 		if (this.config.port < 1024) {
-			this.log.error(`keine Port Nr angegeben [${this.config.port}] .`);
+			this.log.warn(`keine Port Nr angegeben [${this.config.port}] .`);
 			this.config.port = 8899;
 			this.log.info(`Standard-Port wird verwendet [${this.config.port}] .`);
 		}
