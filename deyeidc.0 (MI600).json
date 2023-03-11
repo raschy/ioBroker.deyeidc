@@ -1,0 +1,268 @@
+{
+	"ipaddress": "",
+	"port": 8899,
+	"pollInterval": 60,
+	"logger": 0,
+	"registers": [
+		{
+			"registerStart": 0,
+			"registerEnd": 21
+		},
+		{
+			"registerStart": 59,
+			"registerEnd": 90
+		},
+		{
+			"registerStart": 109,
+			"registerEnd": 112
+		},
+		{
+			"registerStart": 150,
+			"registerEnd": 153
+		}
+	],
+	"coils": [
+		{
+			"register": 0,
+			"rules": 1,
+			"key": "DT",
+			"name": "Device Type",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 2,
+			"rules": 7,
+			"key": "COMM_PTC_v1",
+			"name": "Communication Protocol Version",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 3,
+			"rules": 5,
+			"key": "SN1",
+			"name": "Inverter Serial Number",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 13,
+			"rules": 7,
+			"key": "DC_M_FV",
+			"name": "Control Board Firmware",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 14,
+			"rules": 7,
+			"key": "AC_VER",
+			"name": "Communication Board Firmware",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 16,
+			"rules": 3,
+			"key": "RP",
+			"name": "Rated Power",
+			"unit": "W",
+			"factor": 1
+		},
+		{
+			"register": 18,
+			"rules": 8,
+			"key": "NOMP",
+			"name": "Number of MPPT Path",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 18,
+			"rules": 9,
+			"key": "NOP",
+			"name": "Number of Phases",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 21,
+			"rules": 1,
+			"key": "SScT",
+			"name": "Startup Self-checking Time",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 59,
+			"rules": 1,
+			"key": "ST_w1",
+			"name": "Running Status",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 60,
+			"rules": 1,
+			"key": "Etdy_ge0",
+			"name": "Production Today",
+			"unit": "kWh",
+			"factor": 1
+		},
+		{
+			"register": 63,
+			"rules": 1,
+			"key": "Et_ge0",
+			"name": "Production Total",
+			"unit": "kWh",
+			"factor": 1
+		},
+		{
+			"register": 65,
+			"rules": 1,
+			"key": "Etdy_ge1",
+			"name": "Production Today PV1",
+			"unit": "kWh",
+			"factor": 1
+		},
+		{
+			"register": 66,
+			"rules": 1,
+			"key": "Etdy_ge2",
+			"name": "Production Today PV2",
+			"unit": "kWh",
+			"factor": 1
+		},
+		{
+			"register": 69,
+			"rules": 3,
+			"key": "Et_ge1",
+			"name": "Production Total PV1",
+			"unit": "kWh",
+			"factor": 1
+		},
+		{
+			"register": 71,
+			"rules": 3,
+			"key": "Et_ge2",
+			"name": "Production Total PV2",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 73,
+			"rules": 1,
+			"key": "AV1",
+			"name": "AC Voltage 1",
+			"unit": "V",
+			"factor": 1
+		},
+		{
+			"register": 79,
+			"rules": 1,
+			"key": "AC_Fo1",
+			"name": "AC Frequency 1",
+			"unit": "Hz",
+			"factor": 2
+		},
+		{
+			"register": 86,
+			"rules": 3,
+			"key": "Apo_t1",
+			"name": "Total AC Output Power (Active)",
+			"unit": "W",
+			"factor": 1
+		},
+		{
+			"register": 90,
+			"rules": 6,
+			"key": "AC_RDT_T1",
+			"name": "AC Radiator Temp",
+			"unit": "°C",
+			"factor": 2
+		},
+		{
+			"register": 109,
+			"rules": 1,
+			"key": "DV1",
+			"name": "DC Voltage PV1",
+			"unit": "V",
+			"factor": 1
+		},
+		{
+			"register": 110,
+			"rules": 1,
+			"key": "DC1",
+			"name": "DC Current PV1",
+			"unit": "A",
+			"factor": 1
+		},
+		{
+			"register": 111,
+			"rules": 1,
+			"key": "DV2",
+			"name": "DC Voltage PV2",
+			"unit": "V",
+			"factor": 1
+		},
+		{
+			"register": 112,
+			"rules": 1,
+			"key": "DC2",
+			"name": "DC Current PV2",
+			"unit": "A",
+			"factor": 1
+		},
+		{
+			"register": 150,
+			"rules": 1,
+			"key": "GV_uL",
+			"name": "Grid Voltage Upper Limit",
+			"unit": "V",
+			"factor": 1
+		},
+		{
+			"register": 151,
+			"rules": 1,
+			"key": "GV_lL",
+			"name": "Grid Voltage Lower Limit",
+			"unit": "V",
+			"factor": 1
+		},
+		{
+			"register": 152,
+			"rules": 1,
+			"key": "GF_uL",
+			"name": "Grid Frequency Upper Limit",
+			"unit": "Hz",
+			"factor": 2
+		},
+		{
+			"register": 153,
+			"rules": 1,
+			"key": "GF_lL",
+			"name": "Grid Frequency Lower Limit",
+			"unit": "Hz",
+			"factor": 2
+		}
+	],
+	"computes": [
+		{
+			"value1": "DV1",
+			"value2": "DC1",
+			"key": "DP1",
+			"name": "DC Power PV1",
+			"unit": "W",
+			"factor": 2
+		},
+		{
+			"value1": "DV2",
+			"value2": "DC2",
+			"key": "DP2",
+			"name": "DC Power PV2",
+			"unit": "W",
+			"factor": 2
+		}
+	]
+}
