@@ -147,8 +147,8 @@
 			"rules": 3,
 			"key": "Et_ge2",
 			"name": "Production Total PV2",
-			"unit": "",
-			"factor": 0
+			"unit": "kWh",
+			"factor": 1
 		},
 		{
 			"register": 73,
