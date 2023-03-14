@@ -159,7 +159,7 @@ class Deyeidc extends utils.Adapter {
 				}
 			}
 			if (this.req >= this.numberRegisterSets - 1) {
-				this.setStateAsync(`info.status`, { val: 'idle', ack: true });
+				this.setStateAsync('info.status', { val: 'idle', ack: true });
 			}
 		});
 	}
@@ -171,10 +171,10 @@ class Deyeidc extends utils.Adapter {
 			this.req = 0;
 			this.counter++;
 			this.sendRequest(this.req); // 1.Aufruf
-			await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
+			await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 			// start the timer for the next request
 			this.requestTimeout = setTimeout(async () => {
-				await this.setStateAsync(`info.status`, { val: 'automatic request', ack: true });
+				await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 				await this.requestData();
 			}, this.sync_milliseconds);
 		} catch (error) {
@@ -189,15 +189,8 @@ class Deyeidc extends utils.Adapter {
 		const request = this.idc.request_frame(req);
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
-		//this.client.write(request, this.bspfunc.bind(this));
-		//this.client.write(request, () => await this.setStateAsync(`info.lastUpdate`, { val: Date.now(), ack: true });
 
 	}
-
-	bspfunc() {
-		console.log(`Callback ${this.req}`);
-	}
-
 
 	async computeData(id, state) {
 		const pos = id.lastIndexOf('.');
@@ -206,7 +199,6 @@ class Deyeidc extends utils.Adapter {
 
 		const jsonResult = []; // leeres Array
 		if (state) {
-			//this.log.info(`state ${id} name: ${name}  changed: ${state.val} (ack = ${state.ack})`);
 
 			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
 			//console.log(`[onStateChange] <${changes.length}> ${JSON.stringify(changes)}`);
@@ -215,15 +207,11 @@ class Deyeidc extends utils.Adapter {
 				let product = 1;
 				for (let j = 0; j < changes[i].values.length; j++) {
 					const state = await this.getStateAsync(basedir + '.' + changes[i].values[j]);
-					//console.log(`[ #onStateChange# ##${i}#${j}## ] ${JSON.stringify(state)}`);
 
 					if (typeof state?.val === 'number') {
 						const value = state?.val;
-						//console.log(`[ ##${i}#${j}## ] <${changes[i].values[j]}> ${JSON.stringify(state)}`);
 						product *= value;
 						if (j == changes[i].values.length - 1) {
-							//console.log(`[###${i}#${j}###] <${product}> `);
-							//const product_hr = (product * 10 ** changes[i].factor * 10 ** -changes[i].factor).toFixed(changes[i].factor);
 							const product_hr = product.toFixed(changes[i].factor);
 							const jsonObj = { key: changes[i].key, value: product_hr, unit: changes[i].unit, name: changes[i].name };
 							//console.log(`Ergebnis = ${product_hr}  ${JSON.stringify(jsonObj)}`);
