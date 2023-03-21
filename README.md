@@ -35,9 +35,14 @@ For this, only the IP of the inverter and the serial number of the logger must b
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 0.0.3 (2023-03-21)
+
+### **WORK IN PROGRESS**
 
 -   (raschy) release for npm
+
+### 0.0.3 (2023-03-21)
+
+-   (raschy) release
 
 ### 0.0.2 (2023-03-21)
 
