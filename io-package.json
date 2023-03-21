@@ -45,7 +45,7 @@
 			"uk": "Збирач даних або інвертор, сумісний з Deye"
 		},
 		"authors": ["raschy <raschy@gmx.de>"],
-		"keywords": ["Deye Bosswerk"],
+		"keywords": ["Deye", "Bosswerk", "cloudless"],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
