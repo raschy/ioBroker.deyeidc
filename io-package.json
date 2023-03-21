@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "news": {
+      "0.0.3": {
+        "en": "release for npm",
+        "de": "release für npm",
+        "ru": "релиз для npm",
+        "pt": "lançamento para npm",
+        "nl": "vrijgelaten voor npm",
+        "fr": "release for npm",
+        "it": "rilascio per npm",
+        "es": "versión para npm",
+        "pl": "na przykład",
+        "uk": "реліз для npm",
+        "zh-cn": "页:1"
+      },
       "0.0.2": {
         "en": "initial release",
         "de": "erstausstrahlung",
