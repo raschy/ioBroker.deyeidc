@@ -377,6 +377,7 @@ class Deyeidc extends utils.Adapter {
 			//
 			this.updateInterval && clearInterval(this.updateInterval);
 			//
+			this.client.setTimeout(0);
 			this.client.destroy();
 			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
 			callback();
