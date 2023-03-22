@@ -26,9 +26,8 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		this.client.setTimeout(10000);
+		this.client.setTimeout(30000);
 		// -----------------  Timeout variables -----------------
-		this.requestTimeout = null;
 		this.sync_milliseconds = 60000; // 1min
 		// -----------------  Global variables -----------------
 		this.connectionActive = false;
@@ -38,6 +37,7 @@ class Deyeidc extends utils.Adapter {
 		this.counter = 0;
 		this.req = 0;
 		this.CalcValues = [];
+		this.setWatchPoints = false;
 	}
 
 	/**
@@ -53,11 +53,10 @@ class Deyeidc extends utils.Adapter {
 		// About User changes
 		await this.checkUserData();
 
-		//	Laden der Register
+		// Laden der Register
 		try {
 			const RegisterSets = this.config.registers;
 			if (RegisterSets && Array.isArray(RegisterSets)) {
-				//console.log(`[readRegisterset]  ${JSON.stringify(RegisterSets)}`);
 				this.numberRegisterSets = RegisterSets.length;
 				this.idc.setRegisters(RegisterSets);
 			}
@@ -66,11 +65,10 @@ class Deyeidc extends utils.Adapter {
 			this.log.error(`[readRegisterset] ${e}`);
 		}
 		//
-		//  Laden der Coils
+		// Laden der Coils
 		try {
 			const Coils = this.config.coils;
 			if (Coils && Array.isArray(Coils)) {
-				//console.log(`[readCoilset]  ${JSON.stringify(Coils)}`);
 				this.numberCoils = Coils.length;
 				this.idc.setCoils(Coils);
 			}
@@ -84,8 +82,6 @@ class Deyeidc extends utils.Adapter {
 			await this.connectionHandler();
 			// request
 			await this.requestData();
-			// read to computed values and set subscriptions
-			await this.readComputeAndWatch();
 		}
 	}
 
@@ -107,7 +103,7 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	connect() {
-		console.log(`C O N N E C T`);
+		//console.log(`C O N N E C T`);
 		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
 	}
 
@@ -127,17 +123,17 @@ class Deyeidc extends utils.Adapter {
 			this.client.destroy();
 			this.connectionActive = false;
 			this.setState('info.connection', this.connectionActive, true);
-			if (err) console.log(`Fehler bei Verbindung ${err.message}`);
+			if (err) this.log.debug(`Error during connection ${err.message}`);
 		});
 
 		this.client.on('end', () => {
-			console.log('Verbindung mit Server beendet');
+			this.log.debug('Connection to server terminated');
 			this.connectionActive = false;
 			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('data', (data) => {
-			console.log(`Request ${this.req}`);
+			//console.log(`Request ${this.req}`);
 			if (this.req < this.numberRegisterSets) {
 				try {
 					//console.log(`${this.idc.toHexString(data)}`);
@@ -166,16 +162,15 @@ class Deyeidc extends utils.Adapter {
 
 	async requestData() {
 		try {
-			if (this.requestTimeout) clearTimeout(this.requestTimeout);
-			// Abrufen der Daten
-			this.req = 0;
-			this.counter++;
-			this.sendRequest(this.req); // 1.Aufruf
-			await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 			// start the timer for the next request
-			this.requestTimeout = setTimeout(async () => {
+			this.updateInterval = setInterval(async () => {
+				this.req = 0;
+				this.counter++;
+				this.sendRequest(this.req);
+				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
-				await this.requestData();
+				// read to computed values and set subscriptions
+				await this.readComputeAndWatch();
 			}, this.sync_milliseconds);
 		} catch (error) {
 			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
@@ -225,12 +220,13 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	async readComputeAndWatch() {
+		if (this.setWatchPoints) return;
 		const jsonResult = [];
 		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
-			console.log(`[readCompute ##1] ${JSON.stringify(computeConfig)}`);
+			//console.log(`[readCompute ##1] ${JSON.stringify(computeConfig)}`);
 			computeConfig.forEach(e => {
-				console.log(`[readCompute ##2] ${e.value1} ${e.value2}`);
+				//console.log(`[readCompute ##2] ${e.value1} ${e.value2}`);
 				if (e.value1 != 'none' && e.value1.length < 2) {
 					this.log.warn(`[watchStates] Value1 "${e.value1}" is not valid!`);
 					return;
@@ -244,12 +240,13 @@ class Deyeidc extends utils.Adapter {
 				this.subscribeStates(this.config.logger + '.' + e.value2);
 				//
 				const values = JSON.parse('["' + e.value1 + '","' + e.value2 + '"]');
-				console.log(`[readCompute Values]  ${JSON.stringify(values)}`);
+				//console.log(`[readCompute Values]  ${JSON.stringify(values)}`);
 				const jsonString = { values: values, key: e.key, name: e.name, unit: e.unit, factor: e.factor };
 				jsonResult.push(jsonString);
 			});
-			console.log(`[readCompute ##3]  ${JSON.stringify(jsonResult)}`);
+			//console.log(`[readCompute ##3]  ${JSON.stringify(jsonResult)}`);
 			this.CalcValues = jsonResult;
+			this.setWatchPoints = true;
 		}
 	}
 
@@ -314,34 +311,34 @@ class Deyeidc extends utils.Adapter {
 		// __________________
 		// check if the IP-Address available
 		if (!this.config.ipaddress) {
-			this.log.error(`keine Inverter Ip angegeben [${this.config.ipaddress}] .`);
+			this.log.error(`No inverter IP specified [${this.config.ipaddress}] .`);
 			this.internDataReady = false;
 			return;
 		}
 		// check if the IP-Address seems korrect
 		if (validateIP(this.config.ipaddress)) {
-			this.log.debug(`Die IP-Adresse scheint gültig [${this.config.ipaddress}] .`);
+			this.log.debug(`The IP address [${this.config.ipaddress}] seems to be valid.`);
 		} else {
-			this.log.error(`Die IP-Adresse ist ungültig [${this.config.ipaddress}] !`);
+			this.log.error(`The IP address [${this.config.ipaddress}] is not valid !`);
 			this.internDataReady = false;
 			return;
 		}
 		// __________________
 		// check if portnumber is setted
 		if (this.config.port < 1024) {
-			this.log.warn(`keine Port Nr angegeben [${this.config.port}] .`);
+			this.log.warn(`No port no specified [${this.config.port}] .`);
 			this.config.port = 8899;
-			this.log.info(`Standard-Port wird verwendet [${this.config.port}] .`);
+			this.log.info(`The standard port is used [${this.config.port}] .`);
 		}
 		// __________________
 		// InverterNr is plausible
 		if (!this.config.logger) {
-			this.log.error(`keine Logger Nummer angegeben [${this.config.logger}] .`);
+			this.log.error(`No logger number specified [${this.config.logger}] .`);
 			this.internDataReady = false;
 			return;
 		}
 		if (this.config.logger < 4000000000) {
-			this.log.error(`Logger Nummer scheint falsch zu sein [${this.config.logger}] .`);
+			this.log.error(`Logger number seems to be wrong [${this.config.logger}] .`);
 			this.internDataReady = false;
 			return;
 		}
@@ -377,8 +374,8 @@ class Deyeidc extends utils.Adapter {
 			this.log.debug('[onUnload] cleaned everything up...');
 			this.setState('info.connection', false, true);
 			// Here you must clear all timeouts or intervals that may still be active
-			// ...
-			if (this.requestTimeout) clearInterval(this.requestTimeout);
+			//
+			this.updateInterval && clearInterval(this.updateInterval);
 			//
 			this.client.destroy();
 			this.setStateAsync(`info.status`, { val: 'offline', ack: true });

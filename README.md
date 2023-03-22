@@ -35,6 +35,12 @@ For this, only the IP of the inverter and the serial number of the logger must b
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (raschy) Error message in English
+-   (raschy) Wrapper-Routinen for setTimeout
+
 ### 0.0.4 (2023-03-21)
 
 -   (raschy) release for npm
