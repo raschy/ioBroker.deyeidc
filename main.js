@@ -188,20 +188,22 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	async computeData(id, state) {
-		const pos = id.lastIndexOf('.');
+		const loggerSn = this.config.logger + '.';
+		const pos = id.indexOf(loggerSn) + loggerSn.length;
 		const basedir = id.substring(0, pos);
-		const name = id.substring(pos + 1);
+		const name = id.substring(pos);
 
 		const jsonResult = []; // leeres Array
 		if (state) {
 
 			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
-			//console.log(`[onStateChange] <${changes.length}> ${JSON.stringify(changes)}`);
+			//console.log(`[computeData] <${changes.length}> ${JSON.stringify(changes)}`);
 
 			for (let i = 0; i < changes.length; i++) {
 				let product = 1;
 				for (let j = 0; j < changes[i].values.length; j++) {
-					const state = await this.getStateAsync(basedir + '.' + changes[i].values[j]);
+					const state = await this.getStateAsync(basedir + changes[i].values[j]);
+					//console.log(`[computeData ##] ${i} ${j} ## ${basedir} <${changes[i].values[j]}> ${JSON.stringify(state)} `);
 
 					if (typeof state?.val === 'number') {
 						const value = state?.val;
@@ -224,9 +226,9 @@ class Deyeidc extends utils.Adapter {
 		const jsonResult = [];
 		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
-			//console.log(`[readCompute ##1] ${JSON.stringify(computeConfig)}`);
+			console.log(`[readCompute ##1] ${JSON.stringify(computeConfig)}`);
 			computeConfig.forEach(e => {
-				//console.log(`[readCompute ##2] ${e.value1} ${e.value2}`);
+				console.log(`[readCompute ##2] ${e.value1} ${e.value2}`);
 				if (e.value1 != 'none' && e.value1.length < 2) {
 					this.log.warn(`[watchStates] Value1 "${e.value1}" is not valid!`);
 					return;
@@ -240,7 +242,7 @@ class Deyeidc extends utils.Adapter {
 				this.subscribeStates(this.config.logger + '.' + e.value2);
 				//
 				const values = JSON.parse('["' + e.value1 + '","' + e.value2 + '"]');
-				//console.log(`[readCompute Values]  ${JSON.stringify(values)}`);
+				console.log(`[readCompute Values]  ${JSON.stringify(values)}`);
 				const jsonString = { values: values, key: e.key, name: e.name, unit: e.unit, factor: e.factor };
 				jsonResult.push(jsonString);
 			});
@@ -317,9 +319,9 @@ class Deyeidc extends utils.Adapter {
 		}
 		// check if the IP-Address seems korrect
 		if (validateIP(this.config.ipaddress)) {
-			this.log.debug(`The IP address [${this.config.ipaddress}] seems to be valid.`);
+			this.log.debug(`IP address [${this.config.ipaddress}] seems to be valid.`);
 		} else {
-			this.log.error(`The IP address [${this.config.ipaddress}] is not valid !`);
+			this.log.error(`IP address [${this.config.ipaddress}] is not valid !`);
 			this.internDataReady = false;
 			return;
 		}
@@ -328,7 +330,7 @@ class Deyeidc extends utils.Adapter {
 		if (this.config.port < 1024) {
 			this.log.warn(`No port no specified [${this.config.port}] .`);
 			this.config.port = 8899;
-			this.log.info(`The standard port is used [${this.config.port}] .`);
+			this.log.info(`Standard port is used [${this.config.port}] .`);
 		}
 		// __________________
 		// InverterNr is plausible
@@ -377,7 +379,9 @@ class Deyeidc extends utils.Adapter {
 			//
 			this.updateInterval && clearInterval(this.updateInterval);
 			//
+			//if (this.client.setTimeout) clearInterval(this.client.setTimeout);
 			this.client.setTimeout(0);
+
 			this.client.destroy();
 			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
 			callback();
