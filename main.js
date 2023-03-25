@@ -26,7 +26,8 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		this.client.setTimeout(30000);
+		//this.client.setTimeout(30000);	//deactiviert
+		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.sync_milliseconds = 60000; // 1min
 		// -----------------  Global variables -----------------
@@ -103,17 +104,19 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	connect() {
-		//console.log(`C O N N E C T`);
+		this.log.debug(`C O N N E C T`);
 		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
 	}
 
 	async connectionHandler() {
 		this.client.on('connect', () => {
+			this.log.debug(`connected`);
 			this.connectionActive = true;
 			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('timeout', () => {
+			this.log.debug(`timeout`);
 			this.client.destroy();
 			this.connectionActive = false;
 			this.setState('info.connection', this.connectionActive, true);
@@ -127,7 +130,7 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('end', () => {
-			this.log.debug('Connection to server terminated');
+			this.log.debug(`Connection to server terminated`);
 			this.connectionActive = false;
 			this.setState('info.connection', this.connectionActive, true);
 		});
@@ -339,7 +342,7 @@ class Deyeidc extends utils.Adapter {
 			this.internDataReady = false;
 			return;
 		}
-		if (this.config.logger < 4000000000) {
+		if (this.config.logger < 3900000000) {
 			this.log.error(`Logger number seems to be wrong [${this.config.logger}] .`);
 			this.internDataReady = false;
 			return;
