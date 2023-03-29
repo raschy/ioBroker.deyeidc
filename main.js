@@ -54,19 +54,19 @@ class Deyeidc extends utils.Adapter {
 		// About User changes
 		await this.checkUserData();
 
-		// Laden der Register
+		// Loading the Register
 		try {
 			const RegisterSets = this.config.registers;
 			if (RegisterSets && Array.isArray(RegisterSets)) {
 				this.numberRegisterSets = RegisterSets.length;
 				this.idc.setRegisters(RegisterSets);
 			}
-		} catch (e) {
+		} catch (err) {
 			this.internDataReady = false;
-			this.log.error(`[readRegisterset] ${e}`);
+			this.log.error(`[readRegisterset] ${err}`);
 		}
 		//
-		// Laden der Coils
+		// Loading the Coils
 		try {
 			const Coils = this.config.coils;
 			if (Coils && Array.isArray(Coils)) {
@@ -94,17 +94,17 @@ class Deyeidc extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			//this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.log.debug(`state ${id} has changed`);
 			this.updateData(await this.computeData(id, state));
 
 		} else {
 			// The state was deleted
-			this.log.info(`state ${id} deleted`);
+			this.log.debug(`state ${id} deleted`);
 		}
 	}
 
 	connect() {
-		this.log.debug(`C O N N E C T`);
+		this.log.debug(`try to connect . . .`);
 		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
 	}
 
@@ -292,11 +292,12 @@ class Deyeidc extends utils.Adapter {
 	// prepare data vor ioBroker
 	async updateData(data) {
 		//console.log(`[updataData] ${JSON.stringify(data)}`);
-		data.forEach(async (obj) => {
+		//data.forEach(async (obj) => {
+		for (const obj of data) {
 			if (obj.value != 'none') {
 				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);	//'state'
 			}
-		});
+		}
 	}
 
 	// create object für datavalues
@@ -382,9 +383,6 @@ class Deyeidc extends utils.Adapter {
 			//
 			this.updateInterval && clearInterval(this.updateInterval);
 			//
-			//if (this.client.setTimeout) clearInterval(this.client.setTimeout);
-			this.client.setTimeout(0);
-
 			this.client.destroy();
 			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
 			callback();
