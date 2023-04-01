@@ -19,7 +19,7 @@
     "node": ">= 14"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.7",
+    "@iobroker/adapter-core": "^2.6.8",
     "suncalc": "^1.9.0",
     "websocket": "^1.0.34"
   },
