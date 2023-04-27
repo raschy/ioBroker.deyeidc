@@ -38,8 +38,8 @@ For this, only the IP of the inverter and the serial number of the logger must b
 
 ### **WORK IN PROGRESS**
 
--   (raschy) Error message in English
--   (raschy) Wrapper-Routinen for setTimeout
+-   (raschy) Calculations modified with regulation
+-   (raschy) Error messages in English
 
 ### 0.0.4 (2023-03-21)
 
