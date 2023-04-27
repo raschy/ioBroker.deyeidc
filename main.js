@@ -26,7 +26,7 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		this.client.setTimeout(20000);	//deactiviert
+		//this.client.setTimeout(20000);	//deactiviert
 		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.sync_milliseconds = 60000; // 1min
@@ -97,7 +97,7 @@ class Deyeidc extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.debug(`state ${id} has changed to ${state.val}`);
+			//this.log.debug(`state ${id} has changed to ${state.val}`);
 			if (id.indexOf('PowerSet') > 1) {
 				await this.setPower(id, state);
 			} else {
