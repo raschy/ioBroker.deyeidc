@@ -179,17 +179,9 @@
 						{
 							"type": "text",
 							"trim": true,
-							"attr": "value1",
+							"attr": "values",
 							"width": "15%",
 							"title": "Value 1",
-							"default": ""
-						},
-						{
-							"type": "text",
-							"trim": true,
-							"attr": "value2",
-							"width": "15%",
-							"title": "Value 2",
 							"default": ""
 						},
 						{

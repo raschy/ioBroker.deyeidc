@@ -249,16 +249,14 @@
 	],
 	"computes": [
 		{
-			"value1": "DV1",
-			"value2": "DC1",
+			"values": "DV1*DV1",
 			"key": "DP1",
 			"name": "DC Power PV1",
 			"unit": "W",
 			"factor": 2
 		},
 		{
-			"value1": "DV2",
-			"value2": "DC2",
+			"values": "DV2*DC2",
 			"key": "DP2",
 			"name": "DC Power PV2",
 			"unit": "W",
