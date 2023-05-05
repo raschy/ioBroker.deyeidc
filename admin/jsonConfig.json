@@ -106,7 +106,9 @@
 							"attr": "register",
 							"width": "15%",
 							"title": "Register",
-							"default": ""
+							"default": "",
+							"filter": true,
+							"sort": true
 						},
 						{
 							"type": "number",
@@ -182,7 +184,9 @@
 							"attr": "values",
 							"width": "15%",
 							"title": "Value 1",
-							"default": ""
+							"default": "",
+							"filter": true,
+							"sort": true
 						},
 						{
 							"type": "text",

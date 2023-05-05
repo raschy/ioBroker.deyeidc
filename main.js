@@ -26,7 +26,7 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		//this.client.setTimeout(20000);	//deactiviert
+		this.client.setTimeout(20000);	//deactiviert
 		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.sync_milliseconds = 60000; // 1min
@@ -98,7 +98,7 @@ class Deyeidc extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			//this.log.debug(`state ${id} has changed to ${state.val}`);
-			if (id.indexOf('PowerSet') > 1) {
+			if (id.indexOf('Power_Set') > 1) {
 				await this.setPower(id, state);
 			} else {
 				//await this.computeData(id, state);	// zum Test
@@ -202,6 +202,7 @@ class Deyeidc extends utils.Adapter {
 
 	async setPower(id, state) {
 		//console.log(`[setPower] <${id}> ${state.val}`);
+		//const basedir = this.namespace + '.' + this.config.logger + '.';
 		const req = 0;
 		const powerControlRegister = 40;
 		const data = [];
@@ -210,11 +211,11 @@ class Deyeidc extends utils.Adapter {
 		} else {
 			data[0] = state.val;
 		}
-		console.log(`[setPower] >> ${data[0]}`);
+		//console.log(`[setPower] >> ${data[0]}`);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
 		//console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
-
+		//await this.setStateAsync(basedir + 'Power_Set', { val: data[0], ack: true });
 	}
 
 	async computeData(id, state) {
@@ -278,7 +279,7 @@ class Deyeidc extends utils.Adapter {
 		const basedir = this.namespace + '.' + this.config.logger + '.';
 		const jsonResult = [];
 		const varCompute = [];
-		const watchStates = [];
+		const watchStates = ['Power_Set'];
 		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
 			//const watchStates = [];
