@@ -212,7 +212,7 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * 
+	 * set Power
 	 * @param {*} id
 	 * @param {*} state
 	 */
