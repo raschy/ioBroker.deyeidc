@@ -24,7 +24,7 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		//this.client.setTimeout(20000);	//deactiviert
+		this.client.setTimeout(20000);	//deactiviert
 		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.sync_milliseconds = 60000; // 1min
