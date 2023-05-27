@@ -35,6 +35,11 @@ For this, only the IP of the inverter and the serial number of the logger must b
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (raschy) release for npm and ioBroker latest
+
 ### 0.0.6 (2023-05-27)
 
 -   (raschy) Modules that are not required can be hidden
