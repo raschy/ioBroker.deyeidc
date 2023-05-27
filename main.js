@@ -26,7 +26,7 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		this.client.setTimeout(20000);	//deactiviert
+		//this.client.set # Time # out(20000);	//deactiviert
 		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.sync_milliseconds = 60000; // 1min
@@ -89,11 +89,11 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
-	/*	*
-		* Is called if a subscribed state changes
-		* @param {string} id
-		* @param {ioBroker.State | null | undefined} state
-		*/
+	/**
+	 * Is called if a subscribed state changes
+	 * @param {string} id
+	 * @param {ioBroker.State | null | undefined} state
+	 */
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
@@ -110,11 +110,17 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * connect to inverter
+	 */
 	connect() {
 		this.log.debug(`try to connect . . .`);
 		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
 	}
 
+	/**
+	   *
+	   */
 	async connectionHandler() {
 		this.client.on('connect', () => {
 			this.log.debug(`connected`);
@@ -173,9 +179,11 @@ class Deyeidc extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * start the timer for the next request
+	 */
 	async requestData() {
 		try {
-			// start the timer for the next request
 			this.updateInterval = setInterval(async () => {
 				this.req = 0;
 				this.counter++;
@@ -190,19 +198,26 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * send request via idc-core
+	 * @param {*} req
+	 * @returns
+	 */
 	sendRequest(req) {
 		if (!this.connectionActive) this.connect();
-		//
 		if (req > this.numberRegisterSets - 1) return;
 		const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
-
 	}
 
+	/**
+	 * 
+	 * @param {*} id
+	 * @param {*} state
+	 */
 	async setPower(id, state) {
 		//console.log(`[setPower] <${id}> ${state.val}`);
-		//const basedir = this.namespace + '.' + this.config.logger + '.';
 		const req = 0;
 		const powerControlRegister = 40;
 		const data = [];
@@ -211,13 +226,18 @@ class Deyeidc extends utils.Adapter {
 		} else {
 			data[0] = state.val;
 		}
-		//console.log(`[setPower] >> ${data[0]}`);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
 		//console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
-		//await this.setStateAsync(basedir + 'Power_Set', { val: data[0], ack: true });
 	}
 
+	/**
+	 * Calculate data that cannot be read,
+	 * the necessary values must be subscribed to in advance
+	 * @param {*} id
+	 * @param {*} state
+	 * @returns
+	 */
 	async computeData(id, state) {
 		const loggerSn = this.config.logger + '.';
 		const pos = id.indexOf(loggerSn) + loggerSn.length;
@@ -228,22 +248,17 @@ class Deyeidc extends utils.Adapter {
 		const varCompute = [];
 
 		if (state) {
-			//console.log(`[computeData ###] ${basedir} ${name} ${state.val} `);
 			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
-			//console.log(`[computeData #1#] <${changes.length}> ${JSON.stringify(changes)}`);
 			//
 			for (let i = 0; i < changes.length; i++) {
 				let computeResult = 0;
 				for (let j = 0; j < changes[i].values.length; j++) {
-					//console.log(`[computeData ##] ${i} ${j} <${changes[i].values[j]}>`);
 					const state = await this.getStateAsync(basedir + changes[i].values[j]);
 
 					if (typeof state?.val === 'number') {
 						varCompute[j] = state?.val;
-						//console.log(`[readCompute #1] Wert (${j}) <${changes[i].values[j]}> => ${varCompute[j]}`);
 					} else {
 						varCompute[j] = parseFloat(changes[i].values[j].replace(/[^0-9.]/g, ''));
-						//console.log(`[readCompute #1] Kons (${j}) <${changes[i].values[j]}> => ${varCompute[j]}`);
 					}
 					//
 					switch (changes[i].operation) {
@@ -262,18 +277,19 @@ class Deyeidc extends utils.Adapter {
 					}
 				}
 				//console.log(`[computeResult #${i}#]  <${varCompute[0]}> ${changes[i].operation} <${varCompute[1]}> = ${computeResult}`);
-				//const product_hr = (computeResult * 10 ** -changes[i].factor).toFixed(changes[i].factor);
 				const product_hr = (computeResult * 10 ** -changes[i].factor).toFixed(2);
-				//const product_hr = product.toFixed(changes[i].factor);
-
 				const jsonObj = { key: changes[i].key, value: product_hr, unit: changes[i].unit, name: changes[i].name };
 				console.log(`Ergebnis = ${product_hr}  ${JSON.stringify(jsonObj)}`);
 				jsonResult.push(jsonObj);
-			} // for
+			}
 		}
 		return (jsonResult);
 	}
 
+	/**
+	 * Preparing the compute formales and subscribing to the states
+	 * @returns
+	 */
 	async readComputeAndWatch() {
 		if (this.setWatchPoints) return;
 		const basedir = this.namespace + '.' + this.config.logger + '.';
@@ -282,13 +298,11 @@ class Deyeidc extends utils.Adapter {
 		const watchStates = ['Power_Set'];
 		const computeConfig = this.config.computes;
 		if (computeConfig && Array.isArray(computeConfig)) {
-			//const watchStates = [];
 			for (const obj of computeConfig) {
 				const values = [];
 				const response = mathOperation(obj.values);
 				const operation = response?.operation;
 				const position = response?.position;
-				//console.log(`[readCompute #1] Das Zeichen (${operation}) wurde gefunden an Position ${position}.`);
 				varCompute[0] = obj.values.slice(0, position).trim();
 				varCompute[1] = obj.values.slice(position + 1).trim();
 				values.push(varCompute[0]);
@@ -296,19 +310,15 @@ class Deyeidc extends utils.Adapter {
 				//
 				for (let i = 0; i < 2; i++) {
 					const state = await this.getStateAsync(basedir + values[i]);
-					//console.log(`[readCompute ##2] ${values[i]} ${JSON.stringify(state)} ${i} `);
 					if (state) { // != null
-						//console.log(`[readCompute ##3] ${values[i]} ${JSON.stringify(state)}`);
 						if (!watchStates.includes(values[i])) {
 							watchStates.push(values[i]);
-							//console.log(`[readCompute ###2] ${values[i]} ${JSON.stringify(watchStates)}`);
 						}
 					}
 				}
 				const jsonString = { values: values, operation: operation, key: obj.key, name: obj.name, unit: obj.unit, factor: obj.factor };
 				jsonResult.push(jsonString);
 			}
-			//console.log(`[readCompute #2] ${JSON.stringify(watchStates)}`);
 			for (const watch of watchStates) {
 				this.subscribeStates(this.config.logger + '.' + watch);
 				this.log.debug(`[watchStates] set to ${watch}`);
@@ -324,7 +334,6 @@ class Deyeidc extends utils.Adapter {
 				const zeichen = defMathOperators[i];
 				position = computeString.indexOf(zeichen);
 				if (position > 0) {
-					//console.log(`Das Zeichen (${i}) '${computeString[position]}' wurde gefunden an Position ${position}.`);
 					const jsonString = { operation: computeString[position], position: position };
 					return jsonString;
 				}
@@ -332,6 +341,10 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * PowerReset, if 'EHOSTUNREACH' arrived
+	 * @param {*} err
+	 */
 	powerReset(err) {
 		// Counter for PowerReset
 		if (err.message.indexOf('EHOSTUNREACH') > 1) {
@@ -347,11 +360,17 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
-	// save data in ioBroker datapoints
+	/**
+	 * save data in ioBroker datapoints
+	 * @param {*} key
+	 * @param {*} name
+	 * @param {*} value
+	 * @param {*} role
+	 * @param {*} unit
+	 */
 	async persistData(key, name, value, role, unit) {
-		//console.log(`[persistData] ${key}`);
 		const dp_Device = String(this.config.logger) + '.' + key;
-		// Type-Erkennung
+		// Type recognition
 		let type = 'string';
 		if (this.idc.isNumber(value)) {
 			type = 'number';
@@ -362,6 +381,16 @@ class Deyeidc extends utils.Adapter {
 			value = JSON.stringify(value);
 		}
 		//this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}`);
+
+		/*
+		await this.setObjectNotExistsAsync(String(this.config.logger), {
+			type: 'device',
+			common: {
+				name: String(this.config.logger)
+			},
+			native: {}
+		});
+*/
 
 		await this.setObjectNotExistsAsync(dp_Device, {
 			type: 'state',
@@ -381,18 +410,21 @@ class Deyeidc extends utils.Adapter {
 		await this.setStateAsync(dp_Device, { val: value, ack: true });
 	}
 
-	// prepare data vor ioBroker
+	/**
+	 * prepare data vor ioBroker
+	 * @param {*} data
+	 */
 	async updateData(data) {
-		//console.log(`[updataData] ${JSON.stringify(data)}`);
-		//data.forEach(async (obj) => {
 		for (const obj of data) {
 			if (obj.value != 'none') {
-				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);	//'state'
+				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);
 			}
 		}
 	}
 
-	// create object vor datavalues
+	/**
+	 * create object vor datavalues
+	 */
 	async createDPsForInstances() {
 		const _loggerSn = String(this.config.logger);
 		await this.setObjectNotExistsAsync(_loggerSn, {
@@ -402,10 +434,13 @@ class Deyeidc extends utils.Adapter {
 		});
 	}
 
-	// check data from UI
+	/**
+	 * check data from UI
+	 * @returns
+	 */
 	async checkUserData() {
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
+		// The adapters config (in the instance object everything under the attribute "native")
+		// is accessible via this.config:
 		// __________________
 		// check if the IP-Address available
 		if (!this.config.ipaddress) {

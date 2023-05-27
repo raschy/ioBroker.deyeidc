@@ -35,9 +35,14 @@ For this, only the IP of the inverter and the serial number of the logger must b
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (raschy) Modules that are not required can be hidden
+
 ### 0.0.5 (2023-04-27)
 
--   (raschy) Calculations modified with regulation
+-   (raschy) Calculations modified with formulas
 -   (raschy) Error messages in English
 
 ### 0.0.4 (2023-03-21)
