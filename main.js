@@ -16,17 +16,15 @@ class Deyeidc extends utils.Adapter {
 	constructor(options) {
 		super({
 			...options,
-			name: 'deyeidc', //adapterName
+			name: 'deyeidc',
 		});
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
-		// this.on('objectChange', this.onObjectChange.bind(this));
-		// this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		//this.client.set # Time # out(20000);	//deactiviert
+		//this.client.setTimeout(20000);	//deactiviert
 		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.sync_milliseconds = 60000; // 1min
@@ -101,7 +99,6 @@ class Deyeidc extends utils.Adapter {
 			if (id.indexOf('Power_Set') > 1) {
 				await this.setPower(id, state);
 			} else {
-				//await this.computeData(id, state);	// zum Test
 				this.updateData(await this.computeData(id, state));
 			}
 		} else {
@@ -111,7 +108,7 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * connect to inverter
+	 * connection to inverter
 	 */
 	connect() {
 		this.log.debug(`try to connect . . .`);
@@ -119,8 +116,8 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	   *
-	   */
+	 * connectionHandler
+	 */
 	async connectionHandler() {
 		this.client.on('connect', () => {
 			this.log.debug(`connected`);
@@ -152,7 +149,6 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('data', (data) => {
-			//console.log(`Request ${this.req}`);
 			if (this.req < this.numberRegisterSets) {
 				try {
 					//console.log(`${this.idc.toHexString(data)}`);
@@ -167,7 +163,7 @@ class Deyeidc extends utils.Adapter {
 					this.updateData(this.idc.readCoils(this.mb));
 				}
 
-				// Nächste Anfrage senden
+				// send next request
 				if (data.length > 0) {
 					this.req++;
 					this.sendRequest(this.req);
@@ -279,7 +275,6 @@ class Deyeidc extends utils.Adapter {
 				//console.log(`[computeResult #${i}#]  <${varCompute[0]}> ${changes[i].operation} <${varCompute[1]}> = ${computeResult}`);
 				const product_hr = (computeResult * 10 ** -changes[i].factor).toFixed(2);
 				const jsonObj = { key: changes[i].key, value: product_hr, unit: changes[i].unit, name: changes[i].name };
-				console.log(`Ergebnis = ${product_hr}  ${JSON.stringify(jsonObj)}`);
 				jsonResult.push(jsonObj);
 			}
 		}
