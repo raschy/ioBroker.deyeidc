@@ -4,12 +4,12 @@
 	"items": {
 		"_configuration": {
 			"type": "panel",
-			"label": "Settings",
+			"label": "settings",
 			"items": {
 				"_headerSettings": {
 					"newLine": true,
 					"type": "header",
-					"text": "Settings",
+					"text": "settings",
 					"size": 2
 				},
 				"ipaddress": {
@@ -17,21 +17,21 @@
 					"sm": 12,
 					"md": 6,
 					"lg": 6,
-					"label": "IP-Address from Inverter"
+					"label": "ipaddress"
 				},
 				"port": {
 					"type": "number",
 					"sm": 12,
 					"md": 6,
 					"lg": 6,
-					"label": "Port ( usually 8899 )"
+					"label": "port"
 				},
 				"logger": {
 					"type": "number",
 					"sm": 12,
 					"md": 6,
 					"lg": 6,
-					"label": "Serial Number Data Logger",
+					"label": "serialNumber",
 					"newLine": true
 				},
 				"pollInterval": {
@@ -39,18 +39,18 @@
 					"sm": 12,
 					"md": 6,
 					"lg": 6,
-					"label": "Polling rate"
+					"label": "pollingRate"
 				}
 			}
 		},
 		"_registers": {
 			"type": "panel",
-			"label": "Register",
+			"label": "registerRange",
 			"items": {
 				"_headerRegister": {
 					"newLine": true,
 					"type": "header",
-					"text": "Register Sections",
+					"text": "registerSections",
 					"size": 2
 				},
 				"registers": {
@@ -63,14 +63,14 @@
 							"type": "number",
 							"attr": "registerStart",
 							"width": "35%",
-							"title": "Register Start",
+							"title": "registerStart",
 							"default": ""
 						},
 						{
 							"type": "number",
 							"attr": "registerEnd",
 							"width": "35%",
-							"title": "Register End",
+							"title": "registerEnd",
 							"default": ""
 						}
 					]
@@ -78,7 +78,7 @@
 				"_help1": {
 					"newLine": true,
 					"type": "staticText",
-					"text": "table register help",
+					"text": "tableRegisterHelp",
 					"sm": 12,
 					"md": 4,
 					"lg": 4
@@ -87,12 +87,12 @@
 		},
 		"_coils": {
 			"type": "panel",
-			"label": "Coils",
+			"label": "coils",
 			"items": {
 				"_headerCoils": {
 					"newLine": true,
 					"type": "header",
-					"text": "Register from inverter",
+					"text": "selectedRegister",
 					"size": 2
 				},
 				"coils": {
@@ -105,7 +105,7 @@
 							"type": "number",
 							"attr": "register",
 							"width": "15%",
-							"title": "Register",
+							"title": "registerNr",
 							"default": "",
 							"filter": true,
 							"sort": true
@@ -115,7 +115,7 @@
 							"trim": false,
 							"attr": "rules",
 							"width": "15%",
-							"title": "Rule",
+							"title": "rule",
 							"default": ""
 						},
 						{
@@ -123,23 +123,27 @@
 							"trim": false,
 							"attr": "key",
 							"width": "20%",
-							"title": "Key",
-							"default": ""
+							"title": "key",
+							"default": "",
+							"filter": true,
+							"sort": true
 						},
 						{
 							"type": "text",
 							"trim": false,
 							"attr": "name",
 							"width": "30%",
-							"title": "Name",
-							"default": ""
+							"title": "name",
+							"default": "",
+							"filter": true,
+							"sort": true
 						},
 						{
 							"type": "text",
 							"trim": false,
 							"attr": "unit",
 							"width": "15%",
-							"title": "Unit",
+							"title": "unit",
 							"default": ""
 						},
 						{
@@ -147,29 +151,29 @@
 							"trim": false,
 							"attr": "factor",
 							"width": "15%",
-							"title": "Factor",
+							"title": "factor",
 							"default": 0
+						},
+						{
+							"type": "checkbox",
+							"trim": false,
+							"attr": "nullable",
+							"width": "15%",
+							"title": "nullable",
+							"default": false
 						}
 					]
-				},
-				"_help1": {
-					"newLine": true,
-					"type": "staticText",
-					"text": "table name help",
-					"sm": 12,
-					"md": 4,
-					"lg": 4
 				}
 			}
 		},
 		"_computes": {
 			"type": "panel",
-			"label": "Compute",
+			"label": "compute",
 			"items": {
 				"_headerCompute": {
 					"newLine": true,
 					"type": "header",
-					"text": "Calculated values",
+					"text": "calculatedValues",
 					"size": 2
 				},
 				"computes": {
@@ -183,7 +187,7 @@
 							"trim": true,
 							"attr": "values",
 							"width": "15%",
-							"title": "Value 1",
+							"title": "values",
 							"default": "",
 							"filter": true,
 							"sort": true
@@ -193,15 +197,17 @@
 							"trim": true,
 							"attr": "key",
 							"width": "20%",
-							"title": "Key",
-							"default": ""
+							"title": "key",
+							"default": "",
+							"filter": true,
+							"sort": true
 						},
 						{
 							"type": "text",
 							"trim": false,
 							"attr": "name",
 							"width": "30%",
-							"title": "Name",
+							"title": "name",
 							"default": ""
 						},
 						{
@@ -209,7 +215,7 @@
 							"trim": false,
 							"attr": "unit",
 							"width": "15%",
-							"title": "Unit",
+							"title": "unit",
 							"default": ""
 						},
 						{
@@ -217,7 +223,7 @@
 							"trim": false,
 							"attr": "factor",
 							"width": "15%",
-							"title": "Factor",
+							"title": "factor",
 							"default": 0
 						}
 					]
@@ -225,7 +231,7 @@
 				"_help1": {
 					"newLine": true,
 					"type": "staticText",
-					"text": "table compute help",
+					"text": "tableComputeHelp",
 					"sm": 12,
 					"md": 4,
 					"lg": 4

@@ -27,13 +27,12 @@ class Deyeidc extends utils.Adapter {
 		this.client.setTimeout(20000);	//deactiviert
 		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
-		this.sync_milliseconds = 60000; // 1min
+		this.pollTimeMs = 6 * 60 * 1000; // 6min
 		// -----------------  Global variables -----------------
 		this.connectionActive = false;
 		this.internDataReady = true;
 		this.numberRegisterSets = 0;
 		this.numberCoils = 0;
-		this.counter = 0;
 		this.req = 0;
 		this.CalcValues = [];
 		this.setWatchPoints = false;
@@ -180,15 +179,15 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async requestData() {
 		try {
+			console.log(`[requestData] pollTimeMs: ${this.pollTimeMs}]`);
 			this.updateInterval = setInterval(async () => {
 				this.req = 0;
-				this.counter++;
 				this.sendRequest(this.req);
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 				// read to computed values and set subscriptions
 				await this.readComputeAndWatch();
-			}, this.sync_milliseconds);
+			}, this.pollTimeMs);
 		} catch (error) {
 			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
@@ -473,16 +472,18 @@ class Deyeidc extends utils.Adapter {
 		this.idc.setLoggerSn(this.config.logger);
 		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
-		this.sync_milliseconds =
+		this.pollTimeMs =
 			typeof this.config.pollInterval === 'number'
 				? this.config.pollInterval * 1000
 				: parseInt(this.config.pollInterval, 10) * 1000;
 
-		if (isNaN(this.sync_milliseconds) || this.sync_milliseconds < 0.5 * 1000) {
-			this.sync_milliseconds = 300000; // is set as the minimum interval
-			this.log.warn(`Sync time was too short (${this.config.pollInterval}). New sync time is 1 min`);
+		console.log(`[checkUserData] pollTimeMs: ${this.pollTimeMs}]`);
+
+		if (isNaN(this.pollTimeMs) || this.pollTimeMs < 1 * 60 * 1000) {
+			this.pollTimeMs = 6 * 60 * 1000; // is set as the minimum interval 6*60*1000
+			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is 6 min`);
 		}
-		this.log.info(`Sync time set to ${this.sync_milliseconds} ms`);
+		this.log.info(`Sync time set to ${this.pollTimeMs} ms`);
 		//
 		this.log.debug(`checkUserData is ready`);
 		return;
