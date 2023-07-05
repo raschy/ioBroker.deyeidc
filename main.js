@@ -170,6 +170,8 @@ class Deyeidc extends utils.Adapter {
 
 			if (this.req > this.numberRegisterSets) {
 				console.log(`Request #:# ${this.req}`);
+				// read to computed values and set subscriptions
+				this.readComputeAndWatch();	// ## await
 				this.setStateAsync('info.status', { val: 'idle', ack: true });
 			}
 
@@ -186,7 +188,7 @@ class Deyeidc extends utils.Adapter {
 			await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			// read to computed values and set subscriptions
-			await this.readComputeAndWatch();
+			//await this.readComputeAndWatch();
 		} catch (error) {
 			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
