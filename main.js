@@ -132,7 +132,7 @@ class Deyeidc extends utils.Adapter {
 				//this.createDPsForInstances();
 				// Preparation of the data
 				if (this.mb) {
-					this.log.debug(`Response mb: ${JSON.stringify(this.mb)}`); // human readable
+					this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 					//console.log(`Register Nr = ${this.mb.register}`);
 					if (this.mb.register == 0) {
 						const dayHour = parseInt(this.idc.toHexString(this.mb.modbus.subarray(3, this.mb.modbus.length - 1)));
