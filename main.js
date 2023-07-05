@@ -126,7 +126,7 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('data', (data) => {
-			this.log.debug(`Response from client ${this.req} >> ${this.idc.toHexString(data)}`); // human readable
+			//console.log(`Response from client ${this.req} >> ${this.idc.toHexString(data)}`); // human readable
 			try {
 				this.mb = this.idc.checkDataFrame(data);
 				//this.createDPsForInstances();
@@ -157,12 +157,12 @@ class Deyeidc extends utils.Adapter {
 				//console.log(`Request .. ${this.req} <> ${this.numberRegisterSets}`);
 				this.req++;
 				if (this.req < this.numberRegisterSets) {
-					console.log(`Request #.# ${this.req}`);
+					console.log(`Request #=# ${this.req}`);
 					this.sendRequest(this.req);
 				} else {
 					if (this.req == this.numberRegisterSets) {
 						// look for intern date
-						console.log(`Request #-# ${this.req}`);
+						console.log(`Request #.# ${this.req}`);
 						this.checkOnlineDate();
 					}
 				}
@@ -230,7 +230,7 @@ class Deyeidc extends utils.Adapter {
 		const req = -1;
 		const dateControlRegister = 0x17; // Day&Hour
 		const request = this.idc.requestFrame(req, this.idc.modbusReadFrame(dateControlRegister));
-		this.log.debug(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
 
@@ -245,9 +245,9 @@ class Deyeidc extends utils.Adapter {
 		data[0] = parseInt(decimalToHex(parseInt(d.getFullYear().toString().substring(2))) + decimalToHex(d.getMonth() + 1), 16);
 		data[1] = parseInt(decimalToHex(d.getDate()) + decimalToHex(d.getHours()), 16);
 		data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
-		console.log(`[setOfflineDate] ${JSON.stringify(data)}`); // human readable
+		//console.log(`[setOfflineDate] ${JSON.stringify(data)}`); // human readable
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
-		console.log(`Write Registerset offlineData: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		//this.client.write(request);	// ####
 
 		function decimalToHex(d) {
@@ -399,10 +399,9 @@ class Deyeidc extends utils.Adapter {
 			// The state was changed
 			//this.log.debug(`state ${id} has changed to ${state.val}`);
 			if (id.indexOf('Power_Set') > 1) {
-				//await this.setPower(id, state);
-				await this.setOfflineDate(); // #####
+				await this.setPower(id, state);
 			} else {
-				this.updateData(await this.computeData(id, state));
+				await this.updateData(await this.computeData(id, state));
 			}
 		} else {
 			// The state was deleted
