@@ -24,8 +24,6 @@ class Deyeidc extends utils.Adapter {
 		//
 		this.idc = new idcCore();
 		this.client = new net.Socket();
-		this.client.setTimeout(20000);	//deactiviert
-		// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 		// -----------------  Timeout variables -----------------
 		this.pollTimeMs = 6 * 60 * 1000; // 6min
 		// -----------------  Global variables -----------------
@@ -75,34 +73,14 @@ class Deyeidc extends utils.Adapter {
 			this.internDataReady = false;
 			this.log.error(`[readCoilset] ${err}`);
 		}
-
+		// already
 		if (this.internDataReady) {
 			// Start connection handler to created & monitor websocket connection
 			await this.connectionHandler();
 			// request
-			await this.requestData();
-			// subscribe Contraol
-			this.subscribeStates(this.config.logger + '.' + 'Control.PowerSet');
-		}
-	}
-
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	async onStateChange(id, state) {
-		if (state) {
-			// The state was changed
-			//this.log.debug(`state ${id} has changed to ${state.val}`);
-			if (id.indexOf('Power_Set') > 1) {
-				await this.setPower(id, state);
-			} else {
-				this.updateData(await this.computeData(id, state));
-			}
-		} else {
-			// The state was deleted
-			this.log.debug(`state ${id} deleted`);
+			this.updateInterval = setInterval(async () => await this.requestData(), this.pollTimeMs);
+			// subscribe Control
+			//this.subscribeStates(this.config.logger + '.' + 'Control.PowerSet');
 		}
 	}
 
@@ -112,6 +90,7 @@ class Deyeidc extends utils.Adapter {
 	connect() {
 		this.log.debug(`try to connect . . .`);
 		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
+		this.client.setTimeout(20000);
 	}
 
 	/**
@@ -120,16 +99,15 @@ class Deyeidc extends utils.Adapter {
 	async connectionHandler() {
 		this.client.on('connect', () => {
 			this.log.debug(`connected`);
-			this.connectionActive = true;
 			this.resetCounter = 0;
+			this.connectionActive = true;
 			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('timeout', () => {
-			this.log.debug(`timeout`);
+			this.log.debug(`connection closed`);
 			this.client.destroy();
 			this.connectionActive = false;
-			this.setState('info.connection', this.connectionActive, true);
 		});
 
 		this.client.on('error', (err) => {
@@ -148,29 +126,53 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('data', (data) => {
-			if (this.req < this.numberRegisterSets) {
-				try {
-					//console.log(`${this.idc.toHexString(data)}`);
-					this.mb = this.idc.checkDataFrame(data);
-					this.createDPsForInstances();
-				} catch (err) {
-					this.log.error(`${err}`);
-				}
-
+			this.log.debug(`Response from client ${this.req} >> ${this.idc.toHexString(data)}`); // human readable
+			try {
+				this.mb = this.idc.checkDataFrame(data);
+				//this.createDPsForInstances();
 				// Preparation of the data
 				if (this.mb) {
-					this.updateData(this.idc.readCoils(this.mb));
+					this.log.debug(`Response mb: ${JSON.stringify(this.mb)}`); // human readable
+					//console.log(`Register Nr = ${this.mb.register}`);
+					if (this.mb.register == 0) {
+						const dayHour = parseInt(this.idc.toHexString(this.mb.modbus.subarray(3, this.mb.modbus.length - 1)));
+						//console.log(` DayHour = ${dayHour}`);
+						if (dayHour == 0) this.setOfflineDate(); // ## await
+					} else {
+						if (this.req < this.numberRegisterSets) {
+							this.updateData(this.idc.readCoils(this.mb));	// ## await
+						}
+					}
 				}
-
-				// send next request
-				if (data.length > 0) {
-					this.req++;
-					this.sendRequest(this.req);
+			} catch (err) {
+				if (err.status == 'ECNTRLCODE') {
+					this.log.warn(`${err.message}: Data may be corrupt, therefore discarded`);
+				} else {
+					this.log.error(`${err}`);
 				}
 			}
-			if (this.req >= this.numberRegisterSets - 1) {
+
+			// send next request
+			if (data.length > 0) {
+				//console.log(`Request .. ${this.req} <> ${this.numberRegisterSets}`);
+				this.req++;
+				if (this.req < this.numberRegisterSets) {
+					console.log(`Request #.# ${this.req}`);
+					this.sendRequest(this.req);
+				} else {
+					if (this.req == this.numberRegisterSets) {
+						// look for intern date
+						console.log(`Request #-# ${this.req}`);
+						this.checkOnlineDate();
+					}
+				}
+			}
+
+			if (this.req > this.numberRegisterSets) {
+				console.log(`Request #:# ${this.req}`);
 				this.setStateAsync('info.status', { val: 'idle', ack: true });
 			}
+
 		});
 	}
 
@@ -179,15 +181,12 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async requestData() {
 		try {
-			console.log(`[requestData] pollTimeMs: ${this.pollTimeMs}]`);
-			this.updateInterval = setInterval(async () => {
-				this.req = 0;
-				this.sendRequest(this.req);
-				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
-				await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
-				// read to computed values and set subscriptions
-				await this.readComputeAndWatch();
-			}, this.pollTimeMs);
+			this.req = 0;
+			await this.sendRequest(this.req);
+			await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
+			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
+			// read to computed values and set subscriptions
+			await this.readComputeAndWatch();
 		} catch (error) {
 			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
@@ -198,11 +197,11 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} req
 	 * @returns
 	 */
-	sendRequest(req) {
+	async sendRequest(req) {
 		if (!this.connectionActive) this.connect();
 		if (req > this.numberRegisterSets - 1) return;
 		const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-		//console.log(`Anfrage Registersatz: ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
+		this.log.debug(`Request to register set ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
 
@@ -212,7 +211,6 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} state
 	 */
 	async setPower(id, state) {
-		//console.log(`[setPower] <${id}> ${state.val}`);
 		const req = 0;
 		const powerControlRegister = 40;
 		const data = [];
@@ -224,6 +222,39 @@ class Deyeidc extends utils.Adapter {
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
 		//console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
+	}
+
+	async checkOnlineDate() {
+		const req = -1;
+		const dateControlRegister = 0x17; // Day&Hour
+		const request = this.idc.requestFrame(req, this.idc.modbusReadFrame(dateControlRegister));
+		this.log.debug(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		this.client.write(request);
+	}
+
+	/**
+	 * setOfflineDate
+	 */
+	async setOfflineDate() {
+		const data = [];
+		const req = 0;
+		const dateControlRegister = 0x16;
+		const d = new Date();
+		data[0] = parseInt(decimalToHex(parseInt(d.getFullYear().toString().substring(2))) + decimalToHex(d.getMonth() + 1), 16);
+		data[1] = parseInt(decimalToHex(d.getDate()) + decimalToHex(d.getHours()), 16);
+		data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
+		console.log(`[setOfflineDate] ${JSON.stringify(data)}`); // human readable
+		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
+		console.log(`Write Registerset offlineData: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+		//this.client.write(request);	// ####
+
+		function decimalToHex(d) {
+			let hex = Number(d).toString(16);
+			while (hex.length < 2) {
+				hex = '0' + hex;
+			}
+			return hex;
+		}
 	}
 
 	/**
@@ -282,6 +313,7 @@ class Deyeidc extends utils.Adapter {
 
 	/**
 	 * Preparing the compute formales and subscribing to the states
+	 * it runs, if 'setWatchPoints' is false
 	 * @returns
 	 */
 	async readComputeAndWatch() {
@@ -318,7 +350,6 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug(`[watchStates] set to ${watch}`);
 			}
 			this.setWatchPoints = true;
-			//console.log(`[readCompute #3]  ${JSON.stringify(jsonResult)}`);
 			this.CalcValues = jsonResult;
 		}
 		function mathOperation(computeString) {
@@ -346,11 +377,34 @@ class Deyeidc extends utils.Adapter {
 			this.log.debug(`[powerReset] Counter ${this.resetCounter}`);
 		}
 		if (this.resetCounter == 29) {
+			//
+			console.log(`[powerReset] nullableValues: ${this.config.coils}`);
 			const jsonResult = [];
 			const jsonString = { key: 'Apo_t1', value: 0, unit: 'x', name: 'y' };
 			jsonResult.push(jsonString);
 			this.updateData(jsonResult);
 			this.log.debug(`[powerReset] Power resettet`);
+		}
+	}
+
+	/**
+	   * Is called if a subscribed state changes
+	 * @param {string} id
+	 * @param {ioBroker.State | null | undefined} state
+	 */
+	async onStateChange(id, state) {
+		if (state) {
+			// The state was changed
+			//this.log.debug(`state ${id} has changed to ${state.val}`);
+			if (id.indexOf('Power_Set') > 1) {
+				//await this.setPower(id, state);
+				await this.setOfflineDate(); // #####
+			} else {
+				this.updateData(await this.computeData(id, state));
+			}
+		} else {
+			// The state was deleted
+			this.log.debug(`state ${id} deleted`);
 		}
 	}
 
@@ -376,7 +430,6 @@ class Deyeidc extends utils.Adapter {
 		}
 		//this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}`);
 
-		/*
 		await this.setObjectNotExistsAsync(String(this.config.logger), {
 			type: 'device',
 			common: {
@@ -384,7 +437,6 @@ class Deyeidc extends utils.Adapter {
 			},
 			native: {}
 		});
-*/
 
 		await this.setObjectNotExistsAsync(dp_Device, {
 			type: 'state',
@@ -477,13 +529,11 @@ class Deyeidc extends utils.Adapter {
 				? this.config.pollInterval * 1000
 				: parseInt(this.config.pollInterval, 10) * 1000;
 
-		console.log(`[checkUserData] pollTimeMs: ${this.pollTimeMs}]`);
-
 		if (isNaN(this.pollTimeMs) || this.pollTimeMs < 1 * 60 * 1000) {
 			this.pollTimeMs = 6 * 60 * 1000; // is set as the minimum interval 6*60*1000
-			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is 6 min`);
+			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is ${this.pollTimeMs / 1000} sec, also 6 min.`);
 		}
-		this.log.info(`Sync time set to ${this.pollTimeMs} ms`);
+		this.log.debug(`Sync time set to ${this.pollTimeMs} ms`);
 		//
 		this.log.debug(`checkUserData is ready`);
 		return;
@@ -505,6 +555,7 @@ class Deyeidc extends utils.Adapter {
 			// Here you must clear all timeouts or intervals that may still be active
 			//
 			this.updateInterval && clearInterval(this.updateInterval);
+			// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 			//
 			this.client.destroy();
 			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
