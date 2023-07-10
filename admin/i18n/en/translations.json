@@ -4,6 +4,7 @@
 	"ipaddress": "IP Address from Inverter",
 	"port": "Port ( usually 8899 )",
 	"serialNumber": "Serial Number Data Logger",
+	"tooltipDeviceSerialNnumber": "Pay attention to correct the 'Logger serial number' !",
 	"pollingRate": "Polling rate (in sec)",
 	"registerRange": "Registers",
 	"registerSections": "Set register ranges",

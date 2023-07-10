@@ -1,0 +1,490 @@
+{
+	"ipaddress": "",
+	"port": 8899,
+	"logger": 0,
+	"pollInterval": 360,
+	"registers": [
+		{
+			"registerStart": 0,
+			"registerEnd": 40
+		},
+		{
+			"registerStart": 59,
+			"registerEnd": 90
+		},
+		{
+			"registerStart": 109,
+			"registerEnd": 116
+		},
+		{
+			"registerStart": 150,
+			"registerEnd": 153
+		}
+	],
+	"coils": [
+		{
+			"register": 0,
+			"rules": 1,
+			"key": "DEV-TYP1",
+			"name": "Device Type",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 1,
+			"rules": 1,
+			"key": "MBA",
+			"name": "Modbus Address",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 2,
+			"rules": 7,
+			"key": "COMM_PTC_v1",
+			"name": "Communication Protocol Version",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 3,
+			"rules": 5,
+			"key": "SN1",
+			"name": "Logger Serial Number",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 12,
+			"rules": 7,
+			"key": "DC_S_F_V",
+			"name": "DC Slave Firmware Version",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 13,
+			"rules": 7,
+			"key": "DC_M_F_V",
+			"name": "DC Master Firmware Version",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 14,
+			"rules": 7,
+			"key": "AC_VER",
+			"name": "AC Version Number",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 16,
+			"rules": 3,
+			"key": "P_r1",
+			"name": "Rated Power",
+			"unit": "W",
+			"factor": 1
+		},
+		{
+			"register": 18,
+			"rules": 8,
+			"key": "NOMP",
+			"name": "Number of MPPT Path",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 18,
+			"rules": 9,
+			"key": "NOP",
+			"name": "Number of Phases",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 19,
+			"rules": 8,
+			"key": "Grid_V",
+			"name": "Grid Voltage",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 21,
+			"rules": 1,
+			"key": "S_sc_t1",
+			"name": "Startup Self-checking Time",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 22,
+			"rules": 8,
+			"key": "YEAR",
+			"name": "Year",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 22,
+			"rules": 9,
+			"key": "MONTH",
+			"name": "Month",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 23,
+			"rules": 8,
+			"key": "DAY",
+			"name": "Day",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 23,
+			"rules": 9,
+			"key": "HOUR",
+			"name": "Hour",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 24,
+			"rules": 8,
+			"key": "MINUTE",
+			"name": "Minute",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 24,
+			"rules": 9,
+			"key": "SECOND",
+			"name": "Second",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 40,
+			"rules": 1,
+			"key": "Power_Reg",
+			"name": "Active Power Regulation",
+			"unit": "%",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 59,
+			"rules": 1,
+			"key": "ST_w1",
+			"name": "Running Status",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 60,
+			"rules": 1,
+			"key": "Etdy_ge0",
+			"name": "Production Today",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 62,
+			"rules": 1,
+			"key": "UT",
+			"name": "UpTime",
+			"unit": "",
+			"factor": 0
+		},
+		{
+			"register": 63,
+			"rules": 1,
+			"key": "Et_ge0",
+			"name": "Production Total",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 65,
+			"rules": 1,
+			"key": "Etdy_ge1",
+			"name": "Production Today PV1",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 66,
+			"rules": 1,
+			"key": "Etdy_ge2",
+			"name": "Production Today PV2",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 67,
+			"rules": 1,
+			"key": "Etdy_ge3",
+			"name": "Production Today PV3",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 68,
+			"rules": 1,
+			"key": "Etdy_ge4",
+			"name": "Production Today PV4",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 69,
+			"rules": 3,
+			"key": "Et_ge1",
+			"name": "Production Total PV1",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 71,
+			"rules": 3,
+			"key": "Et_ge2",
+			"name": "Production Total PV2",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 73,
+			"rules": 1,
+			"key": "AV1",
+			"name": "AC Voltage 1",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 74,
+			"rules": 3,
+			"key": "Et_ge3",
+			"name": "Production Total PV3",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 76,
+			"rules": 1,
+			"key": "AC1",
+			"name": "AC Current 1",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 77,
+			"rules": 3,
+			"key": "Et_ge4",
+			"name": "Production Total PV4",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 79,
+			"rules": 1,
+			"key": "AC_Fo1",
+			"name": "AC Output Frequency 1",
+			"unit": "HZ",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 86,
+			"rules": 3,
+			"key": "Apo_t1",
+			"name": "Total AC Output Power (Active)",
+			"unit": "W",
+			"factor": 1,
+			"nullable": true
+		},
+		{
+			"register": 88,
+			"rules": 1,
+			"key": "POW",
+			"name": "AC Reactive Power",
+			"unit": "W",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 90,
+			"rules": 6,
+			"key": "AC_RDT_T1",
+			"name": "AC Radiator Temp",
+			"unit": "°C",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 109,
+			"rules": 1,
+			"key": "DV1",
+			"name": "DC Voltage PV1",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 110,
+			"rules": 1,
+			"key": "DC1",
+			"name": "DC Current PV1",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 111,
+			"rules": 1,
+			"key": "DV2",
+			"name": "DC Voltage PV2",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 112,
+			"rules": 1,
+			"key": "DC2",
+			"name": "DC Current PV2",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 113,
+			"rules": 1,
+			"key": "DV3",
+			"name": "DC Voltage PV3",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 114,
+			"rules": 1,
+			"key": "DC3",
+			"name": "DC Current PV3",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 115,
+			"rules": 1,
+			"key": "DV4",
+			"name": "DC Voltage PV4",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 116,
+			"rules": 1,
+			"key": "DC4",
+			"name": "DC Current PV4",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 150,
+			"rules": 1,
+			"key": "GV_uL",
+			"name": "Grid Voltage Upper Limit",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 151,
+			"rules": 1,
+			"key": "GV_lL",
+			"name": "Grid Voltage Lower Limit",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 152,
+			"rules": 1,
+			"key": "GF_uL",
+			"name": "Grid Frequency Upper Limit",
+			"unit": "Hz",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 153,
+			"rules": 1,
+			"key": "GF_lL",
+			"name": "Grid Frequency Lower Limit",
+			"unit": "Hz",
+			"factor": 2,
+			"nullable": false
+		}
+	],
+	"computes": [
+		{
+			"values": "DV1*DC1",
+			"key": "DP1",
+			"name": "DC Power PV1",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "DV2*DC2",
+			"key": "DP2",
+			"name": "DC Power PV2",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "DV3*DC3",
+			"key": "DP3",
+			"name": "DC Power PV3",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "DV4*DC4",
+			"key": "DP4",
+			"name": "DC Power PV4",
+			"unit": "W",
+			"factor": 0
+		}
+	]
+}

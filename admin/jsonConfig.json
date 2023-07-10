@@ -32,6 +32,7 @@
 					"md": 6,
 					"lg": 6,
 					"label": "serialNumber",
+					"tooltip": "tooltipDeviceSerialNnumber",
 					"newLine": true
 				},
 				"pollInterval": {

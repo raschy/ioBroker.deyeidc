@@ -25,5 +25,7 @@
     "connection": "联系",
     "DeviceConnected": "连接的设备或服务",
     "lastUpdate": "最后更新",
-    "status": "地位"
+    "status": "地位",
+    "deyeidc adapter settings": "Deye-IDC 适配器设置",
+    "tooltipDeviceSerialNnumber": "注意正确填写“记录仪序列号”！"
 }

@@ -8,6 +8,9 @@
 const utils = require('@iobroker/adapter-core');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
+//const { error } = require('console');
+
+
 //
 class Deyeidc extends utils.Adapter {
 	/**
@@ -43,8 +46,8 @@ class Deyeidc extends utils.Adapter {
 	async onReady() {
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
+		// The adapters config (in the instance object everything under the attribute "native")
+		// is accessible via this.config:
 
 		// Initialize your adapter Here
 		// About User changes
@@ -77,10 +80,12 @@ class Deyeidc extends utils.Adapter {
 		if (this.internDataReady) {
 			// Start connection handler to created & monitor websocket connection
 			await this.connectionHandler();
-			// request
-			this.updateInterval = setInterval(async () => await this.requestData(), this.pollTimeMs);
-			// subscribe Control
-			//this.subscribeStates(this.config.logger + '.' + 'Control.PowerSet');
+			// timed request
+			this.updateInterval = setInterval(async () => {
+				this.req = 0;
+				this.checkOnlineDate();
+			}, this.pollTimeMs);
+			//this.updateInterval = setInterval(async () => await this.checkOnlineDate(), this.pollTimeMs);
 		}
 	}
 
@@ -105,8 +110,10 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('timeout', () => {
-			this.log.debug(`connection closed`);
+			this.log.debug(`connection timeout`);
 			this.client.destroy();
+			if (this.client.destroyed)
+				this.log.debug(`conection closed/destroyed`);
 			this.connectionActive = false;
 		});
 
@@ -125,57 +132,53 @@ class Deyeidc extends utils.Adapter {
 			this.setState('info.connection', this.connectionActive, true);
 		});
 
-		this.client.on('data', (data) => {
-			//console.log(`Response from client ${this.req} >> ${this.idc.toHexString(data)}`); // human readable
-			try {
-				this.mb = this.idc.checkDataFrame(data);
-				//this.createDPsForInstances();
-				// Preparation of the data
-				if (this.mb) {
-					this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
-					//console.log(`Register Nr = ${this.mb.register}`);
-					if (this.mb.register == 0) {
-						const dayHour = parseInt(this.idc.toHexString(this.mb.modbus.subarray(3, this.mb.modbus.length - 1)));
-						//console.log(` DayHour = ${dayHour}`);
-						if (dayHour == 0) this.setOfflineDate(); // ## await
-					} else {
-						if (this.req < this.numberRegisterSets) {
-							this.updateData(this.idc.readCoils(this.mb));	// ## await
-						}
-					}
-				}
-			} catch (err) {
-				if (err.status == 'ECNTRLCODE') {
-					this.log.warn(`${err.message}: Data may be corrupt, therefore discarded`);
-				} else {
-					this.log.error(`${err}`);
-				}
-			}
+		this.client.on('data', (data) => this.onData(data));
+		//this.client.on('data', this.onData);
+	}
 
-			// send next request
-			if (data.length > 0) {
-				//console.log(`Request .. ${this.req} <> ${this.numberRegisterSets}`);
-				this.req++;
-				if (this.req < this.numberRegisterSets) {
-					console.log(`Request #=# ${this.req}`);
-					this.sendRequest(this.req);
+	async onData(data) {
+		//console.log(`Response from client ${this.req + 1} >> ${this.idc.toHexString(data)}`); // human readable
+		try {
+			this.mb = this.idc.checkDataFrame(data);
+			// Preparation of the data
+			if (this.mb) {
+				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
+				//console.log(`Register Nr = ${this.mb.register}`);
+				// Register 0 = Date
+				if (this.mb.register == 0) { // for request checkOnlineDate
+					this.req--;
+					const dayHour = parseInt(this.idc.toHexString(this.mb.modbus.subarray(3, this.mb.modbus.length - 1)));
+					//console.log(` DayHour = ${dayHour}`);
+					if (dayHour == 0) await this.setOfflineDate();
 				} else {
-					if (this.req == this.numberRegisterSets) {
-						// look for intern date
-						console.log(`Request #.# ${this.req}`);
-						this.checkOnlineDate();
+					//console.log(`<< ${this.req} <:> ${this.numberRegisterSets}`);
+					if (this.req < this.numberRegisterSets) {
+						await this.updateData(this.idc.readCoils(this.mb));
 					}
 				}
 			}
-
-			if (this.req > this.numberRegisterSets) {
-				console.log(`Request #:# ${this.req}`);
-				// read to computed values and set subscriptions
-				this.readComputeAndWatch();	// ## await
-				this.setStateAsync('info.status', { val: 'idle', ack: true });
+		} catch (err) {
+			if (err.status == 'ECNTRLCODE') {
+				this.log.warn(`${err.message}: Data may be corrupt, therefore discarded`);
+			} else {
+				this.log.error(`${err}`);
 			}
+		}
 
-		});
+		// send next request
+		if (data.length > 0) {
+			this.req++;
+			if (this.req < this.numberRegisterSets) {
+				//console.log(`Request #<# ${this.req}`);
+				//this.sendRequest(this.req);
+				this.requestData();
+			} else {
+				//console.log(`Request #=# ${this.req}`);
+				await this.readComputeAndWatch();
+				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
+				await this.setStateAsync('info.status', { val: 'idle', ack: true });
+			}
+		}
 	}
 
 	/**
@@ -183,12 +186,9 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async requestData() {
 		try {
-			this.req = 0;
+			//this.req = 0;
 			await this.sendRequest(this.req);
-			await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
-			// read to computed values and set subscriptions
-			//await this.readComputeAndWatch();
 		} catch (error) {
 			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
@@ -226,10 +226,13 @@ class Deyeidc extends utils.Adapter {
 		this.client.write(request);
 	}
 
+	/**
+	 * checkOnlineDate
+	 */
 	async checkOnlineDate() {
-		const req = -1;
+		if (!this.connectionActive) this.connect();
 		const dateControlRegister = 0x17; // Day&Hour
-		const request = this.idc.requestFrame(req, this.idc.modbusReadFrame(dateControlRegister));
+		const request = this.idc.requestFrame(-1, this.idc.modbusReadFrame(dateControlRegister));
 		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
@@ -245,10 +248,9 @@ class Deyeidc extends utils.Adapter {
 		data[0] = parseInt(decimalToHex(parseInt(d.getFullYear().toString().substring(2))) + decimalToHex(d.getMonth() + 1), 16);
 		data[1] = parseInt(decimalToHex(d.getDate()) + decimalToHex(d.getHours()), 16);
 		data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
-		//console.log(`[setOfflineDate] ${JSON.stringify(data)}`); // human readable
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
 		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
-		//this.client.write(request);	// ####
+		//this.client.write(request);
 
 		function decimalToHex(d) {
 			let hex = Number(d).toString(16);
@@ -380,7 +382,7 @@ class Deyeidc extends utils.Adapter {
 		}
 		if (this.resetCounter == 29) {
 			//
-			console.log(`[powerReset] nullableValues: ${this.config.coils}`);
+			//console.log(`[powerReset] nullableValues: ${this.config.coils}`);
 			const jsonResult = [];
 			const jsonString = { key: 'Apo_t1', value: 0, unit: 'x', name: 'y' };
 			jsonResult.push(jsonString);
@@ -467,18 +469,6 @@ class Deyeidc extends utils.Adapter {
 				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);
 			}
 		}
-	}
-
-	/**
-	 * create object vor datavalues
-	 */
-	async createDPsForInstances() {
-		const _loggerSn = String(this.config.logger);
-		await this.setObjectNotExistsAsync(_loggerSn, {
-			type: 'channel',
-			common: { name: 'Values from Adapter and Instances' },
-			native: {},
-		});
 	}
 
 	/**

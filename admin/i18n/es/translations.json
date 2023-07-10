@@ -25,5 +25,7 @@
     "connection": "conexión",
     "DeviceConnected": "Dispositivo o servicio conectado",
     "lastUpdate": "Última actualización",
-    "status": "Estado"
+    "status": "Estado",
+    "deyeidc adapter settings": "Configuración del adaptador para Deye-IDC",
+    "tooltipDeviceSerialNnumber": "¡Preste atención para corregir el 'Número de serie del registrador'!"
 }
