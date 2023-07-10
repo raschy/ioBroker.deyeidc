@@ -9,18 +9,17 @@
   "homepage": "https://github.com/raschy/ioBroker.deyeidc",
   "license": "MIT",
   "keywords": [
-    "Deye Bosswerk"
+    "Deye Bosswerk Microinverter"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/raschy/ioBroker.deyeidc.git"
   },
   "engines": {
-    "node": ">= 14"
+    "node": ">= 16"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.8",
-    "suncalc": "^1.9.0",
     "websocket": "^1.0.34"
   },
   "devDependencies": {
