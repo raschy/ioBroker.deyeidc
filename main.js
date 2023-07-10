@@ -109,7 +109,7 @@ class Deyeidc extends utils.Adapter {
 			this.log.debug(`connection timeout`);
 			this.client.destroy();
 			if (this.client.destroyed)
-				this.log.debug(`conection closed/destroyed`);
+				this.log.debug(`connection closed/destroyed`);
 			this.connectionActive = false;
 		});
 
