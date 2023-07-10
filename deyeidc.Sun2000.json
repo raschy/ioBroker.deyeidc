@@ -1,7 +1,7 @@
 {
 	"ipaddress": "",
 	"port": 8899,
-	"logger": 0,
+	"logger": null,
 	"pollInterval": 360,
 	"registers": [
 		{

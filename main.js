@@ -146,7 +146,6 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 				if (this.mb.register == 0) { // for request checkOnlineDate
 					const dayHour = this.mb.modbus.subarray(3, this.mb.modbus.length - 1).readInt16LE(0);
-					console.log('DayHour: ', dayHour);
 					if (dayHour == 0) await this.setOfflineDate();
 					this.req = -1;	// continue with registerset 0, therefore set to -1!
 				} else {
@@ -183,7 +182,6 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
-		console.log('[requestData] ', req);
 		try {
 			if (!this.connectionActive) this.connect();
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });

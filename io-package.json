@@ -1,241 +1,235 @@
 {
-  "common": {
-    "name": "deyeidc",
-    "version": "0.0.8",
-    "news": {
-      "0.0.8": {
-        "en": "Day reset for offline operation",
-        "de": "Tag-Reset für Offline-Betrieb",
-        "ru": "Сброс дня для оффлайн операции",
-        "pt": "Dia reset para operação offline",
-        "nl": "Day reset van offline",
-        "fr": "Réinitialisation de la journée pour une opération hors ligne",
-        "it": "Ripristino del giorno per il funzionamento offline",
-        "es": "Día de restablecimiento para la operación sin conexión",
-        "pl": "Ponowny plan operacji offline",
-        "uk": "День скидання для автономної роботи",
-        "zh-cn": "A. 重新启动机能行动"
-      },
-      "0.0.7": {
-        "en": "release for npm and ioBroker latest",
-        "de": "veröffentlichung für npm und ioBroker",
-        "ru": "релиз для npm и ioBroker",
-        "pt": "lançamento para npm e ioBroker mais recentes",
-        "nl": "vertaling:",
-        "fr": "sortie pour npm et ioBroker dernière",
-        "it": "rilascio per npm e ioBroker",
-        "es": "versión para npm y ioBroker última",
-        "pl": "najnowsza wersja na przykład ioBrokera",
-        "uk": "реліз для npm і ioBroker останні",
-        "zh-cn": "最新奖金和润滑油的释放"
-      },
-      "0.0.6": {
-        "en": "Modules that are not required can be hidden",
-        "de": "Module, die nicht benötigt werden, können versteckt werden",
-        "ru": "Необходимые модули могут быть скрыты",
-        "pt": "Módulos que não são necessários podem ser escondidos",
-        "nl": "Modules die niet nodig zijn kan verborgen worden",
-        "fr": "Les modules qui ne sont pas nécessaires peuvent être cachés",
-        "it": "I moduli che non sono necessari possono essere nascosti",
-        "es": "Los módulos que no son necesarios pueden ser ocultos",
-        "pl": "Moduły, które nie są wymagane, mogą być ukryte",
-        "uk": "Модулі, які не потрібні",
-        "zh-cn": "不能隐藏的管教"
-      },
-      "0.0.5": {
-        "en": "Calculations modified with regulation\nError messages in English",
-        "de": "Berechnungen mit Regulierung geändert\nFehlermeldungen auf Englisch",
-        "ru": "Расчеты изменены с регулированием\nСообщения об ошибках на английском языке",
-        "pt": "Cálculos modificados com regulação\nMensagens de erro em inglês",
-        "nl": "Berekeningen gewijzigd met regelgeving\nError berichten in Engels",
-        "fr": "Calculs modifiés par règlement\nMessages d'erreur en anglais",
-        "it": "Calcoli modificati con regolamento\nMessaggi di errore in inglese",
-        "es": "Cálculos modificados con regulación\nMensajes de error en inglés",
-        "pl": "Obliczenia zmodyfikowane z regulacją\nWiadomości w języku angielskim",
-        "uk": "Розрахунок змінених з регулюванням\nПомилка повідомлень англійською мовою",
-        "zh-cn": "修改条例的计算\n英文译文"
-      },
-      "0.0.4": {
-        "en": "release for npm",
-        "de": "release für npm",
-        "ru": "релиз для npm",
-        "pt": "lançamento para npm",
-        "nl": "vrijgelaten voor npm",
-        "fr": "release for npm",
-        "it": "rilascio per npm",
-        "es": "versión para npm",
-        "pl": "na przykład",
-        "uk": "реліз для npm",
-        "zh-cn": "页:1"
-      },
-      "0.0.3": {
-        "en": "release for npm",
-        "de": "release für npm",
-        "ru": "релиз для npm",
-        "pt": "lançamento para npm",
-        "nl": "vrijgelaten voor npm",
-        "fr": "release for npm",
-        "it": "rilascio per npm",
-        "es": "versión para npm",
-        "pl": "na przykład",
-        "uk": "реліз для npm",
-        "zh-cn": "页:1"
-      },
-      "0.0.2": {
-        "en": "initial release",
-        "de": "erstausstrahlung",
-        "ru": "начальный выпуск",
-        "pt": "lançamento inicial",
-        "nl": "niet",
-        "fr": "initial release",
-        "it": "rilascio iniziale",
-        "es": "liberación inicial",
-        "pl": "pierwsze wydanie",
-        "uk": "початковий реліз",
-        "zh-cn": "初步释放"
-      }
-    },
-    "titleLang": {
-      "en": "Deye Inverter Data Collector",
-      "de": "Datensammler für Wechselrichter von Deye",
-      "ru": "Сборщик данных инвертора Дейе",
-      "pt": "Coletor de Dados do Inversor Deye",
-      "nl": "Deye Inverter-gegevensverzamelaar",
-      "fr": "Collecteur de données Deye Inverter",
-      "it": "Deye Inverter Data Collector",
-      "es": "Colector de datos del inversor Deye",
-      "pl": "Kolektor danych falownika Deye",
-      "zh-cn": "德业逆变器数据采集器",
-      "uk": "Збірник даних інвертора Deye"
-    },
-    "desc": {
-      "en": "Data Collector vor Deye-compatible Inverter",
-      "de": "Datensammler für Deye-kompatible Wechselrichter",
-      "ru": "Сборщик данных с инвертором, совместимым с Дейе",
-      "pt": "Coletor de dados para inversor compatível com Deye",
-      "nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
-      "fr": "Collecteur de données pour onduleur compatible Deye",
-      "it": "Data Collector per Inverter compatibile con Deye",
-      "es": "Colector de datos para inversor compatible con Deye",
-      "pl": "Data Collector dla falownika kompatybilnego z Deye",
-      "zh-cn": "数据收集器 vor Deye 兼容逆变器",
-      "uk": "Збирач даних або інвертор, сумісний з Deye"
-    },
-    "authors": [
-      "raschy <raschy@gmx.de>"
-    ],
-    "keywords": [
-      "Deye",
-      "Bosswerk",
-      "cloudless"
-    ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
-    "icon": "deyeidc.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
-    "readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "energy",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "adminUI": {
-      "config": "json"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=4.0.0"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=5.1.13"
-      }
-    ]
-  },
-  "native": {
-    "ipaddress": "",
-    "port": 8899,
-    "logger": null,
-    "pollInterval": 330,
-    "registers": [
-      {
-        "registerStart": 59,
-        "registerEnd": 90
-      }
-    ],
-    "coils": [
-      {
-        "register": 86,
-        "rules": 3,
-        "key": "Apo_t1",
-        "name": "Total AC Output Power (Active)",
-        "unit": "W",
-        "factor": 1,
-        "nullable": []
-      }
-    ],
-    "computes": [
-      {
-        "values": "DV1*DC1",
-        "key": "DP1",
-        "name": "DC Power PV1",
-        "unit": "W",
-        "factor": 0
-      }
-    ]
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastUpdate",
-      "type": "state",
-      "common": {
-        "role": "date.end",
-        "name": "Last update",
-        "type": "number",
-        "read": true,
-        "write": false,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.status",
-      "type": "state",
-      "common": {
-        "role": "info.status",
-        "name": "Status",
-        "type": "string",
-        "read": true,
-        "write": false,
-        "def": ""
-      },
-      "native": {}
-    }
-  ]
+	"common": {
+		"name": "deyeidc",
+		"version": "0.0.8",
+		"news": {
+			"0.0.8": {
+				"en": "Day reset for offline operation",
+				"de": "Tag-Reset für Offline-Betrieb",
+				"ru": "Сброс дня для оффлайн операции",
+				"pt": "Dia reset para operação offline",
+				"nl": "Day reset van offline",
+				"fr": "Réinitialisation de la journée pour une opération hors ligne",
+				"it": "Ripristino del giorno per il funzionamento offline",
+				"es": "Día de restablecimiento para la operación sin conexión",
+				"pl": "Ponowny plan operacji offline",
+				"uk": "День скидання для автономної роботи",
+				"zh-cn": "A. 重新启动机能行动"
+			},
+			"0.0.7": {
+				"en": "release for npm and ioBroker latest",
+				"de": "veröffentlichung für npm und ioBroker",
+				"ru": "релиз для npm и ioBroker",
+				"pt": "lançamento para npm e ioBroker mais recentes",
+				"nl": "vertaling:",
+				"fr": "sortie pour npm et ioBroker dernière",
+				"it": "rilascio per npm e ioBroker",
+				"es": "versión para npm y ioBroker última",
+				"pl": "najnowsza wersja na przykład ioBrokera",
+				"uk": "реліз для npm і ioBroker останні",
+				"zh-cn": "最新奖金和润滑油的释放"
+			},
+			"0.0.6": {
+				"en": "Modules that are not required can be hidden",
+				"de": "Module, die nicht benötigt werden, können versteckt werden",
+				"ru": "Необходимые модули могут быть скрыты",
+				"pt": "Módulos que não são necessários podem ser escondidos",
+				"nl": "Modules die niet nodig zijn kan verborgen worden",
+				"fr": "Les modules qui ne sont pas nécessaires peuvent être cachés",
+				"it": "I moduli che non sono necessari possono essere nascosti",
+				"es": "Los módulos que no son necesarios pueden ser ocultos",
+				"pl": "Moduły, które nie są wymagane, mogą być ukryte",
+				"uk": "Модулі, які не потрібні",
+				"zh-cn": "不能隐藏的管教"
+			},
+			"0.0.5": {
+				"en": "Calculations modified with regulation\nError messages in English",
+				"de": "Berechnungen mit Regulierung geändert\nFehlermeldungen auf Englisch",
+				"ru": "Расчеты изменены с регулированием\nСообщения об ошибках на английском языке",
+				"pt": "Cálculos modificados com regulação\nMensagens de erro em inglês",
+				"nl": "Berekeningen gewijzigd met regelgeving\nError berichten in Engels",
+				"fr": "Calculs modifiés par règlement\nMessages d'erreur en anglais",
+				"it": "Calcoli modificati con regolamento\nMessaggi di errore in inglese",
+				"es": "Cálculos modificados con regulación\nMensajes de error en inglés",
+				"pl": "Obliczenia zmodyfikowane z regulacją\nWiadomości w języku angielskim",
+				"uk": "Розрахунок змінених з регулюванням\nПомилка повідомлень англійською мовою",
+				"zh-cn": "修改条例的计算\n英文译文"
+			},
+			"0.0.4": {
+				"en": "release for npm",
+				"de": "release für npm",
+				"ru": "релиз для npm",
+				"pt": "lançamento para npm",
+				"nl": "vrijgelaten voor npm",
+				"fr": "release for npm",
+				"it": "rilascio per npm",
+				"es": "versión para npm",
+				"pl": "na przykład",
+				"uk": "реліз для npm",
+				"zh-cn": "页:1"
+			},
+			"0.0.3": {
+				"en": "release for npm",
+				"de": "release für npm",
+				"ru": "релиз для npm",
+				"pt": "lançamento para npm",
+				"nl": "vrijgelaten voor npm",
+				"fr": "release for npm",
+				"it": "rilascio per npm",
+				"es": "versión para npm",
+				"pl": "na przykład",
+				"uk": "реліз для npm",
+				"zh-cn": "页:1"
+			},
+			"0.0.2": {
+				"en": "initial release",
+				"de": "erstausstrahlung",
+				"ru": "начальный выпуск",
+				"pt": "lançamento inicial",
+				"nl": "niet",
+				"fr": "initial release",
+				"it": "rilascio iniziale",
+				"es": "liberación inicial",
+				"pl": "pierwsze wydanie",
+				"uk": "початковий реліз",
+				"zh-cn": "初步释放"
+			}
+		},
+		"titleLang": {
+			"en": "Deye Inverter Data Collector",
+			"de": "Datensammler für Wechselrichter von Deye",
+			"ru": "Сборщик данных инвертора Дейе",
+			"pt": "Coletor de Dados do Inversor Deye",
+			"nl": "Deye Inverter-gegevensverzamelaar",
+			"fr": "Collecteur de données Deye Inverter",
+			"it": "Deye Inverter Data Collector",
+			"es": "Colector de datos del inversor Deye",
+			"pl": "Kolektor danych falownika Deye",
+			"zh-cn": "德业逆变器数据采集器",
+			"uk": "Збірник даних інвертора Deye"
+		},
+		"desc": {
+			"en": "Data Collector vor Deye-compatible Inverter",
+			"de": "Datensammler für Deye-kompatible Wechselrichter",
+			"ru": "Сборщик данных с инвертором, совместимым с Дейе",
+			"pt": "Coletor de dados para inversor compatível com Deye",
+			"nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
+			"fr": "Collecteur de données pour onduleur compatible Deye",
+			"it": "Data Collector per Inverter compatibile con Deye",
+			"es": "Colector de datos para inversor compatible con Deye",
+			"pl": "Data Collector dla falownika kompatybilnego z Deye",
+			"zh-cn": "数据收集器 vor Deye 兼容逆变器",
+			"uk": "Збирач даних або інвертор, сумісний з Deye"
+		},
+		"authors": ["raschy <raschy@gmx.de>"],
+		"keywords": ["Deye", "Bosswerk", "cloudless"],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "deyeidc.png",
+		"enabled": false,
+		"extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
+		"readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "energy",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=4.0.0"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
+	},
+	"native": {
+		"ipaddress": "",
+		"port": 8899,
+		"logger": null,
+		"pollInterval": 330,
+		"registers": [
+			{
+				"registerStart": 59,
+				"registerEnd": 90
+			}
+		],
+		"coils": [
+			{
+				"register": 86,
+				"rules": 3,
+				"key": "Apo_t1",
+				"name": "Total AC Output Power (Active)",
+				"unit": "W",
+				"factor": 1,
+				"nullable": []
+			}
+		],
+		"computes": [
+			{
+				"values": "DV1*DC1",
+				"key": "DP1",
+				"name": "DC Power PV1",
+				"unit": "W",
+				"factor": 0
+			}
+		]
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.lastUpdate",
+			"type": "state",
+			"common": {
+				"role": "date.end",
+				"name": "Last update",
+				"type": "number",
+				"read": true,
+				"write": false,
+				"def": 0
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.status",
+			"type": "state",
+			"common": {
+				"role": "info.status",
+				"name": "Status",
+				"type": "string",
+				"read": true,
+				"write": false,
+				"def": ""
+			},
+			"native": {}
+		}
+	]
 }
