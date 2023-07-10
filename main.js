@@ -43,7 +43,7 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async onReady() {
 		// Reset the connection indicator during startup
-		this.setState('info.connection', false, true);
+		this.setState('info.connection', { val: false, ack: true });
 		// The adapters config (in the instance object everything under the attribute "native")
 		// is accessible via this.config:
 
@@ -102,7 +102,7 @@ class Deyeidc extends utils.Adapter {
 			this.log.debug(`connected`);
 			this.resetCounter = 0;
 			this.connectionActive = true;
-			this.setState('info.connection', this.connectionActive, true);
+			this.setState('info.connection', { val: this.connectionActive, ack: true });
 		});
 
 		this.client.on('timeout', () => {
@@ -116,7 +116,7 @@ class Deyeidc extends utils.Adapter {
 		this.client.on('error', (err) => {
 			this.client.destroy();
 			this.connectionActive = false;
-			this.setState('info.connection', this.connectionActive, true);
+			this.setState('info.connection', { val: this.connectionActive, ack: true });
 			if (err) this.log.debug(`Error during connection ${err.message}`);
 			// Counter for PowerReset
 			this.powerReset(err);
@@ -125,11 +125,10 @@ class Deyeidc extends utils.Adapter {
 		this.client.on('end', () => {
 			this.log.debug(`Connection to server terminated`);
 			this.connectionActive = false;
-			this.setState('info.connection', this.connectionActive, true);
+			this.setState('info.connection', { val: this.connectionActive, ack: true });
 		});
 
 		this.client.on('data', (data) => this.onData(data));
-		//this.client.on('data', this.onData);
 	}
 
 	/**
@@ -166,10 +165,8 @@ class Deyeidc extends utils.Adapter {
 		if (data.length > 0) {
 			this.req++;	// next registerset
 			if (this.req < this.numberRegisterSets) {
-				//console.log('Request #<# ', this.req);
 				this.requestData(this.req);
 			} else {
-				//console.log('Request #=# ', this.req);
 				await this.readComputeAndWatch();
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'idle', ack: true });
