@@ -141,10 +141,12 @@ class Deyeidc extends utils.Adapter {
 		try {
 			this.mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
+			this.createDPsForInstances();
 			if (this.mb) {
 				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 				if (this.mb.register == 0) { // for request checkOnlineDate
-					const dayHour = parseInt(this.idc.toHexString(this.mb.modbus.subarray(3, this.mb.modbus.length - 1)));
+					const dayHour = this.mb.modbus.subarray(3, this.mb.modbus.length - 1).readInt16LE(0);
+					console.log('DayHour: ', dayHour);
 					if (dayHour == 0) await this.setOfflineDate();
 					this.req = -1;	// continue with registerset 0, therefore set to -1!
 				} else {
@@ -181,12 +183,13 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
+		console.log('[requestData] ', req);
 		try {
 			if (!this.connectionActive) this.connect();
+			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 			//console.log(`Request to register set ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
-			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 		} catch (error) {
 			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
@@ -518,6 +521,18 @@ class Deyeidc extends utils.Adapter {
 			const pattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 			return pattern.test(ip);
 		}
+	}
+
+	/**
+	 * createDPsForInstances (loggerSN)
+	 */
+	async createDPsForInstances() {
+		const loggerSn = String(this.config.logger);
+		await this.setObjectNotExistsAsync(loggerSn, {
+			type: 'channel',
+			common: { name: 'Values from Adapter and Instances' },
+			native: {},
+		});
 	}
 
 	/**
