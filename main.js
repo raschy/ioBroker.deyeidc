@@ -250,7 +250,7 @@ class Deyeidc extends utils.Adapter {
 		data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
 		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
-		//this.client.write(request);
+		this.client.write(request);
 
 		function decimalToHex(d) {
 			let hex = Number(d).toString(16);
