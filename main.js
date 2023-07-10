@@ -8,8 +8,6 @@
 const utils = require('@iobroker/adapter-core');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
-//const { error } = require('console');
-
 
 //
 class Deyeidc extends utils.Adapter {
@@ -82,10 +80,8 @@ class Deyeidc extends utils.Adapter {
 			await this.connectionHandler();
 			// timed request
 			this.updateInterval = setInterval(async () => {
-				this.req = 0;
-				this.checkOnlineDate();
+				await this.checkOnlineDate();
 			}, this.pollTimeMs);
-			//this.updateInterval = setInterval(async () => await this.checkOnlineDate(), this.pollTimeMs);
 		}
 	}
 
@@ -136,6 +132,10 @@ class Deyeidc extends utils.Adapter {
 		//this.client.on('data', this.onData);
 	}
 
+	/**
+	 * onData
+	 * @param {*} data
+	 */
 	async onData(data) {
 		//console.log(`Response from client ${this.req + 1} >> ${this.idc.toHexString(data)}`); // human readable
 		try {
@@ -143,15 +143,11 @@ class Deyeidc extends utils.Adapter {
 			// Preparation of the data
 			if (this.mb) {
 				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
-				//console.log(`Register Nr = ${this.mb.register}`);
-				// Register 0 = Date
 				if (this.mb.register == 0) { // for request checkOnlineDate
-					this.req--;
 					const dayHour = parseInt(this.idc.toHexString(this.mb.modbus.subarray(3, this.mb.modbus.length - 1)));
-					//console.log(` DayHour = ${dayHour}`);
 					if (dayHour == 0) await this.setOfflineDate();
+					this.req = -1;	// continue with registerset 0, therefore set to -1!
 				} else {
-					//console.log(`<< ${this.req} <:> ${this.numberRegisterSets}`);
 					if (this.req < this.numberRegisterSets) {
 						await this.updateData(this.idc.readCoils(this.mb));
 					}
@@ -167,13 +163,12 @@ class Deyeidc extends utils.Adapter {
 
 		// send next request
 		if (data.length > 0) {
-			this.req++;
+			this.req++;	// next registerset
 			if (this.req < this.numberRegisterSets) {
-				//console.log(`Request #<# ${this.req}`);
-				//this.sendRequest(this.req);
-				this.requestData();
+				//console.log('Request #<# ', this.req);
+				this.requestData(this.req);
 			} else {
-				//console.log(`Request #=# ${this.req}`);
+				//console.log('Request #=# ', this.req);
 				await this.readComputeAndWatch();
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'idle', ack: true });
@@ -182,29 +177,19 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * start the timer for the next request
+	 * requestData (do the next request for registerset)
+	 * @param {number} req
 	 */
-	async requestData() {
+	async requestData(req) {
 		try {
-			//this.req = 0;
-			await this.sendRequest(this.req);
+			if (!this.connectionActive) this.connect();
+			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
+			//console.log(`Request to register set ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
+			this.client.write(request);
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 		} catch (error) {
-			this.log.debug(`[requestData] error: ${error} stack: ${error.stack}`);
+			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
-	}
-
-	/**
-	 * send request via idc-core
-	 * @param {*} req
-	 * @returns
-	 */
-	async sendRequest(req) {
-		if (!this.connectionActive) this.connect();
-		if (req > this.numberRegisterSets - 1) return;
-		const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-		//console.log(`Request to register set ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
 	}
 
 	/**
@@ -252,8 +237,8 @@ class Deyeidc extends utils.Adapter {
 		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 
-		function decimalToHex(d) {
-			let hex = Number(d).toString(16);
+		function decimalToHex(dec) {
+			let hex = Number(dec).toString(16);
 			while (hex.length < 2) {
 				hex = '0' + hex;
 			}
@@ -481,7 +466,7 @@ class Deyeidc extends utils.Adapter {
 		// __________________
 		// check if the IP-Address available
 		if (!this.config.ipaddress) {
-			this.log.error(`No inverter IP specified [${this.config.ipaddress}] .`);
+			this.log.warn(`No inverter IP specified [${this.config.ipaddress}] .`);
 			this.internDataReady = false;
 			return;
 		}
@@ -489,7 +474,7 @@ class Deyeidc extends utils.Adapter {
 		if (validateIP(this.config.ipaddress)) {
 			this.log.debug(`IP address [${this.config.ipaddress}] seems to be valid.`);
 		} else {
-			this.log.error(`IP address [${this.config.ipaddress}] is not valid !`);
+			this.log.warn(`IP address [${this.config.ipaddress}] is not valid !`);
 			this.internDataReady = false;
 			return;
 		}
@@ -503,12 +488,12 @@ class Deyeidc extends utils.Adapter {
 		// __________________
 		// InverterNr is plausible
 		if (!this.config.logger) {
-			this.log.error(`No logger number specified [${this.config.logger}] .`);
+			this.log.warn(`No logger number specified [${this.config.logger}] .`);
 			this.internDataReady = false;
 			return;
 		}
 		if (this.config.logger < 2.1 * 10 ** 9) {
-			this.log.error(`Logger number seems to be wrong [${this.config.logger}] .`);
+			this.log.warn(`Logger number seems to be wrong [${this.config.logger}] .`);
 			this.internDataReady = false;
 			return;
 		}
@@ -542,13 +527,13 @@ class Deyeidc extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			this.log.debug('[onUnload] cleaned everything up...');
-			this.setState('info.connection', false, true);
 			// Here you must clear all timeouts or intervals that may still be active
 			//
 			this.updateInterval && clearInterval(this.updateInterval);
 			// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 			//
 			this.client.destroy();
+			this.setState('info.connection', { val: false, ack: true });
 			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
 			callback();
 		} catch (e) {
