@@ -1,0 +1,496 @@
+{
+	"ipaddress": "",
+	"port": 8899,
+	"logger": 0,
+	"pollInterval": 60,
+	"registers": [
+		{
+			"registerStart": 500,
+			"registerEnd": 500
+		},
+		{
+			"registerStart": 514,
+			"registerEnd": 541
+		},
+		{
+			"registerStart": 586,
+			"registerEnd": 592
+		},
+		{
+			"registerStart": 607,
+			"registerEnd": 619
+		},
+		{
+			"registerStart": 640,
+			"registerEnd": 653
+		},
+		{
+			"registerStart": 664,
+			"registerEnd": 679
+		}
+	],
+	"coils": [
+		{
+			"register": 672,
+			"rules": 1,
+			"key": "PV1_Leistung",
+			"name": "PV1 - Leistung",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 676,
+			"rules": 1,
+			"key": "PV1_Spannung",
+			"name": "PV1 - Spannung",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 677,
+			"rules": 1,
+			"key": "PV1_Strom",
+			"name": "PV1 - Strom",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 673,
+			"rules": 1,
+			"key": "PV2_Leistung",
+			"name": "PV2 - Leistung",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 678,
+			"rules": 1,
+			"key": "PV2_Spannung",
+			"name": "PV2 - Spannung",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 679,
+			"rules": 1,
+			"key": "PV2_Strom",
+			"name": "PV2 - Strom",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 616,
+			"rules": 2,
+			"key": "P_GRID_CT_L1",
+			"name": "P GRID CT L1",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 617,
+			"rules": 2,
+			"key": "P_GRID_CT_L2",
+			"name": "P GRID CT L2",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 618,
+			"rules": 2,
+			"key": "P_GRID_CT_L3",
+			"name": "P GRID CT L3",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 619,
+			"rules": 2,
+			"key": "P_GRID_CT_TOTAL",
+			"name": "P GRID CT TOTAL",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 607,
+			"rules": 2,
+			"key": "P_GRID_LD_TOTAL",
+			"name": "P GRID LD TOTAL",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 650,
+			"rules": 1,
+			"key": "P_BACKUP_LOAD_L1",
+			"name": "P BACKUP LOAD L1",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 651,
+			"rules": 1,
+			"key": "P_BACKUP_LOAD_L2",
+			"name": "P BACKUP LOAD L2",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 652,
+			"rules": 1,
+			"key": "P_BACKUP_LOAD_L3",
+			"name": "P BACKUP LOAD L3",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 653,
+			"rules": 1,
+			"key": "P_BACKUP_LOAD_TOTAL",
+			"name": "P BACKUP LOAD TOTAL",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 640,
+			"rules": 1,
+			"key": "P_UPS_LOAD_L1",
+			"name": "P UPS LOAD L1",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 641,
+			"rules": 1,
+			"key": "P_UPS_LOAD_L2",
+			"name": "P UPS LOAD L2",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 642,
+			"rules": 1,
+			"key": "P_UPS_LOAD_L3",
+			"name": "P UPS LOAD L3",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 643,
+			"rules": 1,
+			"key": "P_UPS_LOAD_TOTAL",
+			"name": "P UPS LOAD TOTAL",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 664,
+			"rules": 1,
+			"key": "P_GEN_L1",
+			"name": "P GEN L1",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 665,
+			"rules": 1,
+			"key": "P_GEN_L2",
+			"name": "P GEN L2",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 666,
+			"rules": 1,
+			"key": "P_GEN_L3",
+			"name": "P GEN L3",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 667,
+			"rules": 1,
+			"key": "P_GEN_TOTAL",
+			"name": "P_GEN_TOTAL",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 500,
+			"rules": 1,
+			"key": "health_state",
+			"name": "health state",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 529,
+			"rules": 2,
+			"key": "Day_PV_Power_Wh",
+			"name": "Total PV generation on the day",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 526,
+			"rules": 1,
+			"key": "Day_Load_Power_Wh",
+			"name": "Electricity consumption for the day",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 520,
+			"rules": 1,
+			"key": "Day_GridBuy_Power_Wh",
+			"name": "gekaufte Leistung",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 521,
+			"rules": 1,
+			"key": "Day_GridSell_Power_Wh",
+			"name": "Einspeisung",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 534,
+			"rules": 1,
+			"key": "Total_PV_power_Wh_low_word",
+			"name": "Total\tPV_power\tWh_low word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 535,
+			"rules": 1,
+			"key": "Total_PV_power_Wh_high_word",
+			"name": "Total\tPV_power\tWh_high word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 522,
+			"rules": 1,
+			"key": "Total_GridBuy_Power Wh_low word",
+			"name": "Total_GridBuy_Power Wh_low word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 524,
+			"rules": 1,
+			"key": "Total_GridSell_Power Wh_low word",
+			"name": "Total_GridSell_Power Wh_low word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 527,
+			"rules": 1,
+			"key": "Total_Load_Power Wh_low word",
+			"name": "Total_Load_Power Wh_low word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 541,
+			"rules": 1,
+			"key": "Temperature_Heat_Sink",
+			"name": "Temperature Heat Sink",
+			"unit": "°C",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 540,
+			"rules": 1,
+			"key": "Temperature_DC_Transformer",
+			"name": "Temperature DC Transformer",
+			"unit": "°C",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 514,
+			"rules": 1,
+			"key": "Battery_Today_Charge",
+			"name": "Battery_Today_Charge",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 515,
+			"rules": 1,
+			"key": "Battery_Today_Discharge",
+			"name": "Battery_Today_Discharge",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 516,
+			"rules": 1,
+			"key": "Total_Battery_Charge_low_word",
+			"name": "Total_Battery_Charge_low_word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 517,
+			"rules": 1,
+			"key": "Total_Battery_Charge_high_word",
+			"name": "Total_Battery_Charge_high_word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 518,
+			"rules": 1,
+			"key": "Total_Battery_Discharge_low_word",
+			"name": "Total_Battery_Discharge_low_word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 519,
+			"rules": 1,
+			"key": "Total_Battery_Discharge_high_word",
+			"name": "Total_Battery_Discharge_high_word",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 586,
+			"rules": 1,
+			"key": "Temperature_Battery",
+			"name": "Temperature_Battery",
+			"unit": "°C",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 587,
+			"rules": 2,
+			"key": "Battery_Voltage",
+			"name": "Battery_Voltage",
+			"unit": "V",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 588,
+			"rules": 2,
+			"key": "Battery_Level",
+			"name": "Battery_Level",
+			"unit": "%",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 589,
+			"rules": 1,
+			"key": "Battery_Retain",
+			"name": "Battery_Retain",
+			"unit": "",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 590,
+			"rules": 2,
+			"key": "Battery_Output",
+			"name": "Battery_Output",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 591,
+			"rules": 2,
+			"key": "Battery_Current",
+			"name": "Battery_Current",
+			"unit": "A",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 592,
+			"rules": 1,
+			"key": "Battery_Capacity",
+			"name": "Battery_Capacity",
+			"unit": "AH",
+			"factor": 0,
+			"nullable": false
+		}
+	],
+	"computes": [
+		{
+			"values": "PV1_Leistung+PV2_Leistung",
+			"key": "PV1_PV2_Leistung",
+			"name": "PV1+PV2 - Leistung",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "PV1_PV2_Leistung+P_GEN_TOTAL",
+			"key": "PV_Gesamtleistung",
+			"name": "PV - Gesamtleistung",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "P_BACKUP_LOAD_TOTAL+0",
+			"key": "Hausverbrauch",
+			"name": "Hausverbrauch",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "Day_PV_Power_Wh-Day_GridSell_Power_Wh",
+			"key": "Day_Eigenverbrauch",
+			"name": "Day_Eigenverbrauch",
+			"unit": "kWh",
+			"factor": 0
+		}
+	]
+}

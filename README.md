@@ -15,7 +15,7 @@
 
 Data Collector vor Deye-compatible Inverter
 
-## Developer manual
+## Usage
 
 To commission the adapter, the register ranges and coils must be entered in the GUI in addition to the IP address and the logger serial number in the following pages. There is already an example entry for this.
 Certain values are not supplied by the inverter and must be calculated independently. For this purpose, two values per line can be entered in the 'compute' table, which are then multiplied.
@@ -35,6 +35,7 @@ For this, only the IP of the inverter and the serial number of the logger must b
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### 0.0.9 (2023-07-10)
 
 -   (raschy) minor bugs fixed

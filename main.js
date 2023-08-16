@@ -106,7 +106,7 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('timeout', () => {
-			this.log.debug(`connection timeout`);
+			//this.log.debug(`connection timeout`);
 			this.client.destroy();
 			if (this.client.destroyed)
 				this.log.debug(`connection closed/destroyed`);
@@ -118,8 +118,7 @@ class Deyeidc extends utils.Adapter {
 			this.connectionActive = false;
 			this.setState('info.connection', { val: this.connectionActive, ack: true });
 			if (err) this.log.debug(`Error during connection ${err.message}`);
-			// Counter for PowerReset
-			this.powerReset(err);
+			this.offlineReset(err);
 		});
 
 		this.client.on('end', () => {
@@ -354,23 +353,24 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * PowerReset, if 'EHOSTUNREACH' arrived
+	 * OfflineReset, if 'EHOSTUNREACH' arrived
 	 * @param {*} err
 	 */
-	powerReset(err) {
-		// Counter for PowerReset
+	async offlineReset(err) {
+		// Counter for OfflineReset
 		if (err.message.indexOf('EHOSTUNREACH') > 1) {
 			this.resetCounter++;
-			this.log.debug(`[powerReset] Counter ${this.resetCounter}`);
-		}
-		if (this.resetCounter == 29) {
-			//
-			//console.log(`[powerReset] nullableValues: ${this.config.coils}`);
-			const jsonResult = [];
-			const jsonString = { key: 'Apo_t1', value: 0, unit: 'x', name: 'y' };
-			jsonResult.push(jsonString);
-			this.updateData(jsonResult);
-			this.log.debug(`[powerReset] Power resettet`);
+			const startReset = 540 / this.config.pollInterval;
+			this.log.debug(`startReset ${startReset}`);
+			if (this.resetCounter == 9) {
+				this.log.debug(`[offlineReset] Values will be nullable.`);
+				for (const obj of this.config.coils) {
+					if (obj['nullable']) {
+						console.log(`offlineReset: ${obj.key} ${obj.name} ${obj.unit}`);
+						await this.persistData(obj.key, obj.name, 0, 'value', obj.unit, true);
+					}
+				}
+			}
 		}
 	}
 
@@ -382,7 +382,6 @@ class Deyeidc extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			//this.log.debug(`state ${id} has changed to ${state.val}`);
 			if (id.indexOf('Power_Set') > 1) {
 				await this.setPower(id, state);
 			} else {
@@ -402,7 +401,7 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} role
 	 * @param {*} unit
 	 */
-	async persistData(key, name, value, role, unit) {
+	async persistData(key, name, value, role, unit, nullable) {
 		const dp_Device = String(this.config.logger) + '.' + key;
 		// Type recognition
 		let type = 'string';
@@ -439,7 +438,14 @@ class Deyeidc extends utils.Adapter {
 			native: {}
 		});
 
-		await this.setStateAsync(dp_Device, { val: value, ack: true });
+		// Differentiated writing of data
+		if (nullable) {
+			await this.setStateAsync(dp_Device, { val: 0, ack: true, q: 0x42 }); // Nullable values while device is not present
+		} else {
+			await this.setStateAsync(dp_Device, { val: value, ack: true, q: 0x00 });
+		}
+
+
 	}
 
 	/**
@@ -449,7 +455,8 @@ class Deyeidc extends utils.Adapter {
 	async updateData(data) {
 		for (const obj of data) {
 			if (obj.value != 'none') {
-				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit);
+				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
+				//lastUpdatet = parseInt((new Date().getTime() / 1000).toFixed(0));
 			}
 		}
 	}
@@ -503,7 +510,7 @@ class Deyeidc extends utils.Adapter {
 				? this.config.pollInterval * 1000
 				: parseInt(this.config.pollInterval, 10) * 1000;
 
-		if (isNaN(this.pollTimeMs) || this.pollTimeMs < 1 * 60 * 1000) {
+		if (isNaN(this.pollTimeMs) || this.pollTimeMs < 10000) {
 			this.pollTimeMs = 6 * 60 * 1000; // is set as the minimum interval 6*60*1000
 			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is ${this.pollTimeMs / 1000} sec, also 6 min.`);
 		}
