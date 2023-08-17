@@ -1,4 +1,5 @@
 'use strict';
+
 /*
  * Created with @iobroker/create-adapter v2.3.0
  */
@@ -360,13 +361,12 @@ class Deyeidc extends utils.Adapter {
 		// Counter for OfflineReset
 		if (err.message.indexOf('EHOSTUNREACH') > 1) {
 			this.resetCounter++;
-			const startReset = 540 / this.config.pollInterval;
-			this.log.debug(`startReset ${startReset}`);
-			if (this.resetCounter == 9) {
+			const startReset = Math.floor(540 / this.config.pollInterval);
+			if (this.resetCounter == startReset) {
 				this.log.debug(`[offlineReset] Values will be nullable.`);
 				for (const obj of this.config.coils) {
 					if (obj['nullable']) {
-						console.log(`offlineReset: ${obj.key} ${obj.name} ${obj.unit}`);
+						this.log.debug(`offlineReset: ${obj.key}`);
 						await this.persistData(obj.key, obj.name, 0, 'value', obj.unit, true);
 					}
 				}
