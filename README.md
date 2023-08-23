@@ -20,6 +20,24 @@ Data Collector vor Deye-compatible Inverter
 To commission the adapter, the register ranges and coils must be entered in the GUI in addition to the IP address and the logger serial number in the following pages. There is already an example entry for this.
 Certain values are not supplied by the inverter and must be calculated independently. For this purpose, two values per line can be entered in the 'compute' table, which are then multiplied.
 
+### Coils
+
+| Rules | Descriptions |
+| --- | --- | 
+| 0 |  raw_signed |
+| 1 |  für 16-bit-unsigned Values |
+| 2 |  für 16-bit-signed Values |
+| 3 |  für 32-bit-unsigned Values |
+| 4 |  für 32-bit-signed Values |
+| 5 |  Serialnumber |
+| 6 |  Temperature |
+| 7 |  Versionsnumber |
+| 8 |  SingleBytes (MSB) |
+| 9 |  SingleBytes (LSB) |
+
+### Factor
+__Factor__ is used for calculating actual used factor. The formula is: `value = value * -2^factor`
+
 ### DISCLAIMER
 
 All product and company names or logos are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them or any associated subsidiaries! This personal project is maintained in spare time and has no business goal. DEYE is a trademark of Copyright © 2023 Ningbo Deye Technology Co., Ltd., No.26 South Yongjiang Road, Beilun, Ningbo, Zhejiang, 315806 VR China.
