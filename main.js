@@ -104,6 +104,7 @@ class Deyeidc extends utils.Adapter {
 			this.resetCounter = 0;
 			this.connectionActive = true;
 			this.setState('info.connection', { val: this.connectionActive, ack: true });
+			this.requestData(this.req);
 		});
 
 		this.client.on('timeout', () => {
@@ -129,6 +130,7 @@ class Deyeidc extends utils.Adapter {
 		});
 
 		this.client.on('data', (data) => this.onData(data));
+		this.connect()
 	}
 
 	/**
