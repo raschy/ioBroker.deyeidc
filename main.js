@@ -27,7 +27,7 @@ class Deyeidc extends utils.Adapter {
 		this.idc = new idcCore();
 		this.client = new net.Socket();
 		// -----------------  Timeout variables -----------------
-		this.pollTimeMs = 6 * 60 * 1000; // 6min
+		this.pollTimeMs = 1 * 60 * 1000; // 1min
 		// -----------------  Global variables -----------------
 		this.connectionActive = false;
 		this.internDataReady = true;
@@ -456,7 +456,6 @@ class Deyeidc extends utils.Adapter {
 		for (const obj of data) {
 			if (obj.value != 'none') {
 				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
-				//lastUpdatet = parseInt((new Date().getTime() / 1000).toFixed(0));
 			}
 		}
 	}
