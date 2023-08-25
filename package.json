@@ -1,6 +1,6 @@
 {
   "name": "iobroker.deyeidc",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Data collector for deye-compatible inverters",
   "author": {
     "name": "raschy",

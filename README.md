@@ -55,8 +55,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.0.10 (2023-08-25)
 
 -   (raschy) Calculation of 32-bit values corrected
 -   (raschy) Ready for launch into the stable repository
