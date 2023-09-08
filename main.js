@@ -456,6 +456,8 @@ class Deyeidc extends utils.Adapter {
 		for (const obj of data) {
 			if (obj.value != 'none') {
 				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
+
+				//this.lastData[obj.key] = obj;
 			}
 		}
 	}
@@ -546,7 +548,6 @@ class Deyeidc extends utils.Adapter {
 			// Here you must clear all timeouts or intervals that may still be active
 			//
 			this.updateInterval && clearInterval(this.updateInterval);
-			// because [W505] setTimeout found in "main.js", but no clearTimeout detected in AdapterCheck
 			//
 			this.client.destroy();
 			this.setState('info.connection', { val: false, ack: true });
