@@ -1,5 +1,5 @@
 {
-	"ipaddress": " ",
+	"ipaddress": "",
 	"port": 8899,
 	"logger": 0,
 	"pollInterval": 60,
@@ -286,7 +286,7 @@
 			"register": 534,
 			"rules": 1,
 			"key": "Total_PV_power_Wh_low_word",
-			"name": "Total\tPV_power\tWh_low word",
+			"name": "Total PV_power Wh low_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -295,7 +295,7 @@
 			"register": 535,
 			"rules": 1,
 			"key": "Total_PV_power_Wh_high_word",
-			"name": "Total\tPV_power\tWh_high word",
+			"name": "Total PV_power Wh high_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -304,7 +304,7 @@
 			"register": 522,
 			"rules": 1,
 			"key": "Total_GridBuy_Power Wh_low word",
-			"name": "Total_GridBuy_Power Wh_low word",
+			"name": "Total GridBuy Power Wh low_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -313,7 +313,7 @@
 			"register": 524,
 			"rules": 1,
 			"key": "Total_GridSell_Power Wh_low word",
-			"name": "Total_GridSell_Power Wh_low word",
+			"name": "Total GridSell Power Wh low_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -322,7 +322,7 @@
 			"register": 527,
 			"rules": 1,
 			"key": "Total_Load_Power Wh_low word",
-			"name": "Total_Load_Power Wh_low word",
+			"name": "Total Load Power Wh low_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -349,7 +349,7 @@
 			"register": 514,
 			"rules": 1,
 			"key": "Battery_Today_Charge",
-			"name": "Battery_Today_Charge",
+			"name": "Battery Today Charge",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -358,7 +358,7 @@
 			"register": 515,
 			"rules": 1,
 			"key": "Battery_Today_Discharge",
-			"name": "Battery_Today_Discharge",
+			"name": "Battery Today Discharge",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -367,7 +367,7 @@
 			"register": 516,
 			"rules": 1,
 			"key": "Total_Battery_Charge_low_word",
-			"name": "Total_Battery_Charge_low_word",
+			"name": "Total Battery Charge low_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -376,7 +376,7 @@
 			"register": 517,
 			"rules": 1,
 			"key": "Total_Battery_Charge_high_word",
-			"name": "Total_Battery_Charge_high_word",
+			"name": "Total Battery Charge high_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -385,7 +385,7 @@
 			"register": 518,
 			"rules": 1,
 			"key": "Total_Battery_Discharge_low_word",
-			"name": "Total_Battery_Discharge_low_word",
+			"name": "Total Battery Discharge low_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -394,7 +394,7 @@
 			"register": 519,
 			"rules": 1,
 			"key": "Total_Battery_Discharge_high_word",
-			"name": "Total_Battery_Discharge_high_word",
+			"name": "Total Battery Discharge high_word",
 			"unit": "kWh",
 			"factor": 1,
 			"nullable": false
@@ -403,7 +403,7 @@
 			"register": 586,
 			"rules": 1,
 			"key": "Temperature_Battery",
-			"name": "Temperature_Battery",
+			"name": "Temperatur Battery",
 			"unit": "°C",
 			"factor": 1,
 			"nullable": false
@@ -412,7 +412,7 @@
 			"register": 587,
 			"rules": 2,
 			"key": "Battery_Voltage",
-			"name": "Battery_Voltage",
+			"name": "Battery Voltage",
 			"unit": "V",
 			"factor": 2,
 			"nullable": false
@@ -421,7 +421,7 @@
 			"register": 588,
 			"rules": 2,
 			"key": "Battery_Level",
-			"name": "Battery_Level",
+			"name": "Battery Level",
 			"unit": "%",
 			"factor": 0,
 			"nullable": false
@@ -430,7 +430,7 @@
 			"register": 589,
 			"rules": 1,
 			"key": "Battery_Retain",
-			"name": "Battery_Retain",
+			"name": "Battery Retain",
 			"unit": "",
 			"factor": 1,
 			"nullable": false
@@ -439,7 +439,7 @@
 			"register": 590,
 			"rules": 2,
 			"key": "Battery_Output",
-			"name": "Battery_Output",
+			"name": "Battery Output",
 			"unit": "W",
 			"factor": 0,
 			"nullable": false
@@ -448,7 +448,7 @@
 			"register": 591,
 			"rules": 2,
 			"key": "Battery_Current",
-			"name": "Battery_Current",
+			"name": "Battery Current",
 			"unit": "A",
 			"factor": 2,
 			"nullable": false
@@ -457,7 +457,7 @@
 			"register": 592,
 			"rules": 1,
 			"key": "Battery_Capacity",
-			"name": "Battery_Capacity",
+			"name": "Battery Capacity",
 			"unit": "AH",
 			"factor": 0,
 			"nullable": false
@@ -488,7 +488,7 @@
 		{
 			"values": "Day_PV_Power_Wh-Day_GridSell_Power_Wh",
 			"key": "Day_Eigenverbrauch",
-			"name": "Day_Eigenverbrauch",
+			"name": "Day Eigenverbrauch",
 			"unit": "kWh",
 			"factor": 0
 		}
