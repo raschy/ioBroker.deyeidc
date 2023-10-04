@@ -121,7 +121,7 @@ class Deyeidc extends utils.Adapter {
 
 			client.connect({ host: this.config.ipaddress, port: this.config.port }, () => {
 				this.log.debug('Connected to server');
-				client.setTimeout(15000);
+				//client.setTimeout(15000);
 				this.connectionActive = true;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
 				resolve(client); // Successful connection, return the socket
@@ -132,7 +132,7 @@ class Deyeidc extends utils.Adapter {
 				client.destroy();
 				if (client.destroyed) this.log.debug('Connection closed/destroyed');
 				this.connectionActive = false;
-				this.setState('info.connection', { val: this.connectionActive, ack: true });
+				//this.setState('info.connection', { val: this.connectionActive, ack: true });
 			});
 
 			client.on('error', (error) => {

@@ -59,6 +59,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### **WORK IN PROGRESS**
 
 -   (raschy) Changes in the connection setup
+-   (raschy) RangeError fixed
 
 ### 0.0.11 (2023-08-26)
 
