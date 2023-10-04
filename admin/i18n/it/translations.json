@@ -27,5 +27,12 @@
     "lastUpdate": "Ultimo aggiornamento",
     "status": "Stato",
     "deyeidc adapter settings": "Impostazioni dell'adattatore per Deye-IDC",
-    "tooltipDeviceSerialNnumber": "Prestare attenzione a correggere il 'Numero di serie del logger'!"
+    "tooltipDeviceSerialNnumber": "Prestare attenzione a correggere il 'Numero di serie del logger'!",
+    "Adapter cannot be started without correct settings!": "L'adattatore non può essere avviato senza le impostazioni corrette!",
+    "Connected to server": "Connesso al server",
+    "Connect_error": "Errore_connessione",
+    "Connection timeout": "Connesione finita",
+    "Connection closed/destroyed": "Connessione chiusa/distrutta",
+    "Error during connection": "Errore durante la connessione",
+    "Connection closed": "Connessione chiusa"
 }

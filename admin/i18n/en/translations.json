@@ -24,8 +24,15 @@
 	"calculatedValues": "Calculated values",
 	"values": "Values (Formulas)",
 	"tableComputeHelp": "Help for calculating values",
+	"Adapter cannot be started without correct settings!": "Adapter cannot be started without correct settings!",
 	"connection": "connection",
 	"DeviceConnected": "Device or service connected",
 	"lastUpdate": "Last update",
-	"status": "Status"
+	"status": "Status",
+	"Connected to server": "Connected to server",
+	"Connect_error": "Connect_error",
+	"Connection timeout": "Connection timeout",
+	"Connection closed/destroyed": "Connection closed/destroyed",
+	"Error during connection": "Error during connection",
+	"Connection closed": "Connection closed"
 }

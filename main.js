@@ -10,6 +10,8 @@ const utils = require('@iobroker/adapter-core');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
 
+//const HOST = '192.168.68.241';
+//const PORT = 8899;
 //
 class Deyeidc extends utils.Adapter {
 	/**
@@ -25,9 +27,9 @@ class Deyeidc extends utils.Adapter {
 		this.on('unload', this.onUnload.bind(this));
 		//
 		this.idc = new idcCore();
-		this.client = new net.Socket();
+		this.client = null;
 		// -----------------  Timeout variables -----------------
-		this.pollTimeMs = 1 * 60 * 1000; // 1min
+		this.executionInterval = 60;
 		// -----------------  Global variables -----------------
 		this.connectionActive = false;
 		this.internDataReady = true;
@@ -78,57 +80,79 @@ class Deyeidc extends utils.Adapter {
 		// already
 		if (this.internDataReady) {
 			// Start connection handler to created & monitor websocket connection
-			await this.connectionHandler();
+			//await this.checkOnlineDate();
+
+			// First request
+			this.req = 1;
+			console.log('Start >> Request:' + this.req);
+			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = setInterval(async () => {
-				await this.checkOnlineDate();
-			}, this.pollTimeMs);
+				this.req = 1;
+				console.log('Update >> Request:' + this.req);
+				await this.requestData(this.req);
+				//await this.checkOnlineDate(); // ######################
+			}, this.executionInterval * 1000);
+		} else {
+			this.setState('info.connection', { val: false, ack: true });
+			this.log.error('Adapter cannot be started without correct settings!');
 		}
 	}
 
 	/**
 	 * connection to inverter
 	 */
-	connect() {
+	async connect() {
 		this.log.debug(`try to connect . . .`);
-		this.client.connect({ host: this.config.ipaddress, port: this.config.port });
-		this.client.setTimeout(20000);
+		try {
+			this.client = await this.connectToServer();
+		} catch (error) {
+			this.log.error(`Connect_error: ${error}`);
+		}
 	}
 
 	/**
-	 * connectionHandler
+	 * connectToServer
+	 * @returns client
 	 */
-	async connectionHandler() {
-		this.client.on('connect', () => {
-			this.log.debug(`connected`);
-			this.resetCounter = 0;
-			this.connectionActive = true;
-			this.setState('info.connection', { val: this.connectionActive, ack: true });
-		});
+	connectToServer() {
+		return new Promise((resolve, reject) => {
+			const client = new net.Socket();
 
-		this.client.on('timeout', () => {
-			//this.log.debug(`connection timeout`);
-			this.client.destroy();
-			if (this.client.destroyed)
-				this.log.debug(`connection closed/destroyed`);
-			this.connectionActive = false;
-		});
+			client.connect({ host: this.config.ipaddress, port: this.config.port }, () => {
+				this.log.debug('Connected to server');
+				client.setTimeout(15000);
+				this.connectionActive = true;
+				this.setState('info.connection', { val: this.connectionActive, ack: true });
+				resolve(client); // Successful connection, return the socket
+			});
 
-		this.client.on('error', (err) => {
-			this.client.destroy();
-			this.connectionActive = false;
-			this.setState('info.connection', { val: this.connectionActive, ack: true });
-			if (err) this.log.debug(`Error during connection ${err.message}`);
-			this.offlineReset(err);
-		});
+			client.on('timeout', () => {
+				this.log.debug('Connection timeout');
+				client.destroy();
+				if (client.destroyed) this.log.debug('Connection closed/destroyed');
+				this.connectionActive = false;
+				this.setState('info.connection', { val: this.connectionActive, ack: true });
+			});
 
-		this.client.on('end', () => {
-			this.log.debug(`Connection to server terminated`);
-			this.connectionActive = false;
-			this.setState('info.connection', { val: this.connectionActive, ack: true });
-		});
+			client.on('error', (error) => {
+				this.log.error(`Error during connection: ${error}`);
+				this.connectionActive = false;
+				this.setState('info.connection', { val: this.connectionActive, ack: true });
+				reject(error);
+			});
 
-		this.client.on('data', (data) => this.onData(data));
+			client.on('close', () => {
+				this.log.debug('Connection closed');
+				this.connectionActive = false;
+				this.setState('info.connection', { val: this.connectionActive, ack: true });
+			});
+
+			client.on('data', (data) => {
+				this.log.debug('Data received');
+				this.onData(data);
+			});
+		});
 	}
 
 	/**
@@ -136,19 +160,19 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} data
 	 */
 	async onData(data) {
-		//console.log(`Response from client ${this.req + 1} >> ${this.idc.toHexString(data)}`); // human readable
+		//console.log('Response by request [', this.req, '] >>', this.idc.toHexString(data)); // human readable
 		try {
 			this.mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
-			this.createDPsForInstances();
 			if (this.mb) {
 				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 				if (this.mb.register == 0) { // for request checkOnlineDate
+					console.log('Integration OfflineCheck');
 					const dayHour = this.mb.modbus.subarray(3, this.mb.modbus.length - 1).readInt16LE(0);
 					if (dayHour == 0) await this.setOfflineDate();
-					this.req = -1;	// continue with registerset 0, therefore set to -1!
+					// this.req = -1;	// continue with registerset 0, therefore set to -1!  // ##  ?? Integration OfflineCheck
 				} else {
-					if (this.req < this.numberRegisterSets) {
+					if (this.req <= this.numberRegisterSets) {
 						await this.updateData(this.idc.readCoils(this.mb));
 					}
 				}
@@ -163,10 +187,13 @@ class Deyeidc extends utils.Adapter {
 
 		// send next request
 		if (data.length > 0) {
+			console.log('data.length >>: ', this.req);
 			this.req++;	// next registerset
-			if (this.req < this.numberRegisterSets) {
+			if (this.req <= this.numberRegisterSets) {
+				console.log('Request ####: ', this.req);
 				this.requestData(this.req);
 			} else {
+				console.log('Request Else: ', this.req);
 				await this.readComputeAndWatch();
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'idle', ack: true });
@@ -180,12 +207,14 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async requestData(req) {
 		try {
-			if (!this.connectionActive) this.connect();
+			if (!this.connectionActive) await this.connect();
+			console.log('requestData Try');
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-			//console.log(`Request to register set ${(req + 1)} > ${this.idc.toHexString(request)}`); // human readable
+			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
 		} catch (error) {
+			console.log('requestData Catch');
 			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
 	}
@@ -214,9 +243,10 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async checkOnlineDate() {
 		if (!this.connectionActive) this.connect();
+		console.log('##### checkOnlineDate ######');
 		const dateControlRegister = 0x17; // Day&Hour
-		const request = this.idc.requestFrame(-1, this.idc.modbusReadFrame(dateControlRegister));
-		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));  //### -1 ??
+		console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
 
@@ -402,50 +432,61 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} unit
 	 */
 	async persistData(key, name, value, role, unit, nullable) {
-		const dp_Device = String(this.config.logger) + '.' + key;
-		// Type recognition
-		let type = 'string';
-		if (this.idc.isNumber(value)) {
-			type = 'number';
+		const dp_Device = String(this.config.logger);
+		const dp_Value = dp_Device + '.' + key;
+		//
+		await this.setObjectNotExists(dp_Device, {
+			type: 'channel',
+			common: {
+				name: 'Values from device',
+				desc: 'generated by deyeidc',
+				role: 'info'
+			},
+			native: {}
+		});
+		//
+		// Type recognition <number>
+		if (isNumber(value)) {
 			value = parseFloat(value);
+			//
+			await this.setObjectNotExistsAsync(dp_Value, {
+				type: 'state',
+				common: {
+					name: name,
+					type: 'number',
+					role: role,
+					unit: unit,
+					read: true,
+					write: true,
+				},
+				native: {},
+			});
+			//console.log(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "number"`);
+		} else { // or <string>
+			await this.setObjectNotExistsAsync(dp_Value, {
+				type: 'state',
+				common: {
+					name: name,
+					type: 'string',
+					role: role,
+					unit: unit,
+					read: true,
+					write: true,
+				},
+				native: {},
+			});
+			//console.log(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "string"`);
 		}
-		if (typeof value === 'object') {
-			type = 'string';
-			value = JSON.stringify(value);
-		}
-		//this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}`);
-
-		await this.setObjectNotExistsAsync(String(this.config.logger), {
-			type: 'device',
-			common: {
-				name: String(this.config.logger)
-			},
-			native: {}
-		});
-
-		await this.setObjectNotExistsAsync(dp_Device, {
-			type: 'state',
-			common: {
-				name: name,
-				role: role,
-				// @ts-ignore
-				type: type,
-				// @ts-ignore
-				unit: unit,
-				read: true,
-				write: false
-			},
-			native: {}
-		});
-
 		// Differentiated writing of data
 		if (nullable) {
-			await this.setStateAsync(dp_Device, { val: 0, ack: true, q: 0x42 }); // Nullable values while device is not present
+			await this.setStateAsync(dp_Value, { val: 0, ack: true, q: 0x42 }); // Nullable values while device is not present
 		} else {
-			await this.setStateAsync(dp_Device, { val: value, ack: true, q: 0x00 });
+			await this.setStateAsync(dp_Value, { val: value, ack: true, q: 0x00 });
 		}
-
-
+		//
+		function isNumber(n) {
+			return !isNaN(parseFloat(n)) && !isNaN(n - 0);
+		}
 	}
 
 	/**
@@ -506,16 +547,13 @@ class Deyeidc extends utils.Adapter {
 		this.idc.setLoggerSn(this.config.logger);
 		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
-		this.pollTimeMs =
-			typeof this.config.pollInterval === 'number'
-				? this.config.pollInterval * 1000
-				: parseInt(this.config.pollInterval, 10) * 1000;
-
-		if (isNaN(this.pollTimeMs) || this.pollTimeMs < 10000) {
-			this.pollTimeMs = 6 * 60 * 1000; // is set as the minimum interval 6*60*1000
-			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is ${this.pollTimeMs / 1000} sec, also 6 min.`);
+		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 30) {
+			this.executionInterval = 60;
+			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is ${this.executionInterval} sec.`);
+		} else {
+			this.executionInterval = this.config.pollInterval;
 		}
-		this.log.debug(`Sync time set to ${this.pollTimeMs} ms`);
+		this.log.info(`Retrieving data from the inverter will be done every ${this.executionInterval} seconds`);
 		//
 		this.log.debug(`checkUserData is ready`);
 		return;
@@ -527,13 +565,13 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * createDPsForInstances (loggerSN)
+	 * createObjectForDevices (loggerSN)
 	 */
-	async createDPsForInstances() {
+	async createObjectForDevices() {
 		const loggerSn = String(this.config.logger);
 		await this.setObjectNotExistsAsync(loggerSn, {
 			type: 'channel',
-			common: { name: 'Values from Adapter and Instances' },
+			common: { name: 'Values from device', desc: 'generated by Deyeidc' },
 			native: {},
 		});
 	}

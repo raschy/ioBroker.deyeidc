@@ -27,5 +27,12 @@
     "lastUpdate": "最后更新",
     "status": "地位",
     "deyeidc adapter settings": "Deye-IDC 适配器设置",
-    "tooltipDeviceSerialNnumber": "注意正确填写“记录仪序列号”！"
+    "tooltipDeviceSerialNnumber": "注意正确填写“记录仪序列号”！",
+    "Adapter cannot be started without correct settings!": "如果没有正确设置，适配器将无法启动！",
+    "Connected to server": "已连接到服务器",
+    "Connect_error": "连接错误",
+    "Connection timeout": "连接超时",
+    "Connection closed/destroyed": "连接关闭/损坏",
+    "Error during connection": "连接时出错",
+    "Connection closed": "连接已关闭"
 }

@@ -27,5 +27,12 @@
     "lastUpdate": "Dernière mise à jour",
     "status": "Statut",
     "deyeidc adapter settings": "Paramètres de l'adaptateur pour Deye-IDC",
-    "tooltipDeviceSerialNnumber": "Faites attention à corriger le 'Numéro de série de l'enregistreur' !"
+    "tooltipDeviceSerialNnumber": "Faites attention à corriger le 'Numéro de série de l'enregistreur' !",
+    "Adapter cannot be started without correct settings!": "L'adaptateur ne peut pas être démarré sans paramètres corrects !",
+    "Connected to server": "Connecté au serveur",
+    "Connect_error": "Erreur_de connexion",
+    "Connection timeout": "Délai de connection dépassé",
+    "Connection closed/destroyed": "Connexion fermée/détruite",
+    "Error during connection": "Erreur lors de la connexion",
+    "Connection closed": "Connexion fermée"
 }

@@ -27,5 +27,12 @@
     "lastUpdate": "Последнее обновление",
     "status": "Положение дел",
     "deyeidc adapter settings": "Настройки адаптера для Deye-IDC",
-    "tooltipDeviceSerialNnumber": "Обратите внимание на правильный «серийный номер регистратора»!"
+    "tooltipDeviceSerialNnumber": "Обратите внимание на правильный «серийный номер регистратора»!",
+    "Adapter cannot be started without correct settings!": "Адаптер невозможно запустить без правильных настроек!",
+    "Connected to server": "Подключено к серверу",
+    "Connect_error": "Connect_error",
+    "Connection timeout": "Время соединения вышло",
+    "Connection closed/destroyed": "Соединение закрыто/уничтожено",
+    "Error during connection": "Ошибка во время подключения",
+    "Connection closed": "Соединение закрыто"
 }

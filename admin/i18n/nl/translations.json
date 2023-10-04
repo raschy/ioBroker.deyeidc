@@ -27,5 +27,12 @@
     "lastUpdate": "Laatste update",
     "status": "Toestand",
     "deyeidc adapter settings": "Adapterinstellingen voor Deye-IDC",
-    "tooltipDeviceSerialNnumber": "Let op dat u het 'Logger serienummer' corrigeert!"
+    "tooltipDeviceSerialNnumber": "Let op dat u het 'Logger serienummer' corrigeert!",
+    "Adapter cannot be started without correct settings!": "Zonder correcte instellingen kan de adapter niet worden gestart!",
+    "Connected to server": "Verbonden met server",
+    "Connect_error": "Connect_fout",
+    "Connection timeout": "Time-out voor verbinding",
+    "Connection closed/destroyed": "Verbinding gesloten/vernietigd",
+    "Error during connection": "Fout tijdens verbinding",
+    "Connection closed": "Verbinding gesloten"
 }

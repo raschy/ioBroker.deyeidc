@@ -27,5 +27,12 @@
     "lastUpdate": "Ostatnia aktualizacja",
     "status": "Status",
     "deyeidc adapter settings": "Ustawienia adaptera dla Deye-IDC",
-    "tooltipDeviceSerialNnumber": "Zwróć uwagę, aby poprawić „Numer seryjny rejestratora”!"
+    "tooltipDeviceSerialNnumber": "Zwróć uwagę, aby poprawić „Numer seryjny rejestratora”!",
+    "Adapter cannot be started without correct settings!": "Adaptera nie można uruchomić bez poprawnych ustawień!",
+    "Connected to server": "Połączono z serwerem",
+    "Connect_error": "Połącz_błąd",
+    "Connection timeout": "Czas połączenia minął",
+    "Connection closed/destroyed": "Połączenie zamknięte/zniszczone",
+    "Error during connection": "Błąd podczas połączenia",
+    "Connection closed": "Połączenie zamknięte"
 }

@@ -55,6 +55,11 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (raschy) Changes in the connection setup
+
 ### 0.0.11 (2023-08-26)
 
 -   (raschy) wrong implementation msb/lsb of 32-bit values recorrected
