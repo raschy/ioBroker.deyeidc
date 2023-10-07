@@ -107,7 +107,8 @@ class Deyeidc extends utils.Adapter {
 		try {
 			this.client = await this.connectToServer();
 		} catch (error) {
-			this.log.error(`Connect_error: ${error}`);
+			this.client = null;
+			this.connectionActive = false;
 		}
 	}
 
@@ -119,9 +120,10 @@ class Deyeidc extends utils.Adapter {
 		return new Promise((resolve, reject) => {
 			const client = new net.Socket();
 
+			//this.config.ipaddress = '178.27.139.158';
 			client.connect({ host: this.config.ipaddress, port: this.config.port }, () => {
 				this.log.debug('Connected to server');
-				//client.setTimeout(15000);
+				client.setTimeout(15000);
 				this.connectionActive = true;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
 				resolve(client); // Successful connection, return the socket
@@ -136,16 +138,22 @@ class Deyeidc extends utils.Adapter {
 			});
 
 			client.on('error', (error) => {
-				this.log.error(`Error during connection: ${error}`);
+				this.log.debug('Connection error');
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
+				if (error.message.indexOf('EHOSTUNREACH') > 1) {
+					this.log.debug(`Connect_error: 'EHOSTUNREACH'`);
+					this.offlineReset();
+				} else {
+					this.log.error(`Error during connection: ${error}`);
+				}
 				reject(error);
 			});
 
 			client.on('close', () => {
 				this.log.debug('Connection closed');
 				this.connectionActive = false;
-				this.setState('info.connection', { val: this.connectionActive, ack: true });
+				//this.setState('info.connection', { val: this.connectionActive, ack: true });
 			});
 
 			client.on('data', (data) => {
@@ -166,11 +174,17 @@ class Deyeidc extends utils.Adapter {
 			// Preparation of the data
 			if (this.mb) {
 				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
+				if (this.mb.register > 9) {	//############
+					console.log('illegale Registernummer: ', this.mb.register);
+					return;
+				}
 				if (this.mb.register == 0) { // for request checkOnlineDate
-					console.log('Integration OfflineCheck');
+					//console.log('Integration OfflineCheck');
+					/*
 					const dayHour = this.mb.modbus.subarray(3, this.mb.modbus.length - 1).readInt16LE(0);
 					if (dayHour == 0) await this.setOfflineDate();
 					// this.req = -1;	// continue with registerset 0, therefore set to -1!  // ##  ?? Integration OfflineCheck
+					*/
 				} else {
 					if (this.req <= this.numberRegisterSets) {
 						await this.updateData(this.idc.readCoils(this.mb));
@@ -187,7 +201,6 @@ class Deyeidc extends utils.Adapter {
 
 		// send next request
 		if (data.length > 0) {
-			console.log('data.length >>: ', this.req);
 			this.req++;	// next registerset
 			if (this.req <= this.numberRegisterSets) {
 				console.log('Request ####: ', this.req);
@@ -206,6 +219,8 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
+		if (!this.connectionActive) await this.connect();
+		if (!this.connectionActive) return;
 		try {
 			if (!this.connectionActive) await this.connect();
 			console.log('requestData Try');
@@ -243,10 +258,10 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async checkOnlineDate() {
 		if (!this.connectionActive) this.connect();
-		console.log('##### checkOnlineDate ######');
+		//console.log('##### checkOnlineDate ######');
 		const dateControlRegister = 0x17; // Day&Hour
-		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));  //### -1 ??
-		console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
+		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
 	}
 
@@ -383,25 +398,24 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
-	/**
+	/**EHOSTUNREACH Connect_error:
 	 * OfflineReset, if 'EHOSTUNREACH' arrived
-	 * @param {*} err
 	 */
-	async offlineReset(err) {
+	async offlineReset() {
 		// Counter for OfflineReset
-		if (err.message.indexOf('EHOSTUNREACH') > 1) {
-			this.resetCounter++;
-			const startReset = Math.floor(540 / this.config.pollInterval);
-			if (this.resetCounter == startReset) {
-				this.log.debug(`[offlineReset] Values will be nullable.`);
-				for (const obj of this.config.coils) {
-					if (obj['nullable']) {
-						this.log.debug(`offlineReset: ${obj.key}`);
-						await this.persistData(obj.key, obj.name, 0, 'value', obj.unit, true);
-					}
+		//if (err.message.indexOf('EHOSTUNREACH') > 1) {
+		this.resetCounter++;
+		const startReset = Math.floor(540 / this.config.pollInterval);
+		if (this.resetCounter == startReset) {
+			this.log.debug(`[offlineReset] Values will be nullable.`);
+			for (const obj of this.config.coils) {
+				if (obj['nullable']) {
+					this.log.debug(`offlineReset: ${obj.key}`);
+					await this.persistData(obj.key, obj.name, 0, 'value', obj.unit, true);
 				}
 			}
 		}
+		//}
 	}
 
 	/**
