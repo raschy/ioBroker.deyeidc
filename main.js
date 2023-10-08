@@ -140,8 +140,8 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug('Connection error');
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
-				if (error.message.indexOf('EHOSTUNREACH') > 1) {
-					this.log.debug(`Connect_error: 'EHOSTUNREACH'`);
+				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONRESET')) {
+					this.log.debug(`No connection to inverter: '${error.message}'`);
 					this.offlineReset();
 				} else {
 					this.log.error(`Error during connection: ${error}`);
