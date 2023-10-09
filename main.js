@@ -9,9 +9,8 @@
 const utils = require('@iobroker/adapter-core');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
+let adapter;    // adapter instance - @type {ioBroker.Adapter}
 
-//const HOST = '192.168.68.241';
-//const PORT = 8899;
 //
 class Deyeidc extends utils.Adapter {
 	/**
@@ -22,6 +21,10 @@ class Deyeidc extends utils.Adapter {
 			...options,
 			name: 'deyeidc',
 		});
+		adapter = utils.adapter(Object.assign({}, options, {
+			name: 'deyeidc',
+		}));
+
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
@@ -89,7 +92,7 @@ class Deyeidc extends utils.Adapter {
 			// timed request
 			this.updateInterval = setInterval(async () => {
 				this.req = 1;
-				//console.log('Update >> Request: ', this.req);
+				console.log('Update >> Request: ', this.req);
 				await this.requestData(this.req);
 				//await this.checkOnlineDate(); // ######################
 			}, this.executionInterval * 1000);
@@ -171,7 +174,7 @@ class Deyeidc extends utils.Adapter {
 			this.mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
 			if (this.mb) {
-				//this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
+				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 				if (this.mb.register == 0) { // for request checkOnlineDate
 					//console.log('Integration OfflineCheck');
 					/*
@@ -181,10 +184,8 @@ class Deyeidc extends utils.Adapter {
 					*/
 				}
 				if (this.mb.register > 0) {
-					//if (this.req <= this.numberRegisterSets) {
 					//console.log('   ### readCoils >> ', this.req, this.mb.register);
 					await this.updateData(this.idc.readCoils(this.mb));
-					//}
 				}
 			}
 		} catch (err) {
@@ -203,6 +204,7 @@ class Deyeidc extends utils.Adapter {
 			}
 			if (this.req == this.numberRegisterSets + 1) {
 				//console.log('Request Else ##: ', this.req);
+				//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 				this.req++;
 				await this.readComputeAndWatch();
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
@@ -444,8 +446,8 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} unit
 	 */
 	async persistData(key, name, value, role, unit, nullable) {
-		const dp_Device = String(this.config.logger);
-		const dp_Value = dp_Device + '.' + key;
+		const dp_Device = name2id(String(this.config.logger));
+		const dp_Value = dp_Device + '.' + name2id(key);
 		//
 		await this.setObjectNotExists(dp_Device, {
 			type: 'channel',
@@ -498,6 +500,9 @@ class Deyeidc extends utils.Adapter {
 		//
 		function isNumber(n) {
 			return !isNaN(parseFloat(n)) && !isNaN(n - 0);
+		}
+		function name2id(pName) {
+			return (pName || '').replace(adapter.FORBIDDEN_CHARS, '_').replace(/[-\s]/g, '_');
 		}
 	}
 
