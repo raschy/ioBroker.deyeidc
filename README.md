@@ -55,8 +55,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.0.12 (2023-10-09)
 
 -   (raschy) Changes in the connection setup
 -   (raschy) RangeError fixed
