@@ -9,7 +9,6 @@
 const utils = require('@iobroker/adapter-core');
 const net = require('net');
 const idcCore = require('./lib/idc-core.js');
-let adapter;    // adapter instance - @type {ioBroker.Adapter}
 
 //
 class Deyeidc extends utils.Adapter {
@@ -21,10 +20,6 @@ class Deyeidc extends utils.Adapter {
 			...options,
 			name: 'deyeidc',
 		});
-		adapter = utils.adapter(Object.assign({}, options, {
-			name: 'deyeidc',
-		}));
-
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
@@ -125,7 +120,6 @@ class Deyeidc extends utils.Adapter {
 
 			client.connect({ host: this.config.ipaddress, port: this.config.port }, () => {
 				this.log.debug('Connected to server');
-				//client.setTimeout(15000);
 				this.connectionActive = true;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
 				resolve(client); // Successful connection, return the socket
@@ -140,7 +134,7 @@ class Deyeidc extends utils.Adapter {
 			});
 
 			client.on('error', (error) => {
-				this.log.debug('Connection error');
+				//this.log.debug('Connection error');
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
 				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONRESET')) {
@@ -174,16 +168,16 @@ class Deyeidc extends utils.Adapter {
 			this.mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
 			if (this.mb) {
-				this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 				if (this.mb.register == 0) { // for request checkOnlineDate
 					//console.log('Integration OfflineCheck');
 					/*
 					const dayHour = this.mb.modbus.subarray(3, this.mb.modbus.length - 1).readInt16LE(0);
 					if (dayHour == 0) await this.setOfflineDate();
-					// this.req = -1;	// continue with registerset 0, therefore set to -1!  // ##  ?? Integration OfflineCheck
+					// this.req = 0;	// continue with registerset 0  // ##  ?? Integration OfflineCheck
 					*/
 				}
 				if (this.mb.register > 0) {
+					this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 					//console.log('   ### readCoils >> ', this.req, this.mb.register);
 					await this.updateData(this.idc.readCoils(this.mb));
 				}
@@ -205,10 +199,11 @@ class Deyeidc extends utils.Adapter {
 			if (this.req == this.numberRegisterSets + 1) {
 				//console.log('Request Else ##: ', this.req);
 				//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-				this.req++;
+				//this.req++;
 				await this.readComputeAndWatch();
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'idle', ack: true });
+				//this.client.resetAndDestroy();
 			}
 		}
 	}
@@ -405,6 +400,7 @@ class Deyeidc extends utils.Adapter {
 		// Counter for OfflineReset
 		//if (err.message.indexOf('EHOSTUNREACH') > 1) {
 		this.resetCounter++;
+		console.log('ResetCounter: ', this.resetCounter);
 		const startReset = Math.floor(540 / this.config.pollInterval);
 		if (this.resetCounter == startReset) {
 			this.log.debug(`[offlineReset] Values will be nullable.`);
@@ -446,8 +442,8 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} unit
 	 */
 	async persistData(key, name, value, role, unit, nullable) {
-		const dp_Device = name2id(String(this.config.logger));
-		const dp_Value = dp_Device + '.' + name2id(key);
+		const dp_Device = removeInvalidCharacters(String(this.config.logger));
+		const dp_Value = dp_Device + '.' + removeInvalidCharacters(key);
 		//
 		await this.setObjectNotExists(dp_Device, {
 			type: 'channel',
@@ -475,7 +471,7 @@ class Deyeidc extends utils.Adapter {
 				},
 				native: {},
 			});
-			//console.log(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "number"`);
+			this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "number"`);
 		} else { // or <string>
 			await this.setObjectNotExistsAsync(dp_Value, {
 				type: 'state',
@@ -501,8 +497,10 @@ class Deyeidc extends utils.Adapter {
 		function isNumber(n) {
 			return !isNaN(parseFloat(n)) && !isNaN(n - 0);
 		}
-		function name2id(pName) {
-			return (pName || '').replace(adapter.FORBIDDEN_CHARS, '_').replace(/[-\s]/g, '_');
+		function removeInvalidCharacters(inputString) {
+			const regexPattern = '[^a-zA-Z0-9]+';
+			const regex = new RegExp(regexPattern, 'g');
+			return inputString.replace(regex, '_');
 		}
 	}
 
