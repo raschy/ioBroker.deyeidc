@@ -177,9 +177,11 @@ class Deyeidc extends utils.Adapter {
 					*/
 				}
 				if (this.mb.register > 0) {
-					this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
+					//this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
 					//console.log('   ### readCoils >> ', this.req, this.mb.register);
 					await this.updateData(this.idc.readCoils(this.mb));
+				} else {
+					this.log.debug(`RESPONSE: ${JSON.stringify(this.mb)}`); // human readable
 				}
 			}
 		} catch (err) {
