@@ -447,6 +447,7 @@ class Deyeidc extends utils.Adapter {
 		const dp_Device = removeInvalidCharacters(String(this.config.logger));
 		const dp_Value = dp_Device + '.' + removeInvalidCharacters(key);
 		//
+		console.log('Datenpunkt:', dp_Value, '**');
 		await this.setObjectNotExists(dp_Device, {
 			type: 'channel',
 			common: {
