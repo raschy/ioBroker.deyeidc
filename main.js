@@ -199,7 +199,7 @@ class Deyeidc extends utils.Adapter {
 			if (this.req == this.numberRegisterSets + 1) {
 				//console.log('Request Else ##: ', this.req);
 				//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-				//this.req++;
+				this.req++;
 				await this.readComputeAndWatch();
 				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 				await this.setStateAsync('info.status', { val: 'idle', ack: true });
@@ -217,7 +217,7 @@ class Deyeidc extends utils.Adapter {
 		if (!this.connectionActive) return;
 		try {
 			if (!this.connectionActive) await this.connect();
-			//console.log('requestData Try ', this.req);
+			console.log('requestData Try ', this.req);
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
@@ -401,6 +401,8 @@ class Deyeidc extends utils.Adapter {
 		//if (err.message.indexOf('EHOSTUNREACH') > 1) {
 		this.resetCounter++;
 		console.log('ResetCounter: ', this.resetCounter);
+
+
 		const startReset = Math.floor(540 / this.config.pollInterval);
 		if (this.resetCounter == startReset) {
 			this.log.debug(`[offlineReset] Values will be nullable.`);
@@ -485,7 +487,7 @@ class Deyeidc extends utils.Adapter {
 				},
 				native: {},
 			});
-			//console.log(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "string"`);
+			this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "string"`);
 		}
 		// Differentiated writing of data
 		if (nullable) {
@@ -499,7 +501,7 @@ class Deyeidc extends utils.Adapter {
 		}
 		function removeInvalidCharacters(inputString) {
 			const regexPattern = '[^a-zA-Z0-9]+';
-			const regex = new RegExp(regexPattern, 'g');
+			const regex = new RegExp(regexPattern, 'gu');
 			return inputString.replace(regex, '_');
 		}
 	}
