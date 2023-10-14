@@ -473,7 +473,7 @@ class Deyeidc extends utils.Adapter {
 				},
 				native: {},
 			});
-			this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "number"`);
+			//this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "number"`);
 		} else { // or <string>
 			await this.setObjectNotExistsAsync(dp_Value, {
 				type: 'state',
@@ -487,7 +487,7 @@ class Deyeidc extends utils.Adapter {
 				},
 				native: {},
 			});
-			this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "string"`);
+			//this.log.debug(`[persistData] Device "${dp_Device}"  Key "${key}" with value: "${value}" and unit "${unit}" with role "${role}" as type "string"`);
 		}
 		// Differentiated writing of data
 		if (nullable) {
@@ -500,10 +500,10 @@ class Deyeidc extends utils.Adapter {
 			return !isNaN(parseFloat(n)) && !isNaN(n - 0);
 		}
 		function removeInvalidCharacters(inputString) {
-			return inputString;
-			//const regexPattern = '[^a-zA-Z0-9]+';
-			//const regex = new RegExp(regexPattern, 'gu');
-			//return inputString.replace(regex, '_');
+			//return inputString;
+			const regexPattern = '[^a-zA-Z0-9]+';
+			const regex = new RegExp(regexPattern, 'gu');
+			return inputString.replace(regex, '_');
 		}
 	}
 
