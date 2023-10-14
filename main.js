@@ -500,6 +500,7 @@ class Deyeidc extends utils.Adapter {
 			return !isNaN(parseFloat(n)) && !isNaN(n - 0);
 		}
 		function removeInvalidCharacters(inputString) {
+			return inputString;
 			const regexPattern = '[^a-zA-Z0-9]+';
 			const regex = new RegExp(regexPattern, 'gu');
 			return inputString.replace(regex, '_');
