@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "news": {
+      "0.0.13": {
+        "en": "Dialogue to relay filtered",
+        "de": "Dialog zum Relais gefiltert",
+        "ru": "Диалог на эстафет",
+        "pt": "Diálogo para transmitir filtrado",
+        "nl": "Vertaling:",
+        "fr": "Dialogue à relayer",
+        "it": "Dialogo per relè filtrato",
+        "es": "Diálogo para relé filtrado",
+        "pl": "Dialog do przetransferowania filtrów",
+        "uk": "Діалог реле фільтрований",
+        "zh-cn": "恢复过滤的对话"
+      },
       "0.0.12": {
         "en": "Changes in the connection setup\nRangeError fixed",
         "de": "Änderungen im Verbindungsaufbau\nReichweite Fehler behoben",
@@ -80,19 +93,6 @@
         "pl": "najnowsza wersja na przykład ioBrokera",
         "uk": "реліз для npm і ioBroker останні",
         "zh-cn": "最新奖金和润滑油的释放"
-      },
-      "0.0.6": {
-        "en": "Modules that are not required can be hidden",
-        "de": "Module, die nicht benötigt werden, können versteckt werden",
-        "ru": "Необходимые модули могут быть скрыты",
-        "pt": "Módulos que não são necessários podem ser escondidos",
-        "nl": "Modules die niet nodig zijn kan verborgen worden",
-        "fr": "Les modules qui ne sont pas nécessaires peuvent être cachés",
-        "it": "I moduli che non sono necessari possono essere nascosti",
-        "es": "Los módulos que no son necesarios pueden ser ocultos",
-        "pl": "Moduły, które nie są wymagane, mogą być ukryte",
-        "uk": "Модулі, які не потрібні",
-        "zh-cn": "不能隐藏的管教"
       }
     },
     "titleLang": {
