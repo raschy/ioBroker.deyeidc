@@ -83,12 +83,12 @@ class Deyeidc extends utils.Adapter {
 
 			// First request
 			this.req = 1;
-			//console.log('Start >> Request: ', this.req);
+			// console.log('############### Start >> Request: ', this.req); //##
 			await this.requestData(this.req);
 			// timed request
-			this.updateInterval = setInterval(async () => {
+			this.updateInterval = this.setInterval(async () => {
 				this.req = 1;
-				//console.log('Update >> Request: ', this.req);
+				//console.log('############### Update >> Request: ', this.req); //##
 				await this.requestData(this.req);
 				//await this.checkOnlineDate(); // ######################
 			}, this.executionInterval * 1000);
@@ -123,6 +123,7 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug('Connected to server');
 				this.connectionActive = true;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
+				client.setTimeout(10000);
 				resolve(client); // Successful connection, return the socket
 			});
 
@@ -166,47 +167,46 @@ class Deyeidc extends utils.Adapter {
 	async onData(data) {
 		//console.log('Response by request [', this.req, '] >>', this.idc.toHexString(data)); // human readable
 		try {
-			this.mb = this.idc.checkDataFrame(data);
+			const mb = await (this.idc.checkDataFrame(data));
 			// Preparation of the data
-			if (this.mb) {
-				if (this.mb.register == 0) { // for request checkOnlineDate
+			if (mb) {
+				if (mb.register == 0) { // for request checkOnlineDate
 					//console.log('Integration OfflineCheck');
 					/*
-					const dayHour = this.mb.modbus.subarray(3, this.mb.modbus.length - 1).readInt16LE(0);
+					const dayHour = mb.modbus.subarray(3, mb.modbus.length - 1).readInt16LE(0);
 					if (dayHour == 0) await this.setOfflineDate();
 					// this.req = 0;	// continue with registerset 0  // ##  ?? Integration OfflineCheck
 					*/
 				}
-				if (this.mb.register > 0) {
-					//this.log.debug(`Response: ${JSON.stringify(this.mb)}`); // human readable
-					//console.log('   ### readCoils >> ', this.req, this.mb.register);
-					await this.updateData(this.idc.readCoils(this.mb));
+				if (mb.register > 0) {
+					this.log.debug(`Response: ${JSON.stringify(mb)}`); // human readable
+					//console.log('   ### readCoils >> ', this.req, mb.register);
+					await this.updateData(this.idc.readCoils(mb));
+					this.req++;	// next registerset
 				} else {
-					this.log.debug(`RESPONSE: ${JSON.stringify(this.mb)}`); // human readable
+					//this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable
+				}
+				if (mb.register >= 0) {
+					if (this.req <= this.numberRegisterSets) {
+						console.log('Request    ####: ', this.req);
+						this.requestData(this.req);
+					}
+					if (this.req == this.numberRegisterSets + 1) {
+						//console.log('Request Else ##: ', this.req);
+						//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
+						this.req++;
+						await this.readComputeAndWatch();
+						await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
+						await this.setStateAsync('info.status', { val: 'idle', ack: true });
+					}
 				}
 			}
 		} catch (err) {
 			if (err.status == 'ECNTRLCODE') {
-				this.log.warn(`${err.message}: Data may be corrupt, therefore discarded`);
+				this.log.silly(`${err.message}: Data may be corrupt, therefore discarded`);
 			} else {
-				this.log.error(`${err}`);
-			}
-		}
-
-		// send next request
-		if (data.length > 0) {
-			if (this.req <= this.numberRegisterSets) {
-				//console.log('Request    ####: ', this.req);
-				this.requestData(this.req);
-			}
-			if (this.req == this.numberRegisterSets + 1) {
-				//console.log('Request Else ##: ', this.req);
-				//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-				this.req++;
-				await this.readComputeAndWatch();
-				await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
-				await this.setStateAsync('info.status', { val: 'idle', ack: true });
-				//this.client.resetAndDestroy();
+				//this.log.error(`${err}`);
+				this.log.error(`${err} | ${err.stack}`);
 			}
 		}
 	}
@@ -220,12 +220,12 @@ class Deyeidc extends utils.Adapter {
 		if (!this.connectionActive) return;
 		try {
 			if (!this.connectionActive) await this.connect();
-			//console.log('requestData Try ', this.req);
+			//console.log('requestData Try ', this.req); //##
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
-			this.req++;	// next registerset
+			//this.req++;	// next registerset
 		} catch (error) {
 			//console.log('requestData Catch');
 			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
