@@ -184,7 +184,7 @@ class Deyeidc extends utils.Adapter {
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;	// next registerset
 				} else {
-					//this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable
+					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable
 				}
 				if (mb.register >= 0) {
 					if (this.req <= this.numberRegisterSets) {
