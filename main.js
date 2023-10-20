@@ -83,7 +83,7 @@ class Deyeidc extends utils.Adapter {
 
 			// First request
 			this.req = 1;
-			// console.log('############### Start >> Request: ', this.req); //##
+			//console.log('############### Start >> Request: ', this.req); //##
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
@@ -167,7 +167,7 @@ class Deyeidc extends utils.Adapter {
 	async onData(data) {
 		//console.log('Response by request [', this.req, '] >>', this.idc.toHexString(data)); // human readable
 		try {
-			const mb = await (this.idc.checkDataFrame(data));
+			const mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
 			if (mb) {
 				if (mb.register == 0) { // for request checkOnlineDate
@@ -188,7 +188,7 @@ class Deyeidc extends utils.Adapter {
 				}
 				if (mb.register >= 0) {
 					if (this.req <= this.numberRegisterSets) {
-						console.log('Request    ####: ', this.req);
+						//console.log('Request    ####: ', this.req);
 						this.requestData(this.req);
 					}
 					if (this.req == this.numberRegisterSets + 1) {

@@ -55,6 +55,11 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (raschy) Heartbeat also filtered
+
 ### 0.0.13 (2023-10-16)
 
 -   (raschy) Dialogue to relay filtered
