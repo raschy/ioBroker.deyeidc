@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "news": {
+      "0.0.14": {
+        "en": "Heartbeat also filtered",
+        "de": "Herzschlag auch gefiltert",
+        "ru": "Heartbeat также фильтруется",
+        "pt": "Heartbeat também filtrado",
+        "nl": "Hartslag ook gefilterd",
+        "fr": "Heartbeat également filtré",
+        "it": "Battito cardiaco anche filtrato",
+        "es": "Latido cardíaco también filtrado",
+        "pl": "Ścieżka serca również filtrowała",
+        "uk": "Серця також відфільтровано",
+        "zh-cn": "他还过滤"
+      },
       "0.0.13": {
         "en": "Dialogue to relay filtered",
         "de": "Dialog zum Relais gefiltert",
@@ -80,19 +93,6 @@
         "pl": "Ponowny plan operacji offline",
         "uk": "День скидання для автономної роботи",
         "zh-cn": "A. 重新启动机能行动"
-      },
-      "0.0.7": {
-        "en": "release for npm and ioBroker latest",
-        "de": "veröffentlichung für npm und ioBroker",
-        "ru": "релиз для npm и ioBroker",
-        "pt": "lançamento para npm e ioBroker mais recentes",
-        "nl": "vertaling:",
-        "fr": "sortie pour npm et ioBroker dernière",
-        "it": "rilascio per npm e ioBroker",
-        "es": "versión para npm y ioBroker última",
-        "pl": "najnowsza wersja na przykład ioBrokera",
-        "uk": "реліз для npm і ioBroker останні",
-        "zh-cn": "最新奖金和润滑油的释放"
       }
     },
     "titleLang": {
