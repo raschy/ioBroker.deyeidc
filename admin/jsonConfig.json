@@ -113,7 +113,6 @@
 						},
 						{
 							"type": "number",
-							"trim": false,
 							"attr": "rules",
 							"width": "15%",
 							"title": "rule",
@@ -121,8 +120,8 @@
 						},
 						{
 							"type": "text",
-							"trim": false,
 							"attr": "key",
+							"trim": true,
 							"width": "20%",
 							"title": "key",
 							"default": "",
@@ -131,7 +130,7 @@
 						},
 						{
 							"type": "text",
-							"trim": false,
+							"trim": true,
 							"attr": "name",
 							"width": "30%",
 							"title": "name",
@@ -141,7 +140,7 @@
 						},
 						{
 							"type": "text",
-							"trim": false,
+							"trim": true,
 							"attr": "unit",
 							"width": "15%",
 							"title": "unit",
@@ -149,7 +148,6 @@
 						},
 						{
 							"type": "number",
-							"trim": false,
 							"attr": "factor",
 							"width": "15%",
 							"title": "factor",
@@ -157,7 +155,6 @@
 						},
 						{
 							"type": "checkbox",
-							"trim": false,
 							"attr": "nullable",
 							"width": "15%",
 							"title": "nullable",
@@ -205,7 +202,7 @@
 						},
 						{
 							"type": "text",
-							"trim": false,
+							"trim": true,
 							"attr": "name",
 							"width": "30%",
 							"title": "name",
@@ -213,7 +210,7 @@
 						},
 						{
 							"type": "text",
-							"trim": false,
+							"trim": true,
 							"attr": "unit",
 							"width": "15%",
 							"title": "unit",
@@ -221,7 +218,6 @@
 						},
 						{
 							"type": "number",
-							"trim": false,
 							"attr": "factor",
 							"width": "15%",
 							"title": "factor",

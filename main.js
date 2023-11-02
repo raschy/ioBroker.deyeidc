@@ -204,6 +204,8 @@ class Deyeidc extends utils.Adapter {
 		} catch (err) {
 			if (err.status == 'ECNTRLCODE') {
 				this.log.silly(`${err.message}: Data may be corrupt, therefore discarded`);
+			} else if (err.status == 'EFRAMECHK') {
+				this.log.silly(`${err.message}: Frame CheckSum faulty!`);
 			} else {
 				//this.log.error(`${err}`);
 				this.log.error(`${err} | ${err.stack}`);
@@ -241,7 +243,7 @@ class Deyeidc extends utils.Adapter {
 		const req = 0;
 		const powerControlRegister = 40;
 		const data = [];
-		if (state.val > 100) {
+		if (state.val < 1 || state.val > 100) {
 			data[0] = 100;
 		} else {
 			data[0] = state.val;
