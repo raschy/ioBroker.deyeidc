@@ -139,7 +139,7 @@ class Deyeidc extends utils.Adapter {
 				//this.log.debug('Connection error');
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
-				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONRESET')) {
+				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONRESET') > 1) {
 					this.log.debug(`No connection to inverter: '${error.message}'`);
 					this.offlineReset();
 				} else {
