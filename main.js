@@ -204,6 +204,8 @@ class Deyeidc extends utils.Adapter {
 		} catch (err) {
 			if (err.status == 'ECNTRLCODE') {
 				this.log.silly(`${err.message}: Data may be corrupt, therefore discarded`);
+			} else if (err.status == 'EFRAMECHK') {
+				this.log.silly(`${err.message}: Frame CheckSum faulty!`);
 			} else {
 				//this.log.error(`${err}`);
 				this.log.error(`${err} | ${err.stack}`);
@@ -565,7 +567,7 @@ class Deyeidc extends utils.Adapter {
 		this.idc.setLoggerSn(this.config.logger);
 		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
-		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 30) {
+		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 5) {
 			this.executionInterval = 60;
 			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is ${this.executionInterval} sec.`);
 		} else {
