@@ -55,6 +55,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### 0.0.14 (2023-10-20)
 
 -   (raschy) Heartbeat also filtered
@@ -114,7 +115,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 MIT License
 
-Copyright (c) 2023 raschy <raschy@gmx.de>
+Copyright (c) 2024 raschy <raschy@gmx.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
