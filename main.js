@@ -123,7 +123,7 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug('Connected to server');
 				this.connectionActive = true;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
-				//client.setTimeout(10000);
+				//client.set_Time_out(10000);
 				resolve(client); // Successful connection, return the socket
 			});
 
