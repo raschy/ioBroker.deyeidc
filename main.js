@@ -567,7 +567,7 @@ class Deyeidc extends utils.Adapter {
 		this.idc.setLoggerSn(this.config.logger);
 		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
-		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 5) {
+		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 1) {
 			this.executionInterval = 60;
 			this.log.warn(`Sync time was too short (${this.config.pollInterval} sec). New sync time is ${this.executionInterval} sec.`);
 		} else {
