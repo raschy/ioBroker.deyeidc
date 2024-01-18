@@ -548,19 +548,19 @@ class Deyeidc extends utils.Adapter {
 		// __________________
 		// check if portnumber is setted
 		if (this.config.port < 1024) {
-			this.log.warn(`No port no specified [${this.config.port}] .`);
+			this.log.warn(`No port no specified [${this.config.port}].`);
 			this.config.port = 8899;
-			this.log.info(`Standard port is used [${this.config.port}] .`);
+			this.log.info(`Standard port is used [${this.config.port}].`);
 		}
 		// __________________
 		// InverterNr is plausible
 		if (!this.config.logger) {
-			this.log.warn(`No logger number specified [${this.config.logger}] .`);
+			this.log.warn(`No logger number specified [${this.config.logger}].`);
 			this.internDataReady = false;
 			return;
 		}
-		if (this.config.logger < 2.1 * 10 ** 9) {
-			this.log.warn(`Logger number seems to be wrong [${this.config.logger}] .`);
+		if (this.config.logger < 2 * 10 ** 9) {
+			this.log.warn(`Logger number seems to be wrong [${this.config.logger}].`);
 			this.internDataReady = false;
 			return;
 		}

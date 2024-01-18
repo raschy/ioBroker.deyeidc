@@ -54,6 +54,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
+	Serial numbers adjusted for M series
 -->
 
 ### 0.0.14 (2023-10-20)

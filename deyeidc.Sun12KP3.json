@@ -329,20 +329,20 @@
 		},
 		{
 			"register": 541,
-			"rules": 1,
+			"rules": 6,
 			"key": "Temperature_Heat_Sink",
 			"name": "Temperature Heat Sink",
 			"unit": "°C",
-			"factor": 2,
+			"factor": 1,
 			"nullable": false
 		},
 		{
 			"register": 540,
-			"rules": 1,
+			"rules": 6,
 			"key": "Temperature_DC_Transformer",
 			"name": "Temperature DC Transformer",
 			"unit": "°C",
-			"factor": 2,
+			"factor": 1,
 			"nullable": false
 		},
 		{
@@ -401,11 +401,11 @@
 		},
 		{
 			"register": 586,
-			"rules": 1,
+			"rules": 6,
 			"key": "Temperature_Battery",
 			"name": "Temperatur Battery",
 			"unit": "°C",
-			"factor": 2,
+			"factor": 1,
 			"nullable": false
 		},
 		{
