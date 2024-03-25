@@ -186,12 +186,6 @@
 				"unit": "W",
 				"factor": 0
 			}
-		],
-		"write": [
-			{
-				"register_w": 255,
-				"value_w": 11
-			}
 		]
 	},
 	"objects": [],
