@@ -188,7 +188,7 @@ class Deyeidc extends utils.Adapter {
 				}
 				if (mb.register >= 0) {
 					if (this.req <= this.numberRegisterSets) {
-						//console.log('Request    ####: ', this.req);
+						//console.log('#### Request    ####: ', this.req);
 						this.requestData(this.req);
 					}
 					if (this.req == this.numberRegisterSets + 1) {
@@ -207,7 +207,6 @@ class Deyeidc extends utils.Adapter {
 			} else if (err.status == 'EFRAMECHK') {
 				this.log.silly(`${err.message}: Frame CheckSum faulty!`);
 			} else {
-				//this.log.error(`${err}`);
 				this.log.error(`${err} | ${err.stack}`);
 			}
 		}
@@ -222,10 +221,10 @@ class Deyeidc extends utils.Adapter {
 		if (!this.connectionActive) return;
 		try {
 			if (!this.connectionActive) await this.connect();
-			//console.log('requestData Try ', this.req); //##
+			//console.log('##### requestData Try ', this.req); //##
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+			console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
 			//this.req++;	// next registerset
 		} catch (error) {
@@ -248,9 +247,14 @@ class Deyeidc extends utils.Adapter {
 		} else {
 			data[0] = state.val;
 		}
+		this.log.debug(`[setPower] Power set to ${data[0]}%}`);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
-		//console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+		console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
+		// erst möglich, wenn auf ack: false getriggert werden kann, also Umbau CalcValues!
+		//const dp_PowerSet = String(this.config.logger) + '.Power_Set';
+		//await this.setStateAsync(dp_PowerSet, { val: data[0], ack: true });
+
 	}
 
 	/**
