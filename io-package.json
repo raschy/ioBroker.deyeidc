@@ -171,7 +171,7 @@
 			{
 				"register": 86,
 				"rules": 3,
-				"key": "Apo_t1",
+				"key": "APo_t1",
 				"name": "Total AC Output Power (Active)",
 				"unit": "W",
 				"factor": 1,

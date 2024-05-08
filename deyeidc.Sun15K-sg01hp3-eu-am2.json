@@ -14,7 +14,7 @@
 		},
 		{
 			"registerStart": 586,
-			"registerEnd": 593
+			"registerEnd": 599
 		},
 		{
 			"registerStart": 607,
@@ -86,7 +86,7 @@
 		},
 		{
 			"register": 616,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_GRID_CT_L1",
 			"name": "P GRID CT L1",
 			"unit": "W",
@@ -95,7 +95,7 @@
 		},
 		{
 			"register": 617,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_GRID_CT_L2",
 			"name": "P GRID CT L2",
 			"unit": "W",
@@ -104,7 +104,7 @@
 		},
 		{
 			"register": 618,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_GRID_CT_L3",
 			"name": "P GRID CT L3",
 			"unit": "W",
@@ -113,7 +113,7 @@
 		},
 		{
 			"register": 619,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_GRID_CT_TOTAL",
 			"name": "P GRID CT TOTAL",
 			"unit": "W",
@@ -122,7 +122,7 @@
 		},
 		{
 			"register": 607,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_GRID_LD_TOTAL",
 			"name": "P GRID LD TOTAL",
 			"unit": "W",
@@ -131,7 +131,7 @@
 		},
 		{
 			"register": 650,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_BACKUP_LOAD_L1",
 			"name": "P BACKUP LOAD L1",
 			"unit": "W",
@@ -140,7 +140,7 @@
 		},
 		{
 			"register": 651,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_BACKUP_LOAD_L2",
 			"name": "P BACKUP LOAD L2",
 			"unit": "W",
@@ -149,7 +149,7 @@
 		},
 		{
 			"register": 652,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_BACKUP_LOAD_L3",
 			"name": "P BACKUP LOAD L3",
 			"unit": "W",
@@ -158,7 +158,7 @@
 		},
 		{
 			"register": 653,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_BACKUP_LOAD_TOTAL",
 			"name": "P BACKUP LOAD TOTAL",
 			"unit": "W",
@@ -414,7 +414,7 @@
 			"key": "Battery_Voltage",
 			"name": "Battery Voltage",
 			"unit": "V",
-			"factor": 2,
+			"factor": 1,
 			"nullable": false
 		},
 		{
@@ -437,17 +437,40 @@
 		},
 		{
 			"register": 590,
-			"rules": 1,
+			"rules": 2,
 			"key": "Battery_Output_Power",
-			"name": "Battery Power",
+			"name": "Battery Output Power",
 			"unit": "W",
-			"factor": 2,
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 591,
+			"rules": 2,
+			"key": "Battery1_Current",
+			"name": "Battery1 Current",
+			"unit": "A",
+			"factor": 0,
 			"nullable": false
 		}
 	],
 	"computes": [
 		{
-			"values": "PV1_Leistung+PV2_Leistung",
+			"values": "PV1_Leistung*10",
+			"key": "PV1_LeistungWest",
+			"name": "PV1 Leistung Westen",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "PV2_Leistung*10",
+			"key": "PV2_LeistungOst",
+			"name": "PV2 Leistung Osten",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "PV1_LeistungWest+PV2_LeistungOst",
 			"key": "PV1_PV2_Leistung",
 			"name": "PV1+PV2 - Leistung",
 			"unit": "W",
@@ -478,6 +501,20 @@
 			"values": "PV1_PV2_Leistung*2",
 			"key": "PV_Gesamt-Cluster",
 			"name": "PV_Gesamt-Cluster",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "Battery_Output_Power*10",
+			"key": "Battery_Output_PowerW",
+			"name": "Battery Output Watt",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "Battery2_Power*10",
+			"key": "Battery2_PowerW",
+			"name": "Battery2 Power Watt",
 			"unit": "W",
 			"factor": 0
 		}

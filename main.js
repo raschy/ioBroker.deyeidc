@@ -521,8 +521,6 @@ class Deyeidc extends utils.Adapter {
 		for (const obj of data) {
 			if (obj.value != 'none') {
 				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
-
-				//this.lastData[obj.key] = obj;
 			}
 		}
 	}
