@@ -1,241 +1,241 @@
 {
-	"common": {
-		"name": "deyeidc",
-		"version": "0.0.14",
-		"news": {
-			"0.0.14": {
-				"en": "Heartbeat also filtered",
-				"de": "Herzschlag auch gefiltert",
-				"ru": "Heartbeat также фильтруется",
-				"pt": "Heartbeat também filtrado",
-				"nl": "Hartslag ook gefilterd",
-				"fr": "Heartbeat également filtré",
-				"it": "Battito cardiaco anche filtrato",
-				"es": "Latido cardíaco también filtrado",
-				"pl": "Ścieżka serca również filtrowała",
-				"uk": "Серця також відфільтровано",
-				"zh-cn": "他还过滤"
-			},
-			"0.0.13": {
-				"en": "Dialogue to relay filtered",
-				"de": "Dialog zum Relais gefiltert",
-				"ru": "Диалог на эстафет",
-				"pt": "Diálogo para transmitir filtrado",
-				"nl": "Vertaling:",
-				"fr": "Dialogue à relayer",
-				"it": "Dialogo per relè filtrato",
-				"es": "Diálogo para relé filtrado",
-				"pl": "Dialog do przetransferowania filtrów",
-				"uk": "Діалог реле фільтрований",
-				"zh-cn": "恢复过滤的对话"
-			},
-			"0.0.12": {
-				"en": "Changes in the connection setup\nRangeError fixed",
-				"de": "Änderungen im Verbindungsaufbau\nReichweite Fehler behoben",
-				"ru": "Изменения в настройках подключения\nАссортимент Исправлена ошибка",
-				"pt": "Alterações na configuração de conexão\nGama Erro corrigido",
-				"nl": "Verandering in de verbinding\nRang Error gemaakt",
-				"fr": "Changements dans la configuration de connexion\nGamme Erreur corrigée",
-				"it": "Modifiche nella configurazione della connessione\nAmpiezza Errore risolto",
-				"es": "Cambios en la configuración de conexión\nRango Error fijo",
-				"pl": "Zmiany w zbiorze połączeń\nRange Error",
-				"uk": "Зміна налаштування підключення\nР Виправлено помилку",
-				"zh-cn": "A. 建立联系的改变\nRange 固定地点"
-			},
-			"0.0.11": {
-				"en": "wrong implementation msb/lsb of 32-bit values recorrected",
-				"de": "falsche implementierung msb/lsb von 32-bit-werten",
-				"ru": "неправильная реализация msb/lsb из 32-битных значений реставрированных",
-				"pt": "implementação errada msb/lsb de valores de 32 bits espalhados",
-				"nl": "verkeerde implementatie msb/lsb van 32-bit waarden hersteld",
-				"fr": "implémentation incorrecte msb/lsb de valeurs 32-bit recorréctées",
-				"it": "errata implementazione msb/lsb di valori a 32 bit recorretti",
-				"es": "incorrecta aplicación msb/lsb de los valores de 32-bit corregido",
-				"pl": "zła implementacja msb/lsb wartości 32-bitowych została poprawiona",
-				"uk": "неправильне виконання мсб/лсб 32-бітних значень, що перетворюються",
-				"zh-cn": "第32条-轨道价值的错误实施失误"
-			},
-			"0.0.10": {
-				"en": "Calculation of 32-bit values corrected\nReady for launch into the stable repository",
-				"de": "Berechnung von 32-Bit-Werten korrigiert\nBereit zum Start in das stabile Repository",
-				"ru": "Исправлена расчет 32-битных значений\nГотов к запуску в стабильный репозиторий",
-				"pt": "Cálculo de valores de 32 bits corrigidos\nPronto para lançamento no repositório estável",
-				"nl": "Calculatie van 32-bit waarden gecorrigeerd\nKlaar voor lancering in de stalen herberg",
-				"fr": "Calcul des valeurs corrigées de 32 bits\nPrêt pour le lancement dans le dépôt stable",
-				"it": "Calcolo dei valori a 32 bit corretto\nPronto per il lancio nel repository stabile",
-				"es": "Cálculo de valores de 32 bits corregidos\nListo para el lanzamiento en el repositorio estable",
-				"pl": "Kalkulacja 32-bitowych wartości poprawiła się\nReady for launch into a stable repozytorium",
-				"uk": "Розрахунок 32-бітних значень, виправлених\nГотовий для запуску в стабільну репозиторію",
-				"zh-cn": "修改的32个轨道价值的计算\n进入稳定的储存库的准备"
-			},
-			"0.0.9": {
-				"en": "minor bugs fixed",
-				"de": "kleinere fehler behoben",
-				"ru": "мелкие баги исправлены",
-				"pt": "pequenos bugs corrigidos",
-				"nl": "minor bugs gemaakt",
-				"fr": "bugs mineurs corrigés",
-				"it": "bug minori fissi",
-				"es": "bugs menores fijos",
-				"pl": "drobny trąb",
-				"uk": "незначні помилки фіксовані",
-				"zh-cn": "b 轻微固定钢"
-			},
-			"0.0.8": {
-				"en": "Day reset for offline operation",
-				"de": "Tag-Reset für Offline-Betrieb",
-				"ru": "Сброс дня для оффлайн операции",
-				"pt": "Dia reset para operação offline",
-				"nl": "Day reset van offline",
-				"fr": "Réinitialisation de la journée pour une opération hors ligne",
-				"it": "Ripristino del giorno per il funzionamento offline",
-				"es": "Día de restablecimiento para la operación sin conexión",
-				"pl": "Ponowny plan operacji offline",
-				"uk": "День скидання для автономної роботи",
-				"zh-cn": "A. 重新启动机能行动"
-			}
-		},
-		"titleLang": {
-			"en": "Deye Inverter Data Collector",
-			"de": "Datensammler für Wechselrichter von Deye",
-			"ru": "Сборщик данных инвертора Дейе",
-			"pt": "Coletor de Dados do Inversor Deye",
-			"nl": "Deye Inverter-gegevensverzamelaar",
-			"fr": "Collecteur de données Deye Inverter",
-			"it": "Deye Inverter Data Collector",
-			"es": "Colector de datos del inversor Deye",
-			"pl": "Kolektor danych falownika Deye",
-			"zh-cn": "德业逆变器数据采集器",
-			"uk": "Збірник даних інвертора Deye"
-		},
-		"desc": {
-			"en": "Data Collector vor Deye-compatible Inverter",
-			"de": "Datensammler für Deye-kompatible Wechselrichter",
-			"ru": "Сборщик данных с инвертором, совместимым с Дейе",
-			"pt": "Coletor de dados para inversor compatível com Deye",
-			"nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
-			"fr": "Collecteur de données pour onduleur compatible Deye",
-			"it": "Data Collector per Inverter compatibile con Deye",
-			"es": "Colector de datos para inversor compatible con Deye",
-			"pl": "Data Collector dla falownika kompatybilnego z Deye",
-			"zh-cn": "数据收集器 vor Deye 兼容逆变器",
-			"uk": "Збирач даних або інвертор, сумісний з Deye"
-		},
-		"authors": [
-			"raschy <raschy@gmx.de>"
-		],
-		"keywords": [
-			"Deye",
-			"Bosswerk",
-			"cloudless"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "deyeidc.png",
-		"enabled": false,
-		"extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
-		"readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "energy",
-		"compact": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"adminUI": {
-			"config": "json"
-		},
-		"dependencies": [
-			{
-				"js-controller": ">=4.0.0"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"ipaddress": "",
-		"port": 8899,
-		"logger": null,
-		"pollInterval": 330,
-		"registers": [
-			{
-				"registerStart": 59,
-				"registerEnd": 90
-			}
-		],
-		"coils": [
-			{
-				"register": 86,
-				"rules": 3,
-				"key": "APo_t1",
-				"name": "Total AC Output Power (Active)",
-				"unit": "W",
-				"factor": 1,
-				"nullable": false
-			}
-		],
-		"computes": [
-			{
-				"values": "DV1*DC1",
-				"key": "DP1",
-				"name": "DC Power PV1",
-				"unit": "W",
-				"factor": 0
-			}
-		]
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.lastUpdate",
-			"type": "state",
-			"common": {
-				"role": "date.end",
-				"name": "Last update",
-				"type": "number",
-				"read": true,
-				"write": false,
-				"def": 0
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.status",
-			"type": "state",
-			"common": {
-				"role": "info.status",
-				"name": "Status",
-				"type": "string",
-				"read": true,
-				"write": false,
-				"def": ""
-			},
-			"native": {}
-		}
-	]
+    "common": {
+        "name": "deyeidc",
+        "version": "0.0.14",
+        "news": {
+            "0.0.14": {
+                "en": "Heartbeat also filtered",
+                "de": "Herzschlag auch gefiltert",
+                "ru": "Heartbeat также фильтруется",
+                "pt": "Heartbeat também filtrado",
+                "nl": "Hartslag ook gefilterd",
+                "fr": "Heartbeat également filtré",
+                "it": "Battito cardiaco anche filtrato",
+                "es": "Latido cardíaco también filtrado",
+                "pl": "Ścieżka serca również filtrowała",
+                "uk": "Серця також відфільтровано",
+                "zh-cn": "他还过滤"
+            },
+            "0.0.13": {
+                "en": "Dialogue to relay filtered",
+                "de": "Dialog zum Relais gefiltert",
+                "ru": "Диалог на эстафет",
+                "pt": "Diálogo para transmitir filtrado",
+                "nl": "Vertaling:",
+                "fr": "Dialogue à relayer",
+                "it": "Dialogo per relè filtrato",
+                "es": "Diálogo para relé filtrado",
+                "pl": "Dialog do przetransferowania filtrów",
+                "uk": "Діалог реле фільтрований",
+                "zh-cn": "恢复过滤的对话"
+            },
+            "0.0.12": {
+                "en": "Changes in the connection setup\nRangeError fixed",
+                "de": "Änderungen im Verbindungsaufbau\nReichweite Fehler behoben",
+                "ru": "Изменения в настройках подключения\nАссортимент Исправлена ошибка",
+                "pt": "Alterações na configuração de conexão\nGama Erro corrigido",
+                "nl": "Verandering in de verbinding\nRang Error gemaakt",
+                "fr": "Changements dans la configuration de connexion\nGamme Erreur corrigée",
+                "it": "Modifiche nella configurazione della connessione\nAmpiezza Errore risolto",
+                "es": "Cambios en la configuración de conexión\nRango Error fijo",
+                "pl": "Zmiany w zbiorze połączeń\nRange Error",
+                "uk": "Зміна налаштування підключення\nР Виправлено помилку",
+                "zh-cn": "A. 建立联系的改变\nRange 固定地点"
+            },
+            "0.0.11": {
+                "en": "wrong implementation msb/lsb of 32-bit values recorrected",
+                "de": "falsche implementierung msb/lsb von 32-bit-werten",
+                "ru": "неправильная реализация msb/lsb из 32-битных значений реставрированных",
+                "pt": "implementação errada msb/lsb de valores de 32 bits espalhados",
+                "nl": "verkeerde implementatie msb/lsb van 32-bit waarden hersteld",
+                "fr": "implémentation incorrecte msb/lsb de valeurs 32-bit recorréctées",
+                "it": "errata implementazione msb/lsb di valori a 32 bit recorretti",
+                "es": "incorrecta aplicación msb/lsb de los valores de 32-bit corregido",
+                "pl": "zła implementacja msb/lsb wartości 32-bitowych została poprawiona",
+                "uk": "неправильне виконання мсб/лсб 32-бітних значень, що перетворюються",
+                "zh-cn": "第32条-轨道价值的错误实施失误"
+            },
+            "0.0.10": {
+                "en": "Calculation of 32-bit values corrected\nReady for launch into the stable repository",
+                "de": "Berechnung von 32-Bit-Werten korrigiert\nBereit zum Start in das stabile Repository",
+                "ru": "Исправлена расчет 32-битных значений\nГотов к запуску в стабильный репозиторий",
+                "pt": "Cálculo de valores de 32 bits corrigidos\nPronto para lançamento no repositório estável",
+                "nl": "Calculatie van 32-bit waarden gecorrigeerd\nKlaar voor lancering in de stalen herberg",
+                "fr": "Calcul des valeurs corrigées de 32 bits\nPrêt pour le lancement dans le dépôt stable",
+                "it": "Calcolo dei valori a 32 bit corretto\nPronto per il lancio nel repository stabile",
+                "es": "Cálculo de valores de 32 bits corregidos\nListo para el lanzamiento en el repositorio estable",
+                "pl": "Kalkulacja 32-bitowych wartości poprawiła się\nReady for launch into a stable repozytorium",
+                "uk": "Розрахунок 32-бітних значень, виправлених\nГотовий для запуску в стабільну репозиторію",
+                "zh-cn": "修改的32个轨道价值的计算\n进入稳定的储存库的准备"
+            },
+            "0.0.9": {
+                "en": "minor bugs fixed",
+                "de": "kleinere fehler behoben",
+                "ru": "мелкие баги исправлены",
+                "pt": "pequenos bugs corrigidos",
+                "nl": "minor bugs gemaakt",
+                "fr": "bugs mineurs corrigés",
+                "it": "bug minori fissi",
+                "es": "bugs menores fijos",
+                "pl": "drobny trąb",
+                "uk": "незначні помилки фіксовані",
+                "zh-cn": "b 轻微固定钢"
+            },
+            "0.0.8": {
+                "en": "Day reset for offline operation",
+                "de": "Tag-Reset für Offline-Betrieb",
+                "ru": "Сброс дня для оффлайн операции",
+                "pt": "Dia reset para operação offline",
+                "nl": "Day reset van offline",
+                "fr": "Réinitialisation de la journée pour une opération hors ligne",
+                "it": "Ripristino del giorno per il funzionamento offline",
+                "es": "Día de restablecimiento para la operación sin conexión",
+                "pl": "Ponowny plan operacji offline",
+                "uk": "День скидання для автономної роботи",
+                "zh-cn": "A. 重新启动机能行动"
+            }
+        },
+        "titleLang": {
+            "en": "Deye Inverter Data Collector",
+            "de": "Datensammler für Wechselrichter von Deye",
+            "ru": "Сборщик данных инвертора Дейе",
+            "pt": "Coletor de Dados do Inversor Deye",
+            "nl": "Deye Inverter-gegevensverzamelaar",
+            "fr": "Collecteur de données Deye Inverter",
+            "it": "Deye Inverter Data Collector",
+            "es": "Colector de datos del inversor Deye",
+            "pl": "Kolektor danych falownika Deye",
+            "zh-cn": "德业逆变器数据采集器",
+            "uk": "Збірник даних інвертора Deye"
+        },
+        "desc": {
+            "en": "Data Collector vor Deye-compatible Inverter",
+            "de": "Datensammler für Deye-kompatible Wechselrichter",
+            "ru": "Сборщик данных с инвертором, совместимым с Дейе",
+            "pt": "Coletor de dados para inversor compatível com Deye",
+            "nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
+            "fr": "Collecteur de données pour onduleur compatible Deye",
+            "it": "Data Collector per Inverter compatibile con Deye",
+            "es": "Colector de datos para inversor compatible con Deye",
+            "pl": "Data Collector dla falownika kompatybilnego z Deye",
+            "zh-cn": "数据收集器 vor Deye 兼容逆变器",
+            "uk": "Збирач даних або інвертор, сумісний з Deye"
+        },
+        "authors": [
+            "raschy <raschy@gmx.de>"
+        ],
+        "keywords": [
+            "Deye",
+            "Bosswerk",
+            "cloudless"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "deyeidc.png",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
+        "readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "energy",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.0"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "native": {
+        "ipaddress": "",
+        "port": 8899,
+        "logger": null,
+        "pollInterval": 330,
+        "registers": [
+            {
+                "registerStart": 59,
+                "registerEnd": 90
+            }
+        ],
+        "coils": [
+            {
+                "register": 86,
+                "rules": 3,
+                "key": "APo_t1",
+                "name": "Total AC Output Power (Active)",
+                "unit": "W",
+                "factor": 1,
+                "nullable": false
+            }
+        ],
+        "computes": [
+            {
+                "values": "DV1*DC1",
+                "key": "DP1",
+                "name": "DC Power PV1",
+                "unit": "W",
+                "factor": 0
+            }
+        ]
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastUpdate",
+            "type": "state",
+            "common": {
+                "role": "date.end",
+                "name": "Last update",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "def": 0
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.status",
+            "type": "state",
+            "common": {
+                "role": "info.status",
+                "name": "Status",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        }
+    ]
 }

@@ -19,7 +19,7 @@
 		"node": ">= 16"
 	},
 	"dependencies": {
-		"@iobroker/adapter-core": "^3.1.1",
+		"@iobroker/adapter-core": "^3.1.4",
 		"websocket": "^1.0.34"
 	},
 	"devDependencies": {
@@ -64,7 +64,8 @@
 		"test:integration": "mocha test/integration --exit",
 		"test": "npm run test:js && npm run test:package",
 		"check": "tsc --noEmit -p tsconfig.check.json",
-		"lint": "eslint .",
+		"lint": "eslint --ext .js,.jsx",
+		"lint_": "eslint .",
 		"translate": "translate-adapter",
 		"release": "release-script"
 	},
