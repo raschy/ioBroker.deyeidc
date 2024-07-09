@@ -540,7 +540,7 @@ class Deyeidc extends utils.Adapter {
 			return;
 		}
 		// check if the IP-Address seems korrect
-		if (validateIP(this.config.ipaddress)) {
+		if (validateIP_new(this.config.ipaddress)) {
 			this.log.debug(`IP address [${this.config.ipaddress}] seems to be valid.`);
 		} else {
 			this.log.warn(`IP address [${this.config.ipaddress}] is not valid !`);
@@ -583,6 +583,11 @@ class Deyeidc extends utils.Adapter {
 		function validateIP(ip) {
 			const pattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 			return pattern.test(ip);
+		}
+		function validateIP_new(ip) {
+    			const ipPattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    			const domainPattern = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/;
+    			return ipPattern.test(ip) || domainPattern.test(ip);
 		}
 	}
 
