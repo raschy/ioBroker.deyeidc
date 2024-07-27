@@ -61,6 +61,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 -   (raschy) Minor code optimisation
 -   (raschy) Revision of the calculation area
+-   (raschy) NodeJS >= 18.x and js-controller >= 5 is required
 -   (raschy) Allow http addresses
 
 ### 0.0.14 (2023-10-20)
