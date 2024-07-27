@@ -57,6 +57,12 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Serial numbers adjusted for M series
 -->
 
+### **WORK IN PROGRESS**
+
+-   (raschy) Minor code optimisation
+-   (raschy) Revision of the calculation area
+-   (raschy) Allow http addresses
+
 ### 0.0.14 (2023-10-20)
 
 -   (raschy) Heartbeat also filtered

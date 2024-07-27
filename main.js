@@ -35,8 +35,7 @@ class Deyeidc extends utils.Adapter {
 		this.numberRegisterSets = 0;
 		this.numberCoils = 0;
 		this.req = 0;
-		this.CalcValues = [];
-		this.setWatchPoints = false;
+		this.memoryValues = [];
 		this.resetCounter = 0;
 	}
 
@@ -88,7 +87,7 @@ class Deyeidc extends utils.Adapter {
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
 				this.req = 1;
-				//console.log('############### Update >> Request: ', this.req); //##
+				console.log('############### Update >> Request: ', this.req); //##
 				await this.requestData(this.req);
 				//await this.checkOnlineDate(); // ######################
 			}, this.executionInterval * 1000);
@@ -132,7 +131,7 @@ class Deyeidc extends utils.Adapter {
 				client.destroy();
 				if (client.destroyed) this.log.debug('Connection closed/destroyed');
 				this.connectionActive = false;
-				//this.setState('info.connection', { val: this.connectionActive, ack: true });
+				this.setState('info.connection', { val: this.connectionActive, ack: true });
 			});
 
 			client.on('error', (error) => {
@@ -151,7 +150,7 @@ class Deyeidc extends utils.Adapter {
 			client.on('close', () => {
 				this.log.debug('Connection closed');
 				this.connectionActive = false;
-				//this.setState('info.connection', { val: this.connectionActive, ack: true });
+				this.setState('info.connection', { val: this.connectionActive, ack: true });
 			});
 
 			client.on('data', (data) => {
@@ -195,7 +194,9 @@ class Deyeidc extends utils.Adapter {
 						//console.log('Request Else ##: ', this.req);
 						//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 						this.req++;
-						await this.readComputeAndWatch();
+						//await this.readComputeAndWatch();
+						await this.updateData(await this.computeData());
+						//await this.computeData();
 						await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 						await this.setStateAsync('info.status', { val: 'idle', ack: true });
 					}
@@ -234,30 +235,6 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * set Power
-	 * @param {*} id
-	 * @param {*} state
-	 */
-	async setPower(id, state) {
-		const req = 0;
-		const powerControlRegister = 40;
-		const data = [];
-		if (state.val < 1 || state.val > 100) {
-			data[0] = 100;
-		} else {
-			data[0] = state.val;
-		}
-		this.log.debug(`[setPower] Power set to ${data[0]}%}`);
-		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
-		console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
-		// erst möglich, wenn auf ack: false getriggert werden kann, also Umbau CalcValues!
-		//const dp_PowerSet = String(this.config.logger) + '.Power_Set';
-		//await this.setStateAsync(dp_PowerSet, { val: data[0], ack: true });
-
-	}
-
-	/**
 	 * checkOnlineDate
 	 */
 	async checkOnlineDate() {
@@ -267,6 +244,112 @@ class Deyeidc extends utils.Adapter {
 		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
 		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
+	}
+
+	/**
+	 * Calculate data that cannot be read,
+	 * the necessary values must be calulated by formula
+	 * @returns jsonResult
+	 */
+	async computeData() {
+		const jsonResult = [];
+		const computeConfig = this.config.computes;
+		let computeValue1 = 0;
+		let computeValue2 = 0;
+		let computeResult = 0;
+		if (computeConfig && Array.isArray(computeConfig)) {
+			for (const obj of computeConfig) {
+				this.log.debug(`[computeData]  ${JSON.stringify(obj)}`);
+				const response = mathOperation(obj.values);
+				if (response) {
+					//console.log('MathResponse: ', response);
+					//
+					const key1Index = this.memoryValues.findIndex((element => element.key == response.key1));
+					if (key1Index == -1) {
+						this.log.warn(`Compute Key '${response.key1}' not found!`);
+						continue;
+					} else {
+						computeValue1 = this.memoryValues[key1Index].value;
+					}
+					//
+					const key2Index = this.memoryValues.findIndex((element => element.key == response.key2));
+					if (key2Index == -1) {
+						this.log.warn(`Compute Key '${response.key2}' not found!`);
+						continue;
+					} else {
+						computeValue2 = this.memoryValues[key2Index].value;
+					}
+					//
+					const operation = response.operation;
+					//console.log(`[computeResult] OP: <${computeValue1}> ${operation} <${computeValue2}>`);
+					switch (operation) {
+						case '+':
+							computeResult = computeValue1 + computeValue2;
+							break;
+						case '-':
+							computeResult = computeValue1 - computeValue2;
+							break;
+						case '*':
+							computeResult = computeValue1 * computeValue2;
+							break;
+						case '/':
+							if (computeValue2 == 0) {
+								this.log.warn(`Compute Division '${response.key2}' by zero!`);
+								continue;
+							} else {
+								computeResult = computeValue1 / computeValue2;
+							}
+							break;
+						default:
+							computeResult = -999;
+					}
+					//
+					const key0 = this.removeInvalidCharacters(obj.key.trim());
+					//console.log(`[computeResult]  <${computeValue1}> ${operation} <${computeValue2}> = ${computeResult}`);
+					const product_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
+					const jsonObj = { key: key0, value: product_hr, unit: obj.unit, name: obj.name };
+					//console.log(`[computeData] ResultJson: ${JSON.stringify(jsonObj)}`);
+					jsonResult.push(jsonObj);
+				}
+			}
+			this.log.debug(`[computeData] ResultJson: ${JSON.stringify(jsonResult)}`);
+			return (jsonResult);
+		}
+		// -- Helper --
+		function mathOperation(computeString) {
+			const defMathOperators = ['+', '-', '*', '/'];
+			for (let i = 0; i < defMathOperators.length; i++) {
+				const zeichen = defMathOperators[i];
+				const position = computeString.indexOf(zeichen);
+				if (position > 0) {
+					const key1 = computeString.slice(0, position).trim();
+					const key2 = computeString.slice(position + 1).trim();
+					const jsonString = { operation: computeString[position], key1: key1, key2: key2 };
+					return jsonString;
+				}
+			}
+		}
+	}
+
+
+	/**EHOSTUNREACH Connect_error:
+	 * OfflineReset, if 'EHOSTUNREACH' arrived
+	 */
+	async offlineReset() {
+		// Counter for OfflineReset
+		//if (err.message.indexOf('EHOSTUNREACH') > 1) {
+		this.resetCounter++;
+		const startReset = Math.floor(540 / this.config.pollInterval);
+		if (this.resetCounter == startReset) {
+			this.log.debug(`[offlineReset] Values will be nullable.`);
+			for (const obj of this.config.coils) {
+				if (obj['nullable']) {
+					this.log.debug(`[offlineReset] ${obj.key}`);
+					await this.persistData(obj.key, obj.name, 0, 'value', obj.unit, true);
+				}
+			}
+		}
+		//}
 	}
 
 	/**
@@ -283,7 +366,7 @@ class Deyeidc extends utils.Adapter {
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
 		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
-
+		//
 		function decimalToHex(dec) {
 			let hex = Number(dec).toString(16);
 			while (hex.length < 2) {
@@ -291,135 +374,6 @@ class Deyeidc extends utils.Adapter {
 			}
 			return hex;
 		}
-	}
-
-	/**
-	 * Calculate data that cannot be read,
-	 * the necessary values must be subscribed to in advance
-	 * @param {*} id
-	 * @param {*} state
-	 * @returns
-	 */
-	async computeData(id, state) {
-		const loggerSn = this.config.logger + '.';
-		const pos = id.indexOf(loggerSn) + loggerSn.length;
-		const basedir = id.substring(0, pos);
-		const name = id.substring(pos);
-
-		const jsonResult = [];
-		const varCompute = [];
-
-		if (state) {
-			const changes = this.CalcValues.filter(calc => calc.values.includes(name));
-			//
-			for (let i = 0; i < changes.length; i++) {
-				let computeResult = 0;
-				for (let j = 0; j < changes[i].values.length; j++) {
-					const state = await this.getStateAsync(basedir + changes[i].values[j]);
-
-					if (typeof state?.val === 'number') {
-						varCompute[j] = state?.val;
-					} else {
-						varCompute[j] = parseFloat(changes[i].values[j].replace(/[^0-9.]/g, ''));
-					}
-					//
-					switch (changes[i].operation) {
-						case '+':
-							computeResult = varCompute[0] + varCompute[1];
-							break;
-						case '-':
-							computeResult = varCompute[0] - varCompute[1];
-							break;
-						case '*':
-							computeResult = varCompute[0] * varCompute[1];
-							break;
-						case '/':
-							computeResult = varCompute[0] / varCompute[1];
-							break;
-					}
-				}
-				//console.log(`[computeResult #${i}#]  <${varCompute[0]}> ${changes[i].operation} <${varCompute[1]}> = ${computeResult}`);
-				const product_hr = (computeResult * 10 ** -changes[i].factor).toFixed(2);
-				const jsonObj = { key: changes[i].key, value: product_hr, unit: changes[i].unit, name: changes[i].name };
-				jsonResult.push(jsonObj);
-			}
-		}
-		return (jsonResult);
-	}
-
-	/**
-	 * Preparing the compute formales and subscribing to the states
-	 * it runs, if 'setWatchPoints' is false
-	 * @returns
-	 */
-	async readComputeAndWatch() {
-		if (this.setWatchPoints) return;
-		const basedir = this.namespace + '.' + this.config.logger + '.';
-		const jsonResult = [];
-		const varCompute = [];
-		const watchStates = ['Power_Set'];
-		const computeConfig = this.config.computes;
-		if (computeConfig && Array.isArray(computeConfig)) {
-			for (const obj of computeConfig) {
-				const values = [];
-				const response = mathOperation(obj.values);
-				const operation = response?.operation;
-				const position = response?.position;
-				varCompute[0] = obj.values.slice(0, position).trim();
-				varCompute[1] = obj.values.slice(position + 1).trim();
-				values.push(varCompute[0]);
-				values.push(varCompute[1]);
-				//
-				for (let i = 0; i < 2; i++) {
-					const state = await this.getStateAsync(basedir + values[i]);
-					if (state) { // != null
-						if (!watchStates.includes(values[i])) {
-							watchStates.push(values[i]);
-						}
-					}
-				}
-				const jsonString = { values: values, operation: operation, key: obj.key, name: obj.name, unit: obj.unit, factor: obj.factor };
-				jsonResult.push(jsonString);
-			}
-			for (const watch of watchStates) {
-				this.subscribeStates(this.config.logger + '.' + watch);
-				this.log.debug(`[watchStates] set to ${watch}`);
-			}
-			this.setWatchPoints = true;
-			this.CalcValues = jsonResult;
-		}
-		function mathOperation(computeString) {
-			const defMathOperators = ['+', '-', '*', '/'];
-			let position;
-			for (let i = 0; i < defMathOperators.length; i++) {
-				const zeichen = defMathOperators[i];
-				position = computeString.indexOf(zeichen);
-				if (position > 0) {
-					const jsonString = { operation: computeString[position], position: position };
-					return jsonString;
-				}
-			}
-		}
-	}
-
-	/**EHOSTUNREACH Connect_error:
-	 * OfflineReset, if 'EHOSTUNREACH' arrived
-	 */
-	async offlineReset() {
-		// Counter for OfflineReset
-		//if (err.message.indexOf('EHOSTUNREACH') > 1) {
-		this.resetCounter++;
-		const startReset = Math.floor(540 / this.config.pollInterval);
-		if (this.resetCounter == startReset) {
-			this.log.debug(`[offlineReset] Values will be nullable.`);
-			for (const obj of this.config.coils) {
-				if (obj['nullable']) {
-					this.log.debug(`offlineReset: ${obj.key}`);
-					await this.persistData(obj.key, obj.name, 0, 'value', obj.unit, true);
-				}
-			}
-		}
-		//}
 	}
 
 	/**
@@ -432,13 +386,35 @@ class Deyeidc extends utils.Adapter {
 			// The state was changed
 			if (id.indexOf('Power_Set') > 1) {
 				await this.setPower(id, state);
-			} else {
-				await this.updateData(await this.computeData(id, state));
 			}
 		} else {
 			// The state was deleted
 			this.log.debug(`state ${id} deleted`);
 		}
+	}
+
+	/**
+	   * set Power
+	 * @param {*} id
+	 * @param {*} state
+	 */
+	async setPower(id, state) {
+		const req = 0;
+		const powerControlRegister = 40;
+		const data = [];
+		console.log(`[setPower] ID ${id}`);
+		if (state.val < 1 || state.val > 100) {
+			data[0] = 100;
+		} else {
+			data[0] = state.val;
+		}
+		this.log.debug(`[setPower] Power set to ${data[0]}%}`);
+		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
+		console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+		//this.client.write(request);
+		// erst möglich, wenn auf ack: false getriggert werden kann, also Umbau CalcValues!
+		//const dp_PowerSet = String(this.config.logger) + '.Power_Set';
+		//await this.setStateAsync(dp_PowerSet, { val: data[0], ack: true });
 	}
 
 	/**
@@ -450,8 +426,8 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} unit
 	 */
 	async persistData(key, name, value, role, unit, nullable) {
-		const dp_Device = removeInvalidCharacters(String(this.config.logger));
-		const dp_Value = dp_Device + '.' + removeInvalidCharacters(key);
+		const dp_Device = this.removeInvalidCharacters(String(this.config.logger));
+		const dp_Value = dp_Device + '.' + this.removeInvalidCharacters(key);
 		//
 		await this.setObjectNotExists(dp_Device, {
 			type: 'channel',
@@ -505,12 +481,6 @@ class Deyeidc extends utils.Adapter {
 		function isNumber(n) {
 			return !isNaN(parseFloat(n)) && !isNaN(n - 0);
 		}
-		function removeInvalidCharacters(inputString) {
-			//return inputString;
-			const regexPattern = '[^a-zA-Z0-9]+';
-			const regex = new RegExp(regexPattern, 'gu');
-			return inputString.replace(regex, '_');
-		}
 	}
 
 	/**
@@ -520,6 +490,13 @@ class Deyeidc extends utils.Adapter {
 	async updateData(data) {
 		for (const obj of data) {
 			if (obj.value != 'none') {
+				const elementIndex = this.memoryValues.findIndex((element => element.key == obj.key));
+				if (elementIndex == -1) { // new memory object
+					const jsonString = { key: obj.key, value: obj.value };
+					this.memoryValues.push(jsonString);
+				} else { // update memory object
+					this.memoryValues[elementIndex].value = obj.value;
+				}
 				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
 			}
 		}
@@ -597,6 +574,18 @@ class Deyeidc extends utils.Adapter {
 			common: { name: 'Values from device', desc: 'generated by Deyeidc' },
 			native: {},
 		});
+	}
+
+	/**
+	 *
+	 * @param {string} inputString
+	 * @returns {string}
+	 */
+	removeInvalidCharacters(inputString) {
+		//return inputString;
+		const regexPattern = '[^a-zA-Z0-9]+';
+		const regex = new RegExp(regexPattern, 'gu');
+		return inputString.replace(regex, '_');
 	}
 
 	/**
