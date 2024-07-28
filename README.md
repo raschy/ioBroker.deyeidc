@@ -59,7 +59,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 ### **WORK IN PROGRESS**
 
--   (raschy) Minor code optimisation
+-   (raschy) Minor code refactorings
 -   (raschy) Revision of the calculation area
 -   (raschy) NodeJS >= 18.x and js-controller >= 5 is required
 -   (raschy) Allow http addresses

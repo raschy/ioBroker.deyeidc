@@ -36,6 +36,7 @@ class Deyeidc extends utils.Adapter {
 		this.numberCoils = 0;
 		this.req = 0;
 		this.memoryValues = [];
+		this.setWatchPoints = false;
 		this.resetCounter = 0;
 	}
 
@@ -191,8 +192,9 @@ class Deyeidc extends utils.Adapter {
 						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 						await this.updateData(await this.computeData());
 						await this.checkOnlineDate();
-						await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
-						await this.setStateAsync('info.status', { val: 'idle', ack: true });
+						await this.readWatchpoints();
+						await this.setState('info.lastUpdate', { val: Date.now(), ack: true });
+						await this.setState('info.status', { val: 'idle', ack: true });
 					}
 				} else {
 					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
@@ -220,7 +222,7 @@ class Deyeidc extends utils.Adapter {
 		try {
 			if (!this.connectionActive) await this.connect();
 			//console.log('##### requestData Try ', this.req); //##
-			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
+			await this.setState('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
@@ -373,6 +375,18 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
+	 * Set a subscriber to watchStates
+	 */
+	async readWatchpoints() {
+		if (this.setWatchPoints) return;
+		const watchStates = ['Power_Set'];
+		for (const watch of watchStates) {
+			this.subscribeStates(this.config.logger + '.' + watch);
+			this.log.debug(`[watchStates] set to ${watch}`);
+		}
+		this.setWatchPoints = true;
+	}
+	/**
 	   * Is called if a subscribed state changes
 	 * @param {string} id
 	 * @param {ioBroker.State | null | undefined} state
@@ -390,7 +404,7 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	   * set Power
+	  * set Power
 	 * @param {*} id
 	 * @param {*} state
 	 */
@@ -398,7 +412,7 @@ class Deyeidc extends utils.Adapter {
 		const req = 0;
 		const powerControlRegister = 40;
 		const data = [];
-		console.log(`[setPower] ID ${id}`);
+		console.log(`[setPower] ID=${id} State=${JSON.stringify(state)}`);
 		if (state.val < 1 || state.val > 100) {
 			data[0] = 100;
 		} else {
@@ -409,8 +423,9 @@ class Deyeidc extends utils.Adapter {
 		console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		//this.client.write(request);
 		// erst möglich, wenn auf ack: false getriggert werden kann, also Umbau CalcValues!
-		//const dp_PowerSet = String(this.config.logger) + '.Power_Set';
-		//await this.setStateAsync(dp_PowerSet, { val: data[0], ack: true });
+		//await this.setState(id, { val: data[0], ack: true });
+		//this.setState(id, { ack: true });
+
 	}
 
 	/**
@@ -469,9 +484,9 @@ class Deyeidc extends utils.Adapter {
 		}
 		// Differentiated writing of data
 		if (nullable) {
-			await this.setStateAsync(dp_Value, { val: 0, ack: true, q: 0x42 }); // Nullable values while device is not present
+			await this.setState(dp_Value, { val: 0, ack: true, q: 0x42 }); // Nullable values while device is not present
 		} else {
-			await this.setStateAsync(dp_Value, { val: value, ack: true, q: 0x00 });
+			await this.setState(dp_Value, { val: value, ack: true, q: 0x00 });
 		}
 		//
 		function isNumber(n) {
@@ -597,7 +612,7 @@ class Deyeidc extends utils.Adapter {
 			//
 			this.client.destroy();
 			this.setState('info.connection', { val: false, ack: true });
-			this.setStateAsync(`info.status`, { val: 'offline', ack: true });
+			this.setState(`info.status`, { val: 'offline', ack: true });
 			callback();
 		} catch (e) {
 			callback();
