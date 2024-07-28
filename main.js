@@ -78,18 +78,15 @@ class Deyeidc extends utils.Adapter {
 		// already
 		if (this.internDataReady) {
 			// Start connection handler to created & monitor websocket connection
-			//await this.checkOnlineDate();
-
 			// First request
 			this.req = 1;
-			//console.log('############### Start >> Request: ', this.req); //##
+			//console.log('##### Start >> Request: ', this.req); //##
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
 				this.req = 1;
-				console.log('############### Update >> Request: ', this.req); //##
+				//console.log('##### Update >> Request: ', this.req); //##
 				await this.requestData(this.req);
-				//await this.checkOnlineDate(); // ######################
 			}, this.executionInterval * 1000);
 		} else {
 			this.setState('info.connection', { val: false, ack: true });
@@ -169,37 +166,37 @@ class Deyeidc extends utils.Adapter {
 			const mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
 			if (mb) {
+				// if (mb.register >= 0) console.log(`[onData] ## Register ## ${mb.register}`);
+				//
 				if (mb.register == 0) { // for request checkOnlineDate
-					//console.log('Integration OfflineCheck');
+					console.log(`[onData] Register "=0"`);
 					/*
 					const dayHour = mb.modbus.subarray(3, mb.modbus.length - 1).readInt16LE(0);
 					if (dayHour == 0) await this.setOfflineDate();
 					// this.req = 0;	// continue with registerset 0  // ##  ?? Integration OfflineCheck
 					*/
 				}
+
 				if (mb.register > 0) {
-					this.log.debug(`Response: ${JSON.stringify(mb)}`); // human readable
-					//console.log('   ### readCoils >> ', this.req, mb.register);
+					//console.log(`[onData] Register ">0"`);
+					this.log.debug(`Response: ${JSON.stringify(mb)}`);
+					//console.log('### readCoils >> ', this.req, mb.register);
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;	// next registerset
-				} else {
-					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable
-				}
-				if (mb.register >= 0) {
 					if (this.req <= this.numberRegisterSets) {
-						//console.log('#### Request    ####: ', this.req);
+						//console.log('### Request ### ', this.req);
 						this.requestData(this.req);
-					}
-					if (this.req == this.numberRegisterSets + 1) {
-						//console.log('Request Else ##: ', this.req);
-						//this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-						this.req++;
-						//await this.readComputeAndWatch();
+					} else {
+						//console.log('Request Else ## ', this.req);
+						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 						await this.updateData(await this.computeData());
-						//await this.computeData();
+						await this.checkOnlineDate();
 						await this.setStateAsync('info.lastUpdate', { val: Date.now(), ack: true });
 						await this.setStateAsync('info.status', { val: 'idle', ack: true });
 					}
+				} else {
+					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
+					//console.log(`RESPONSE: ${JSON.stringify(mb)}`);
 				}
 			}
 		} catch (err) {
@@ -225,7 +222,7 @@ class Deyeidc extends utils.Adapter {
 			//console.log('##### requestData Try ', this.req); //##
 			await this.setStateAsync('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-			console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
 			//this.req++;	// next registerset
 		} catch (error) {
@@ -242,8 +239,8 @@ class Deyeidc extends utils.Adapter {
 		//console.log('##### checkOnlineDate ######');
 		const dateControlRegister = 0x17; // Day&Hour
 		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
-		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
+		console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		//this.client.write(request);
 	}
 
 	/**
@@ -330,7 +327,6 @@ class Deyeidc extends utils.Adapter {
 			}
 		}
 	}
-
 
 	/**EHOSTUNREACH Connect_error:
 	 * OfflineReset, if 'EHOSTUNREACH' arrived
