@@ -129,7 +129,10 @@
 			"Bosswerk",
 			"cloudless"
 		],
-		"licenseInformation": "MIT",
+		"licenseInformation": {
+			"license": "MIT",
+			"type": "free"
+		},
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
 		"icon": "deyeidc.png",
@@ -137,9 +140,8 @@
 		"extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
 		"readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
 		"loglevel": "info",
-		"mode": "daemon",
+		"tier": 2,
 		"type": "energy",
-		"tier": 3,
 		"compact": true,
 		"connectionType": "local",
 		"dataSource": "poll",
@@ -147,7 +149,9 @@
 			"config": "json"
 		},
 		"dependencies": [
-			{}
+			{
+				"js-controller": ">=5.0.19"
+			}
 		],
 		"globalDependencies": [
 			{
