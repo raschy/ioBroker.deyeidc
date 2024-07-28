@@ -163,7 +163,7 @@ class Deyeidc extends utils.Adapter {
 			const mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
 
-			if (mb.register > 0) {
+			if (mb && mb.register > 0) {
 				this.log.debug(`Response: ${JSON.stringify(mb)}`);
 				await this.updateData(this.idc.readCoils(mb));
 				this.req++;	// next registerset
@@ -172,7 +172,8 @@ class Deyeidc extends utils.Adapter {
 				} else {
 					this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 					await this.updateData(await this.computeData());
-					await this.checkOnlineDate();
+					// await this.checkOnlineDate();
+					// await this.setOfflineDate();
 					await this.readWatchpoints();
 					await this.setState('info.lastUpdate', { val: Date.now(), ack: true });
 					await this.setState('info.status', { val: 'idle', ack: true });
@@ -210,18 +211,6 @@ class Deyeidc extends utils.Adapter {
 			//console.log('requestData Catch');
 			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
-	}
-
-	/**
-	 * checkOnlineDate
-	 */
-	async checkOnlineDate() {
-		if (!this.connectionActive) this.connect();
-		//console.log('##### checkOnlineDate ######');
-		const dateControlRegister = 0x17; // Day&Hour
-		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
-		console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
 	}
 
 	/**
@@ -309,12 +298,11 @@ class Deyeidc extends utils.Adapter {
 		}
 	}
 
-	/**EHOSTUNREACH Connect_error:
+	/**
 	 * OfflineReset, if 'EHOSTUNREACH' arrived
 	 */
 	async offlineReset() {
 		// Counter for OfflineReset
-		//if (err.message.indexOf('EHOSTUNREACH') > 1) {
 		this.resetCounter++;
 		const startReset = Math.floor(540 / this.config.pollInterval);
 		if (this.resetCounter == startReset) {
@@ -326,11 +314,10 @@ class Deyeidc extends utils.Adapter {
 				}
 			}
 		}
-		//}
 	}
 
 	/**
-	 * setOfflineDate
+	 * set actual date to inverter (for daily data-reset)
 	 */
 	async setOfflineDate() {
 		const data = [];
@@ -354,6 +341,18 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
+	 * checkOnlineDate
+	 */
+	async checkOnlineDate() {
+		if (!this.connectionActive) this.connect();
+		//console.log('##### checkOnlineDate ######');
+		const dateControlRegister = 0x17; // Day&Hour
+		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
+		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		//this.client.write(request);
+	}
+
+	/**
 	 * Set a subscriber to watchStates
 	 */
 	async readWatchpoints() {
@@ -365,6 +364,7 @@ class Deyeidc extends utils.Adapter {
 		}
 		this.setWatchPoints = true;
 	}
+
 	/**
 	   * Is called if a subscribed state changes
 	 * @param {string} id
