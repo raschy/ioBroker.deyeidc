@@ -139,6 +139,7 @@
 		"extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
 		"readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
 		"loglevel": "info",
+		"mode": "daemon",
 		"tier": 2,
 		"type": "energy",
 		"compact": true,
