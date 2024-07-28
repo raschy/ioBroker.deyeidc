@@ -156,7 +156,7 @@ class Deyeidc extends utils.Adapter {
 
 	/**
 	 * onData
-	 * @param {*} data
+	 * @param {*} data#
 	 */
 	async onData(data) {
 		try {
