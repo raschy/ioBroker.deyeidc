@@ -78,15 +78,12 @@ class Deyeidc extends utils.Adapter {
 		}
 		// already
 		if (this.internDataReady) {
-			// Start connection handler to created & monitor websocket connection
-			// First request
+			// first request
 			this.req = 1;
-			//console.log('##### Start >> Request: ', this.req); //##
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
 				this.req = 1;
-				//console.log('##### Update >> Request: ', this.req); //##
 				await this.requestData(this.req);
 			}, this.executionInterval * 1000);
 		} else {
@@ -162,44 +159,26 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} data
 	 */
 	async onData(data) {
-		//console.log('Response by request [', this.req, '] >>', this.idc.toHexString(data)); // human readable
 		try {
 			const mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
-			if (mb) {
-				// if (mb.register >= 0) console.log(`[onData] ## Register ## ${mb.register}`);
-				//
-				if (mb.register == 0) { // for request checkOnlineDate
-					console.log(`[onData] Register "=0"`);
-					/*
-					const dayHour = mb.modbus.subarray(3, mb.modbus.length - 1).readInt16LE(0);
-					if (dayHour == 0) await this.setOfflineDate();
-					// this.req = 0;	// continue with registerset 0  // ##  ?? Integration OfflineCheck
-					*/
-				}
 
-				if (mb.register > 0) {
-					//console.log(`[onData] Register ">0"`);
-					this.log.debug(`Response: ${JSON.stringify(mb)}`);
-					//console.log('### readCoils >> ', this.req, mb.register);
-					await this.updateData(this.idc.readCoils(mb));
-					this.req++;	// next registerset
-					if (this.req <= this.numberRegisterSets) {
-						//console.log('### Request ### ', this.req);
-						this.requestData(this.req);
-					} else {
-						//console.log('Request Else ## ', this.req);
-						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-						await this.updateData(await this.computeData());
-						await this.checkOnlineDate();
-						await this.readWatchpoints();
-						await this.setState('info.lastUpdate', { val: Date.now(), ack: true });
-						await this.setState('info.status', { val: 'idle', ack: true });
-					}
+			if (mb.register > 0) {
+				this.log.debug(`Response: ${JSON.stringify(mb)}`);
+				await this.updateData(this.idc.readCoils(mb));
+				this.req++;	// next registerset
+				if (this.req <= this.numberRegisterSets) {
+					this.requestData(this.req);
 				} else {
-					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
-					//console.log(`RESPONSE: ${JSON.stringify(mb)}`);
+					this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
+					await this.updateData(await this.computeData());
+					await this.checkOnlineDate();
+					await this.readWatchpoints();
+					await this.setState('info.lastUpdate', { val: Date.now(), ack: true });
+					await this.setState('info.status', { val: 'idle', ack: true });
 				}
+			} else {
+				this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
 			}
 		} catch (err) {
 			if (err.status == 'ECNTRLCODE') {
@@ -242,7 +221,7 @@ class Deyeidc extends utils.Adapter {
 		const dateControlRegister = 0x17; // Day&Hour
 		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
 		console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
-		//this.client.write(request);
+		this.client.write(request);
 	}
 
 	/**
@@ -421,11 +400,9 @@ class Deyeidc extends utils.Adapter {
 		this.log.debug(`[setPower] Power set to ${data[0]}%}`);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
 		console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
-		//this.client.write(request);
-		// erst möglich, wenn auf ack: false getriggert werden kann, also Umbau CalcValues!
+		this.client.write(request);
+		// erst möglich, wenn auf ack: false getriggert werden kann!
 		//await this.setState(id, { val: data[0], ack: true });
-		//this.setState(id, { ack: true });
-
 	}
 
 	/**
