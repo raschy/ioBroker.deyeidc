@@ -1,2 +1,0 @@
-#!/usr/bin/env node
-require('/home/raschy/ioBroker.deyeidc/node_modules/@iobroker/js-controller-cli/build/lib/setup').execute();
