@@ -78,6 +78,8 @@ class Deyeidc extends utils.Adapter {
 		}
 		// already
 		if (this.internDataReady) {
+			// open connection
+			if (!this.connectionActive) await this.connect();
 			// first request
 			this.req = 1;
 			await this.requestData(this.req);
@@ -117,7 +119,7 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug('Connected to server');
 				this.connectionActive = true;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
-				//client.set_Time_out(10000);
+				client.setTimeout(10000);
 				resolve(client); // Successful connection, return the socket
 			});
 
@@ -130,7 +132,6 @@ class Deyeidc extends utils.Adapter {
 			});
 
 			client.on('error', (error) => {
-				//this.log.debug('Connection error');
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
 				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONRESET') > 1) {
@@ -162,24 +163,29 @@ class Deyeidc extends utils.Adapter {
 		try {
 			const mb = this.idc.checkDataFrame(data);
 			// Preparation of the data
-
-			if (mb && mb.register > 0) {
-				this.log.debug(`Response: ${JSON.stringify(mb)}`);
-				await this.updateData(this.idc.readCoils(mb));
-				this.req++;	// next registerset
-				if (this.req <= this.numberRegisterSets) {
-					this.requestData(this.req);
-				} else {
-					this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-					await this.updateData(await this.computeData());
-					// await this.checkOnlineDate();
-					// await this.setOfflineDate();
-					await this.readWatchpoints();
-					await this.setState('info.lastUpdate', { val: Date.now(), ack: true });
-					await this.setState('info.status', { val: 'idle', ack: true });
+			if (mb) {
+				if (mb.register == 0) { //checkOnlineDate
+					this.log.debug(`Response: (checkOnlineDate) ${JSON.stringify(mb)}`);
+					if (mb.modbus[3] == 0) await this.setOfflineDate();
 				}
-			} else {
-				this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
+				//
+				if (mb.register > 0) { //payload
+					this.log.debug(`Response: (payload) ${JSON.stringify(mb)}`);
+					await this.updateData(this.idc.readCoils(mb));
+					this.req++;
+					if (this.req <= this.numberRegisterSets) {
+						this.requestData(this.req);
+					} else {
+						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
+						await this.updateData(await this.computeData());
+						await this.checkOnlineDate();
+						this.subscribeWatchpoint();
+						this.setState('info.lastUpdate', { val: Date.now(), ack: true });
+						this.setState('info.status', { val: 'idle', ack: true });
+					}
+				} else { //other messages
+					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
+				}
 			}
 		} catch (err) {
 			if (err.status == 'ECNTRLCODE') {
@@ -197,18 +203,12 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
-		if (!this.connectionActive) await this.connect();
-		if (!this.connectionActive) return;
 		try {
-			if (!this.connectionActive) await this.connect();
-			//console.log('##### requestData Try ', this.req); //##
-			await this.setState('info.status', { val: 'automatic request', ack: true });
+			this.setState('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-			//console.log(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+			this.log.silly(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 			this.client.write(request);
-			//this.req++;	// next registerset
 		} catch (error) {
-			//console.log('requestData Catch');
 			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 		}
 	}
@@ -229,8 +229,6 @@ class Deyeidc extends utils.Adapter {
 				this.log.debug(`[computeData]  ${JSON.stringify(obj)}`);
 				const response = mathOperation(obj.values);
 				if (response) {
-					//console.log('MathResponse: ', response);
-					//
 					const key1Index = this.memoryValues.findIndex((element => element.key == response.key1));
 					if (key1Index == -1) {
 						this.log.warn(`Compute Key '${response.key1}' not found!`);
@@ -248,7 +246,6 @@ class Deyeidc extends utils.Adapter {
 					}
 					//
 					const operation = response.operation;
-					//console.log(`[computeResult] OP: <${computeValue1}> ${operation} <${computeValue2}>`);
 					switch (operation) {
 						case '+':
 							computeResult = computeValue1 + computeValue2;
@@ -272,10 +269,8 @@ class Deyeidc extends utils.Adapter {
 					}
 					//
 					const key0 = this.removeInvalidCharacters(obj.key.trim());
-					//console.log(`[computeResult]  <${computeValue1}> ${operation} <${computeValue2}> = ${computeResult}`);
-					const product_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
-					const jsonObj = { key: key0, value: product_hr, unit: obj.unit, name: obj.name };
-					//console.log(`[computeData] ResultJson: ${JSON.stringify(jsonObj)}`);
+					const result_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
+					const jsonObj = { key: key0, value: result_hr, unit: obj.unit, name: obj.name };
 					jsonResult.push(jsonObj);
 				}
 			}
@@ -305,6 +300,7 @@ class Deyeidc extends utils.Adapter {
 		// Counter for OfflineReset
 		this.resetCounter++;
 		const startReset = Math.floor(540 / this.config.pollInterval);
+		this.log.debug(`[offlineReset] ${this.resetCounter} / ${startReset}`);
 		if (this.resetCounter == startReset) {
 			this.log.debug(`[offlineReset] Values will be nullable.`);
 			for (const obj of this.config.coils) {
@@ -345,23 +341,20 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async checkOnlineDate() {
 		if (!this.connectionActive) this.connect();
-		//console.log('##### checkOnlineDate ######');
 		const dateControlRegister = 0x17; // Day&Hour
 		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
-		//console.log(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
-		//this.client.write(request);
+		this.log.silly(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+		this.client.write(request);
 	}
 
 	/**
-	 * Set a subscriber to watchStates
+	 * Set a subscriber to watchState 'Power_Set'
 	 */
-	async readWatchpoints() {
+	async subscribeWatchpoint() {
 		if (this.setWatchPoints) return;
-		const watchStates = ['Power_Set'];
-		for (const watch of watchStates) {
-			this.subscribeStates(this.config.logger + '.' + watch);
-			this.log.debug(`[watchStates] set to ${watch}`);
-		}
+		const watch = this.config.logger + '.Power_Set';
+		this.subscribeStates(watch);
+		this.log.debug(`[subscribeWatchpoint] set to ${watch}`);
 		this.setWatchPoints = true;
 	}
 
@@ -373,7 +366,7 @@ class Deyeidc extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			if (id.indexOf('Power_Set') > 1) {
+			if ((id.indexOf('Power_Set') > 1) && !state.ack) {
 				await this.setPower(id, state);
 			}
 		} else {
@@ -391,18 +384,15 @@ class Deyeidc extends utils.Adapter {
 		const req = 0;
 		const powerControlRegister = 40;
 		const data = [];
-		console.log(`[setPower] ID=${id} State=${JSON.stringify(state)}`);
 		if (state.val < 1 || state.val > 100) {
 			data[0] = 100;
 		} else {
 			data[0] = state.val;
 		}
-		this.log.debug(`[setPower] Power set to ${data[0]}%}`);
+		this.log.debug(`[setPower] Power set to ${data[0]}%`);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
-		console.log(`Write Registersatz: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
-		// erst möglich, wenn auf ack: false getriggert werden kann!
-		//await this.setState(id, { val: data[0], ack: true });
+		this.setState(id, { val: data[0], ack: true });
 	}
 
 	/**
