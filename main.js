@@ -85,6 +85,7 @@ class Deyeidc extends utils.Adapter {
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
+				if (!this.connectionActive) await this.connect();
 				this.req = 1;
 				await this.requestData(this.req);
 			}, this.executionInterval * 1000);
@@ -162,6 +163,7 @@ class Deyeidc extends utils.Adapter {
 	async onData(data) {
 		try {
 			const mb = this.idc.checkDataFrame(data);
+			this.mb = mb;	//###
 			// Preparation of the data
 			if (mb) {
 				if (mb.register == 0) { //checkOnlineDate
@@ -193,6 +195,7 @@ class Deyeidc extends utils.Adapter {
 			} else if (err.status == 'EFRAMECHK') {
 				this.log.silly(`${err.message}: Frame CheckSum faulty!`);
 			} else {
+				this.log.warn(JSON.stringify(this.mb));
 				this.log.error(`${err} | ${err.stack}`);
 			}
 		}
@@ -203,6 +206,7 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
+		if (!this.connectionActive) return;
 		try {
 			this.setState('info.status', { val: 'automatic request', ack: true });
 			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
