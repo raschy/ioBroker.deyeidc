@@ -56,6 +56,11 @@ All product and company names or logos are trademarks™ or registered® tradema
 	### **WORK IN PROGRESS**
 	Serial numbers adjusted for M series
 -->
+
+    ### **WORK IN PROGRESS**
+
+-   (raschy) Stabilisation on connection
+
 ### 0.0.15 (2024-07-28)
 
 -   (raschy) Minor code refactorings

@@ -78,14 +78,11 @@ class Deyeidc extends utils.Adapter {
 		}
 		// already
 		if (this.internDataReady) {
-			// open connection
-			if (!this.connectionActive) await this.connect();
 			// first request
 			this.req = 1;
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
-				if (!this.connectionActive) await this.connect();
 				this.req = 1;
 				await this.requestData(this.req);
 			}, this.executionInterval * 1000);
@@ -206,6 +203,7 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
+		if (!this.connectionActive) await this.connect();
 		if (!this.connectionActive) return;
 		try {
 			this.setState('info.status', { val: 'automatic request', ack: true });
@@ -327,6 +325,7 @@ class Deyeidc extends utils.Adapter {
 		data[0] = parseInt(decimalToHex(parseInt(d.getFullYear().toString().substring(2))) + decimalToHex(d.getMonth() + 1), 16);
 		data[1] = parseInt(decimalToHex(d.getDate()) + decimalToHex(d.getHours()), 16);
 		data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
+		if (!this.connectionActive) await this.connect();
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
 		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
 		this.client.write(request);
@@ -393,6 +392,7 @@ class Deyeidc extends utils.Adapter {
 		} else {
 			data[0] = state.val;
 		}
+		if (!this.connectionActive) await this.connect();
 		this.log.debug(`[setPower] Power set to ${data[0]}%`);
 		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
 		this.client.write(request);
