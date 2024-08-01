@@ -236,7 +236,7 @@ class Deyeidc extends utils.Adapter {
 						this.log.warn(`Compute Key '${response.key1}' not found!`);
 						continue;
 					} else {
-						computeValue1 = this.memoryValues[key1Index].value;
+						computeValue1 = parseFloat(this.memoryValues[key1Index].value);
 					}
 					//
 					const key2Index = this.memoryValues.findIndex((element => element.key == response.key2));
@@ -244,7 +244,7 @@ class Deyeidc extends utils.Adapter {
 						this.log.warn(`Compute Key '${response.key2}' not found!`);
 						continue;
 					} else {
-						computeValue2 = this.memoryValues[key2Index].value;
+						computeValue2 = parseFloat(this.memoryValues[key2Index].value);
 					}
 					//
 					const operation = response.operation;
