@@ -94,14 +94,18 @@ class Deyeidc extends utils.Adapter {
 
 	/**
 	 * connection to inverter
+	 * @returns boolean
 	 */
-	async connect() {
+	async checkConnected() {
+		if (this.connectionActive) return true;
 		this.log.debug(`try to connect . . .`);
 		try {
 			this.client = await this.connectToServer();
+			return true;
 		} catch (error) {
 			this.client = null;
-			this.connectionActive = false;
+			//this.connectionActive = false;
+			return false;
 		}
 	}
 
@@ -203,15 +207,15 @@ class Deyeidc extends utils.Adapter {
 	 * @param {number} req
 	 */
 	async requestData(req) {
-		if (!this.connectionActive) await this.connect();
-		if (!this.connectionActive) return;
-		try {
-			this.setState('info.status', { val: 'automatic request', ack: true });
-			const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-			this.log.silly(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
-			this.client.write(request);
-		} catch (error) {
-			this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
+		if (await this.checkConnected()) {
+			try {
+				this.setState('info.status', { val: 'automatic request', ack: true });
+				const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
+				this.log.silly(`Request to register set ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+				this.client.write(request);
+			} catch (error) {
+				this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
+			}
 		}
 	}
 
@@ -318,18 +322,19 @@ class Deyeidc extends utils.Adapter {
 	 * set actual date to inverter (for daily data-reset)
 	 */
 	async setOfflineDate() {
-		const data = [];
-		const req = 0;
-		const dateControlRegister = 0x16;
-		const d = new Date();
-		data[0] = parseInt(decimalToHex(parseInt(d.getFullYear().toString().substring(2))) + decimalToHex(d.getMonth() + 1), 16);
-		data[1] = parseInt(decimalToHex(d.getDate()) + decimalToHex(d.getHours()), 16);
-		data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
-		if (!this.connectionActive) await this.connect();
-		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
-		this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
-		//
+		if (await this.checkConnected()) {
+			const data = [];
+			const req = 0;
+			const dateControlRegister = 0x16;
+			const d = new Date();
+			data[0] = parseInt(decimalToHex(parseInt(d.getFullYear().toString().substring(2))) + decimalToHex(d.getMonth() + 1), 16);
+			data[1] = parseInt(decimalToHex(d.getDate()) + decimalToHex(d.getHours()), 16);
+			data[2] = parseInt(decimalToHex(d.getMinutes()) + decimalToHex(d.getSeconds()), 16);
+			const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(dateControlRegister, data));
+			this.log.debug(`[setOfflineDate] write: ${(req)} > ${this.idc.toHexString(request)}`); // human readable
+			this.client.write(request);
+		}
+
 		function decimalToHex(dec) {
 			let hex = Number(dec).toString(16);
 			while (hex.length < 2) {
@@ -343,11 +348,12 @@ class Deyeidc extends utils.Adapter {
 	 * checkOnlineDate
 	 */
 	async checkOnlineDate() {
-		if (!this.connectionActive) this.connect();
-		const dateControlRegister = 0x17; // Day&Hour
-		const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
-		this.log.silly(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
-		this.client.write(request);
+		if (await this.checkConnected()) {
+			const dateControlRegister = 0x17; // Day&Hour
+			const request = this.idc.requestFrame(0, this.idc.modbusReadFrame(dateControlRegister));
+			this.log.silly(`Request to date  ( ddhh ) > ${this.idc.toHexString(request)}`); // human readable
+			this.client.write(request);
+		}
 	}
 
 	/**
@@ -384,19 +390,20 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} state
 	 */
 	async setPower(id, state) {
-		const req = 0;
-		const powerControlRegister = 40;
-		const data = [];
-		if (state.val < 1 || state.val > 100) {
-			data[0] = 100;
-		} else {
-			data[0] = state.val;
+		if (await this.checkConnected()) {
+			const req = 0;
+			const powerControlRegister = 40;
+			const data = [];
+			if (state.val < 1 || state.val > 100) {
+				data[0] = 100;
+			} else {
+				data[0] = state.val;
+			}
+			this.log.debug(`[setPower] Power set to ${data[0]}%`);
+			const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
+			this.client.write(request);
+			this.setState(id, { val: data[0], ack: true });
 		}
-		if (!this.connectionActive) await this.connect();
-		this.log.debug(`[setPower] Power set to ${data[0]}%`);
-		const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
-		this.client.write(request);
-		this.setState(id, { val: data[0], ack: true });
 	}
 
 	/**
