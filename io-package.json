@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.0.16",
+    "version": "0.1.0",
     "news": {
+      "0.1.0": {
+        "en": "Computing module stabilised\nTypo in error handling corrected",
+        "de": "Vergleichsmodul stabilisiert\nTypo in Fehlerbehebung korrigiert",
+        "ru": "Стабилизированный вычислительный модуль\nТайпо в исправленном режиме",
+        "pt": "Módulo de computação estabilizado\nTypo em manipulação de erros corrigido",
+        "nl": "Berekeningsmodule gestabiliseerd\nTypo in foutverwerking gecorrigeerd",
+        "fr": "Module informatique stabilisé\nTypo dans la gestion des erreurs corrigée",
+        "it": "Modulo di calcolo stabilizzato\nTypo nella gestione degli errori corretto",
+        "es": "Módulo de computación estabilizado\nTypo en el manejo de errores corregido",
+        "pl": "Stabilizacja modułu obliczeniowego\nTypo w obsłudze błędów poprawione",
+        "uk": "Порівняння стабілізації модуля\nТіпо у виправленні помилок",
+        "zh-cn": "计算模块稳定\nTypo 处理错误纠正"
+      },
       "0.0.16": {
         "en": "Stabilisation on connection",
         "de": "Stabilisierung der Verbindung",
@@ -80,19 +93,6 @@
         "pl": "zła implementacja msb/lsb wartości 32-bitowych została poprawiona",
         "uk": "неправильне виконання мсб/лсб 32-бітних значень, що перетворюються",
         "zh-cn": "第32条-轨道价值的错误实施失误"
-      },
-      "0.0.10": {
-        "en": "Calculation of 32-bit values corrected\nReady for launch into the stable repository",
-        "de": "Berechnung von 32-Bit-Werten korrigiert\nBereit zum Start in das stabile Repository",
-        "ru": "Исправлена расчет 32-битных значений\nГотов к запуску в стабильный репозиторий",
-        "pt": "Cálculo de valores de 32 bits corrigidos\nPronto para lançamento no repositório estável",
-        "nl": "Calculatie van 32-bit waarden gecorrigeerd\nKlaar voor lancering in de stalen herberg",
-        "fr": "Calcul des valeurs corrigées de 32 bits\nPrêt pour le lancement dans le dépôt stable",
-        "it": "Calcolo dei valori a 32 bit corretto\nPronto per il lancio nel repository stabile",
-        "es": "Cálculo de valores de 32 bits corregidos\nListo para el lanzamiento en el repositorio estable",
-        "pl": "Kalkulacja 32-bitowych wartości poprawiła się\nReady for launch into a stable repozytorium",
-        "uk": "Розрахунок 32-бітних значень, виправлених\nГотовий для запуску в стабільну репозиторію",
-        "zh-cn": "修改的32个轨道价值的计算\n进入稳定的储存库的准备"
       }
     },
     "titleLang": {
