@@ -60,6 +60,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### **WORK IN PROGRESS**
 
 -   (raschy) Computing module stabilised
+-   (raschy) Typo in error handling corrected
 
 ### 0.0.16 (2024-07-31)
 

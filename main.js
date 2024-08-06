@@ -104,7 +104,6 @@ class Deyeidc extends utils.Adapter {
 			return true;
 		} catch (error) {
 			this.client = null;
-			//this.connectionActive = false;
 			return false;
 		}
 	}
@@ -136,7 +135,7 @@ class Deyeidc extends utils.Adapter {
 			client.on('error', (error) => {
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
-				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONRESET') > 1) {
+				if (error.message.indexOf('EHOSTUNREACH') > 1 || error.message.indexOf('ECONNRESET') > 1) {
 					this.log.debug(`No connection to inverter: '${error.message}'`);
 					this.offlineReset();
 				} else {
@@ -237,16 +236,22 @@ class Deyeidc extends utils.Adapter {
 				if (response) {
 					const key1Index = this.memoryValues.findIndex((element => element.key == response.key1));
 					if (key1Index == -1) {
-						this.log.warn(`Compute Key '${response.key1}' not found!`);
-						continue;
+						computeValue1 = parseFloat(response.key1);
+						if (isNaN(computeValue1)) {
+							this.log.warn(`Compute Key '${response.key1}' not found!`);
+							continue;
+						}
 					} else {
 						computeValue1 = parseFloat(this.memoryValues[key1Index].value);
 					}
 					//
 					const key2Index = this.memoryValues.findIndex((element => element.key == response.key2));
 					if (key2Index == -1) {
-						this.log.warn(`Compute Key '${response.key2}' not found!`);
-						continue;
+						computeValue2 = parseFloat(response.key2);
+						if (isNaN(computeValue2)) {
+							this.log.warn(`Compute Key '${response.key2}' not found!`);
+							continue;
+						}
 					} else {
 						computeValue2 = parseFloat(this.memoryValues[key2Index].value);
 					}
@@ -285,11 +290,12 @@ class Deyeidc extends utils.Adapter {
 		}
 		// -- Helper --
 		function mathOperation(computeString) {
-			const defMathOperators = ['+', '-', '*', '/'];
+			const defMathOperators = ['*', '/', '+', '-'];
 			for (let i = 0; i < defMathOperators.length; i++) {
 				const zeichen = defMathOperators[i];
 				const position = computeString.indexOf(zeichen);
 				if (position > 0) {
+					i = defMathOperators.length;
 					const key1 = computeString.slice(0, position).trim();
 					const key2 = computeString.slice(position + 1).trim();
 					const jsonString = { operation: computeString[position], key1: key1, key2: key2 };
