@@ -1,0 +1,397 @@
+{
+	"ipaddress": "",
+	"port": 8899,
+	"logger": 0,
+	"pollInterval": 60,
+	"registers": [
+		{
+			"registerStart": 0,
+			"registerEnd": 58
+		},
+		{
+			"registerStart": 59,
+			"registerEnd": 108
+		},
+		{
+			"registerStart": 109,
+			"registerEnd": 112
+		},
+		{
+			"registerStart": 113,
+			"registerEnd": 199
+		},
+		{
+			"registerStart": 200,
+			"registerEnd": 299
+		}
+	],
+	"coils": [
+		{
+			"register": 0,
+			"rules": 1,
+			"key": "DT",
+			"name": "Device Type",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 2,
+			"rules": 7,
+			"key": "COMM_PTC_v1",
+			"name": "Communication Protocol Version",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 3,
+			"rules": 5,
+			"key": "SN1",
+			"name": "Inverter Serial Number",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 13,
+			"rules": 7,
+			"key": "DC_M_FV",
+			"name": "Control Board Firmware",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 14,
+			"rules": 7,
+			"key": "AC_VER",
+			"name": "Communication Board Firmware",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 16,
+			"rules": 3,
+			"key": "RP",
+			"name": "Rated Power",
+			"unit": "W",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 18,
+			"rules": 8,
+			"key": "NOMP",
+			"name": "Number of MPPT Path",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 18,
+			"rules": 9,
+			"key": "NOP",
+			"name": "Number of Phases",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 21,
+			"rules": 1,
+			"key": "SScT",
+			"name": "Startup Self-checking Time",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 59,
+			"rules": 1,
+			"key": "ST_w1",
+			"name": "Running Status",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 70,
+			"rules": 1,
+			"key": "BC_Day",
+			"name": "Batterie Charge Day",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 71,
+			"rules": 1,
+			"key": "BD_Day",
+			"name": "Batterie Discharge Day",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 72,
+			"rules": 1,
+			"key": "BC_Tot_lw",
+			"name": "Batterie Charge Total low word",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 74,
+			"rules": 1,
+			"key": "BD_Tot_lw",
+			"name": "Batterie Discharge Total low word",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 76,
+			"rules": 1,
+			"key": "GB_Day",
+			"name": "Grid Buy Day",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 77,
+			"rules": 1,
+			"key": "GS_Day",
+			"name": "Grid Sell Day",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 78,
+			"rules": 1,
+			"key": "GB_Tot_lw",
+			"name": "Grid Buy Total",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 79,
+			"rules": 1,
+			"key": "AC_Fo1",
+			"name": "AC Frequency 1",
+			"unit": "Hz",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 81,
+			"rules": 1,
+			"key": "GS_Tot_lw",
+			"name": "Grid Sell Total low word",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 84,
+			"rules": 1,
+			"key": "LP_Day",
+			"name": "Load Power Day",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 85,
+			"rules": 1,
+			"key": "LP_Tot_lw",
+			"name": "Load Power low word",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 87,
+			"rules": 1,
+			"key": "LP_Year_lw",
+			"name": "Load Power Year",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 90,
+			"rules": 6,
+			"key": "AC_RDT_T1",
+			"name": "AC Radiator Temp",
+			"unit": "°C",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 98,
+			"rules": 1,
+			"key": "GS_Year_lw",
+			"name": "Grid Sell Year low word",
+			"unit": "kW",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 109,
+			"rules": 1,
+			"key": "DV1",
+			"name": "DC Voltage PV1",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 110,
+			"rules": 1,
+			"key": "DC1",
+			"name": "DC Current PV1",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 111,
+			"rules": 1,
+			"key": "DV2",
+			"name": "DC Voltage PV2",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 112,
+			"rules": 1,
+			"key": "DC2",
+			"name": "DC Current PV2",
+			"unit": "A",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 183,
+			"rules": 1,
+			"key": "Batt_V",
+			"name": "Batterie Voltage",
+			"unit": "V",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 184,
+			"rules": 1,
+			"key": "Batt_Cap",
+			"name": "Batterie Capacity",
+			"unit": "%",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 186,
+			"rules": 1,
+			"key": "DP1_read",
+			"name": "PV1 Input Power",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 187,
+			"rules": 1,
+			"key": "DP2_read",
+			"name": "PV2 Input Power",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 201,
+			"rules": 1,
+			"key": "EV",
+			"name": "Equalization Voltage",
+			"unit": "V",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 202,
+			"rules": 1,
+			"key": "AV",
+			"name": "Absorption Voltage",
+			"unit": "V",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 203,
+			"rules": 1,
+			"key": "FV",
+			"name": "Floating Voltage",
+			"unit": "V",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 204,
+			"rules": 1,
+			"key": "Batt_tot_Cap",
+			"name": "Batterie Total Capacity",
+			"unit": "Ah",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 206,
+			"rules": 1,
+			"key": "ZEP",
+			"name": "Zero Export Power",
+			"unit": "W",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 210,
+			"rules": 1,
+			"key": "Max_Charge",
+			"name": "Maximum Current Charge",
+			"unit": "A",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 211,
+			"rules": 1,
+			"key": "Max_Discharge",
+			"name": "Maximum Current Discharge",
+			"unit": "A",
+			"factor": 0,
+			"nullable": false
+		}
+	],
+	"computes": [
+		{
+			"values": "DV1*DC1",
+			"key": "DP1",
+			"name": "DC Power PV1",
+			"unit": "W",
+			"factor": 0
+		},
+		{
+			"values": "DV2*DC2",
+			"key": "DP2",
+			"name": "DC Power PV2",
+			"unit": "W",
+			"factor": 0
+		}
+	]
+}
