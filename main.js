@@ -25,7 +25,7 @@ class Deyeidc extends utils.Adapter {
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		//
-		this.idc = new idcCore();
+		this.idc = new idcCore(this.log);
 		this.client = null;
 		// -----------------  Timeout variables -----------------
 		this.executionInterval = 60;
@@ -50,6 +50,7 @@ class Deyeidc extends utils.Adapter {
 		// is accessible via this.config:
 
 		// Initialize your adapter Here
+		this.idc = new idcCore(this.log);
 		// About User changes
 		await this.checkUserData();
 
@@ -131,7 +132,7 @@ class Deyeidc extends utils.Adapter {
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
 			});
-*/
+			*/
 			client.on('error', (error) => {
 				this.connectionActive = false;
 				this.setState('info.connection', { val: this.connectionActive, ack: true });
@@ -163,15 +164,14 @@ class Deyeidc extends utils.Adapter {
 	async onData(data) {
 		try {
 			const mb = this.idc.checkDataFrame(data);
-			this.mb = mb;	//###
+			//this.mb = mb;	//###
 			// Preparation of the data
 			if (mb) {
 				if (mb.register == 0) { //checkOnlineDate
 					this.log.debug(`Response: (checkOnlineDate) ${JSON.stringify(mb)}`);
-					if (mb.modbus[3] == 0) await this.setOfflineDate();
+					if (mb.modbus[3] == 0) await this.setOfflineDate();	// date/time check
 				}
-				//
-				if (mb.register > 0) { //payload
+				else if (mb.register > 0) { //payload
 					this.log.debug(`Response: (payload) ${JSON.stringify(mb)}`);
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;
@@ -180,13 +180,13 @@ class Deyeidc extends utils.Adapter {
 					} else {
 						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 						await this.updateData(await this.computeData());
-						await this.checkOnlineDate();
+						if (this.config.onlinecheck) await this.checkOnlineDate();
 						this.subscribeWatchpoint();
 						this.setState('info.lastUpdate', { val: Date.now(), ack: true });
 						this.setState('info.status', { val: 'idle', ack: true });
 					}
 				} else { //other messages
-					this.log.silly(`RESPONSE: ${JSON.stringify(mb)}`); // human readable ALL Responses
+					this.log.silly(`RESPONSE ${JSON.stringify(mb)}`); // human readable ALL Responses
 				}
 			}
 		} catch (err) {
@@ -195,7 +195,7 @@ class Deyeidc extends utils.Adapter {
 			} else if (err.status == 'EFRAMECHK') {
 				this.log.silly(`${err.message}: Frame CheckSum faulty!`);
 			} else {
-				this.log.warn(JSON.stringify(this.mb));
+				//this.log.warn(JSON.stringify(this.mb));
 				this.log.error(`${err} | ${err.stack}`);
 			}
 		}
@@ -364,6 +364,7 @@ class Deyeidc extends utils.Adapter {
 
 	/**
 	 * Set a subscriber to watchState 'Power_Set'
+	 * Subscribe first when object has been created
 	 */
 	async subscribeWatchpoint() {
 		if (this.setWatchPoints) return;

@@ -32,7 +32,7 @@
 					"md": 6,
 					"lg": 6,
 					"label": "serialNumber",
-					"tooltip": "tooltipDeviceSerialNnumber",
+					"tooltip": "serialNumberTooltip",
 					"newLine": true
 				},
 				"pollInterval": {
@@ -41,6 +41,14 @@
 					"md": 6,
 					"lg": 6,
 					"label": "pollingRate"
+				},
+				"onlinecheck": {
+					"type": "checkbox",
+					"label": "onlinecheck",
+					"tooltip": "onlinecheckTooltip",
+					"help": "onlinecheckHelptext",
+					"default": false,
+					"newLine": true
 				}
 			}
 		},
@@ -79,7 +87,7 @@
 				"_help1": {
 					"newLine": true,
 					"type": "staticText",
-					"text": "tableRegisterHelp",
+					"text": "registerHelptext",
 					"sm": 12,
 					"md": 4,
 					"lg": 4
@@ -228,7 +236,7 @@
 				"_help1": {
 					"newLine": true,
 					"type": "staticText",
-					"text": "tableComputeHelp",
+					"text": "computeHelptext",
 					"sm": 12,
 					"md": 4,
 					"lg": 4

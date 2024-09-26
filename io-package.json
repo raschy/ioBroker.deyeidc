@@ -1,244 +1,293 @@
 {
-  "common": {
-    "name": "deyeidc",
-    "version": "0.1.0",
-    "news": {
-      "0.1.0": {
-        "en": "Computing module stabilised\nTypo in error handling corrected",
-        "de": "Vergleichsmodul stabilisiert\nTypo in Fehlerbehebung korrigiert",
-        "ru": "Стабилизированный вычислительный модуль\nТайпо в исправленном режиме",
-        "pt": "Módulo de computação estabilizado\nTypo em manipulação de erros corrigido",
-        "nl": "Berekeningsmodule gestabiliseerd\nTypo in foutverwerking gecorrigeerd",
-        "fr": "Module informatique stabilisé\nTypo dans la gestion des erreurs corrigée",
-        "it": "Modulo di calcolo stabilizzato\nTypo nella gestione degli errori corretto",
-        "es": "Módulo de computación estabilizado\nTypo en el manejo de errores corregido",
-        "pl": "Stabilizacja modułu obliczeniowego\nTypo w obsłudze błędów poprawione",
-        "uk": "Порівняння стабілізації модуля\nТіпо у виправленні помилок",
-        "zh-cn": "计算模块稳定\nTypo 处理错误纠正"
-      },
-      "0.0.16": {
-        "en": "Stabilisation on connection",
-        "de": "Stabilisierung der Verbindung",
-        "ru": "Стабилизация связи",
-        "pt": "Estabilização em conexão",
-        "nl": "Stabilisatie van de verbinding",
-        "fr": "Stabilisation sur la connexion",
-        "it": "Stabilizzazione sul collegamento",
-        "es": "Estabilización en conexión",
-        "pl": "Stabilizacja połączenia",
-        "uk": "Стабілізація з'єднання",
-        "zh-cn": "连接稳定"
-      },
-      "0.0.15": {
-        "en": "Minor code refactorings\nRevision of the calculation area\nNodeJS >= 18.x and js-controller >= 5 is required\nAllow http addresses",
-        "de": "Minor Code Refactorings\nRevision des Berechnungsbereichs\nNodeJS >= 18.x und js-Controller >= 5 ist erforderlich\nErlauben Sie http Adressen",
-        "ru": "Незначительный рефакторинг кода\nПересмотр района расчета\nNodeJS >= 18.x и js-контроллер >= 5 требуется\nРазрешить адреса",
-        "pt": "Refactorings de códigos menores\nRevisão da área de cálculo\nNodeJS >= 18.x e js-controller >= 5 é necessário\nPermitir endereços http",
-        "nl": "Minor code refactorings\nHerziening van het berekeningsgebied\nVoor de toepassing van de onderverdelingen 870190 tot en met 870290 wordt onder post 8702 verstaan: 5 is vereist\nHttp-adressen toestaan",
-        "fr": "Révisions mineures du code\nRévision de la zone de calcul\nNodeJS >= 18.x et js-controller >= 5 est nécessaire\nAutoriser les adresses http",
-        "it": "Refactorings minor codice\nRevisione dell'area di calcolo\nNodeJS >= 18.x e js-controller 5 è richiesto\nConsentire gli indirizzi http",
-        "es": "Refactorias de código menor\nRevisión del área de cálculo\nNodeJS >= 18.x y js-controller Se requiere 5\nPermitir direcciones http",
-        "pl": "Ogniwa wtórne o mniejszym kodzie\nPrzegląd obszaru obliczeniowego\nNodeJS > = 18.x i kontroler js- > = 5 jest wymagane\nZezwalaj na adresy http",
-        "uk": "Рефакторинг коду Мінор\nРевізія розрахункової зони\nNodeJS >= 18.x та js-controller >= 5 обов'язково\nДозволити адреси",
-        "zh-cn": "小代码重构\n修改计算区域\n节点JS18x和js控制器QQ 需要5个\n允许 http 地址"
-      },
-      "0.0.14": {
-        "en": "Heartbeat also filtered",
-        "de": "Herzschlag auch gefiltert",
-        "ru": "Heartbeat также фильтруется",
-        "pt": "Heartbeat também filtrado",
-        "nl": "Hartslag ook gefilterd",
-        "fr": "Heartbeat également filtré",
-        "it": "Battito cardiaco anche filtrato",
-        "es": "Latido cardíaco también filtrado",
-        "pl": "Ścieżka serca również filtrowała",
-        "uk": "Серця також відфільтровано",
-        "zh-cn": "他还过滤"
-      },
-      "0.0.13": {
-        "en": "Dialogue to relay filtered",
-        "de": "Dialog zum Relais gefiltert",
-        "ru": "Диалог на эстафет",
-        "pt": "Diálogo para transmitir filtrado",
-        "nl": "Vertaling:",
-        "fr": "Dialogue à relayer",
-        "it": "Dialogo per relè filtrato",
-        "es": "Diálogo para relé filtrado",
-        "pl": "Dialog do przetransferowania filtrów",
-        "uk": "Діалог реле фільтрований",
-        "zh-cn": "恢复过滤的对话"
-      },
-      "0.0.12": {
-        "en": "Changes in the connection setup\nRangeError fixed",
-        "de": "Änderungen im Verbindungsaufbau\nReichweite Fehler behoben",
-        "ru": "Изменения в настройках подключения\nАссортимент Исправлена ошибка",
-        "pt": "Alterações na configuração de conexão\nGama Erro corrigido",
-        "nl": "Verandering in de verbinding\nRang Error gemaakt",
-        "fr": "Changements dans la configuration de connexion\nGamme Erreur corrigée",
-        "it": "Modifiche nella configurazione della connessione\nAmpiezza Errore risolto",
-        "es": "Cambios en la configuración de conexión\nRango Error fijo",
-        "pl": "Zmiany w zbiorze połączeń\nRange Error",
-        "uk": "Зміна налаштування підключення\nР Виправлено помилку",
-        "zh-cn": "A. 建立联系的改变\nRange 固定地点"
-      },
-      "0.0.11": {
-        "en": "wrong implementation msb/lsb of 32-bit values recorrected",
-        "de": "falsche implementierung msb/lsb von 32-bit-werten",
-        "ru": "неправильная реализация msb/lsb из 32-битных значений реставрированных",
-        "pt": "implementação errada msb/lsb de valores de 32 bits espalhados",
-        "nl": "verkeerde implementatie msb/lsb van 32-bit waarden hersteld",
-        "fr": "implémentation incorrecte msb/lsb de valeurs 32-bit recorréctées",
-        "it": "errata implementazione msb/lsb di valori a 32 bit recorretti",
-        "es": "incorrecta aplicación msb/lsb de los valores de 32-bit corregido",
-        "pl": "zła implementacja msb/lsb wartości 32-bitowych została poprawiona",
-        "uk": "неправильне виконання мсб/лсб 32-бітних значень, що перетворюються",
-        "zh-cn": "第32条-轨道价值的错误实施失误"
-      }
+    "common": {
+        "name": "deyeidc",
+        "version": "0.1.0",
+        "news": {
+            "0.1.0": {
+                "en": "Computing module stabilised\nTypo in error handling corrected",
+                "de": "Vergleichsmodul stabilisiert\nTypo in Fehlerbehebung korrigiert",
+                "ru": "Стабилизированный вычислительный модуль\nТайпо в исправленном режиме",
+                "pt": "Módulo de computação estabilizado\nTypo em manipulação de erros corrigido",
+                "nl": "Berekeningsmodule gestabiliseerd\nTypo in foutverwerking gecorrigeerd",
+                "fr": "Module informatique stabilisé\nTypo dans la gestion des erreurs corrigée",
+                "it": "Modulo di calcolo stabilizzato\nTypo nella gestione degli errori corretto",
+                "es": "Módulo de computación estabilizado\nTypo en el manejo de errores corregido",
+                "pl": "Stabilizacja modułu obliczeniowego\nTypo w obsłudze błędów poprawione",
+                "uk": "Порівняння стабілізації модуля\nТіпо у виправленні помилок",
+                "zh-cn": "计算模块稳定\nTypo 处理错误纠正"
+            },
+            "0.0.16": {
+                "en": "Stabilisation on connection",
+                "de": "Stabilisierung der Verbindung",
+                "ru": "Стабилизация связи",
+                "pt": "Estabilização em conexão",
+                "nl": "Stabilisatie van de verbinding",
+                "fr": "Stabilisation sur la connexion",
+                "it": "Stabilizzazione sul collegamento",
+                "es": "Estabilización en conexión",
+                "pl": "Stabilizacja połączenia",
+                "uk": "Стабілізація з'єднання",
+                "zh-cn": "连接稳定"
+            },
+            "0.0.15": {
+                "en": "Minor code refactorings\nRevision of the calculation area\nNodeJS >= 18.x and js-controller >= 5 is required\nAllow http addresses",
+                "de": "Minor Code Refactorings\nRevision des Berechnungsbereichs\nNodeJS >= 18.x und js-Controller >= 5 ist erforderlich\nErlauben Sie http Adressen",
+                "ru": "Незначительный рефакторинг кода\nПересмотр района расчета\nNodeJS >= 18.x и js-контроллер >= 5 требуется\nРазрешить адреса",
+                "pt": "Refactorings de códigos menores\nRevisão da área de cálculo\nNodeJS >= 18.x e js-controller >= 5 é necessário\nPermitir endereços http",
+                "nl": "Minor code refactorings\nHerziening van het berekeningsgebied\nVoor de toepassing van de onderverdelingen 870190 tot en met 870290 wordt onder post 8702 verstaan: 5 is vereist\nHttp-adressen toestaan",
+                "fr": "Révisions mineures du code\nRévision de la zone de calcul\nNodeJS >= 18.x et js-controller >= 5 est nécessaire\nAutoriser les adresses http",
+                "it": "Refactorings minor codice\nRevisione dell'area di calcolo\nNodeJS >= 18.x e js-controller 5 è richiesto\nConsentire gli indirizzi http",
+                "es": "Refactorias de código menor\nRevisión del área de cálculo\nNodeJS >= 18.x y js-controller Se requiere 5\nPermitir direcciones http",
+                "pl": "Ogniwa wtórne o mniejszym kodzie\nPrzegląd obszaru obliczeniowego\nNodeJS > = 18.x i kontroler js- > = 5 jest wymagane\nZezwalaj na adresy http",
+                "uk": "Рефакторинг коду Мінор\nРевізія розрахункової зони\nNodeJS >= 18.x та js-controller >= 5 обов'язково\nДозволити адреси",
+                "zh-cn": "小代码重构\n修改计算区域\n节点JS18x和js控制器QQ 需要5个\n允许 http 地址"
+            },
+            "0.0.14": {
+                "en": "Heartbeat also filtered",
+                "de": "Herzschlag auch gefiltert",
+                "ru": "Heartbeat также фильтруется",
+                "pt": "Heartbeat também filtrado",
+                "nl": "Hartslag ook gefilterd",
+                "fr": "Heartbeat également filtré",
+                "it": "Battito cardiaco anche filtrato",
+                "es": "Latido cardíaco también filtrado",
+                "pl": "Ścieżka serca również filtrowała",
+                "uk": "Серця також відфільтровано",
+                "zh-cn": "他还过滤"
+            },
+            "0.0.13": {
+                "en": "Dialogue to relay filtered",
+                "de": "Dialog zum Relais gefiltert",
+                "ru": "Диалог на эстафет",
+                "pt": "Diálogo para transmitir filtrado",
+                "nl": "Vertaling:",
+                "fr": "Dialogue à relayer",
+                "it": "Dialogo per relè filtrato",
+                "es": "Diálogo para relé filtrado",
+                "pl": "Dialog do przetransferowania filtrów",
+                "uk": "Діалог реле фільтрований",
+                "zh-cn": "恢复过滤的对话"
+            },
+            "0.0.12": {
+                "en": "Changes in the connection setup\nRangeError fixed",
+                "de": "Änderungen im Verbindungsaufbau\nReichweite Fehler behoben",
+                "ru": "Изменения в настройках подключения\nАссортимент Исправлена ошибка",
+                "pt": "Alterações na configuração de conexão\nGama Erro corrigido",
+                "nl": "Verandering in de verbinding\nRang Error gemaakt",
+                "fr": "Changements dans la configuration de connexion\nGamme Erreur corrigée",
+                "it": "Modifiche nella configurazione della connessione\nAmpiezza Errore risolto",
+                "es": "Cambios en la configuración de conexión\nRango Error fijo",
+                "pl": "Zmiany w zbiorze połączeń\nRange Error",
+                "uk": "Зміна налаштування підключення\nР Виправлено помилку",
+                "zh-cn": "A. 建立联系的改变\nRange 固定地点"
+            },
+            "0.0.11": {
+                "en": "wrong implementation msb/lsb of 32-bit values recorrected",
+                "de": "falsche implementierung msb/lsb von 32-bit-werten",
+                "ru": "неправильная реализация msb/lsb из 32-битных значений реставрированных",
+                "pt": "implementação errada msb/lsb de valores de 32 bits espalhados",
+                "nl": "verkeerde implementatie msb/lsb van 32-bit waarden hersteld",
+                "fr": "implémentation incorrecte msb/lsb de valeurs 32-bit recorréctées",
+                "it": "errata implementazione msb/lsb di valori a 32 bit recorretti",
+                "es": "incorrecta aplicación msb/lsb de los valores de 32-bit corregido",
+                "pl": "zła implementacja msb/lsb wartości 32-bitowych została poprawiona",
+                "uk": "неправильне виконання мсб/лсб 32-бітних значень, що перетворюються",
+                "zh-cn": "第32条-轨道价值的错误实施失误"
+            }
+        },
+        "titleLang": {
+            "en": "Deye Inverter Data Collector",
+            "de": "Datensammler für Wechselrichter von Deye",
+            "ru": "Сборщик данных инвертора Дейе",
+            "pt": "Coletor de Dados do Inversor Deye",
+            "nl": "Deye Inverter-gegevensverzamelaar",
+            "fr": "Collecteur de données Deye Inverter",
+            "it": "Deye Inverter Data Collector",
+            "es": "Colector de datos del inversor Deye",
+            "pl": "Kolektor danych falownika Deye",
+            "zh-cn": "德业逆变器数据采集器",
+            "uk": "Збірник даних інвертора Deye"
+        },
+        "desc": {
+            "en": "Data Collector vor Deye-compatible Inverter",
+            "de": "Datensammler für Deye-kompatible Wechselrichter",
+            "ru": "Сборщик данных с инвертором, совместимым с Дейе",
+            "pt": "Coletor de dados para inversor compatível com Deye",
+            "nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
+            "fr": "Collecteur de données pour onduleur compatible Deye",
+            "it": "Data Collector per Inverter compatibile con Deye",
+            "es": "Colector de datos para inversor compatible con Deye",
+            "pl": "Data Collector dla falownika kompatybilnego z Deye",
+            "zh-cn": "数据收集器 vor Deye 兼容逆变器",
+            "uk": "Збирач даних або інвертор, сумісний з Deye"
+        },
+        "authors": [
+            "raschy <raschy@gmx.de>"
+        ],
+        "keywords": [
+            "Deye",
+            "Bosswerk",
+            "cloudless"
+        ],
+        "licenseInformation": {
+            "license": "MIT",
+            "type": "free"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "deyeidc.png",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
+        "readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "tier": 2,
+        "type": "energy",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=5.0.19"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
     },
-    "titleLang": {
-      "en": "Deye Inverter Data Collector",
-      "de": "Datensammler für Wechselrichter von Deye",
-      "ru": "Сборщик данных инвертора Дейе",
-      "pt": "Coletor de Dados do Inversor Deye",
-      "nl": "Deye Inverter-gegevensverzamelaar",
-      "fr": "Collecteur de données Deye Inverter",
-      "it": "Deye Inverter Data Collector",
-      "es": "Colector de datos del inversor Deye",
-      "pl": "Kolektor danych falownika Deye",
-      "zh-cn": "德业逆变器数据采集器",
-      "uk": "Збірник даних інвертора Deye"
+    "native": {
+        "ipaddress": "",
+        "port": 8899,
+        "logger": null,
+        "pollInterval": 330,
+        "onlinecheck": false,
+        "registers": [
+            {
+                "registerStart": 59,
+                "registerEnd": 90
+            }
+        ],
+        "coils": [
+            {
+                "register": 86,
+                "rules": 3,
+                "key": "APo_t1",
+                "name": "Total AC Output Power (Active)",
+                "unit": "W",
+                "factor": 1,
+                "nullable": false
+            }
+        ],
+        "computes": [
+            {
+                "values": "DV1*DC1",
+                "key": "DP1",
+                "name": "DC Power PV1",
+                "unit": "W",
+                "factor": 0
+            }
+        ]
     },
-    "desc": {
-      "en": "Data Collector vor Deye-compatible Inverter",
-      "de": "Datensammler für Deye-kompatible Wechselrichter",
-      "ru": "Сборщик данных с инвертором, совместимым с Дейе",
-      "pt": "Coletor de dados para inversor compatível com Deye",
-      "nl": "Gegevensverzamelaar voor Deye-compatibele omvormer",
-      "fr": "Collecteur de données pour onduleur compatible Deye",
-      "it": "Data Collector per Inverter compatibile con Deye",
-      "es": "Colector de datos para inversor compatible con Deye",
-      "pl": "Data Collector dla falownika kompatybilnego z Deye",
-      "zh-cn": "数据收集器 vor Deye 兼容逆变器",
-      "uk": "Збирач даних або інвертор, сумісний з Deye"
-    },
-    "authors": [
-      "raschy <raschy@gmx.de>"
-    ],
-    "keywords": [
-      "Deye",
-      "Bosswerk",
-      "cloudless"
-    ],
-    "licenseInformation": {
-      "license": "MIT",
-      "type": "free"
-    },
-    "platform": "Javascript/Node.js",
-    "icon": "deyeidc.png",
-    "enabled": false,
-    "extIcon": "https://raw.githubusercontent.com/raschy/ioBroker.deyeidc/main/admin/deyeidc.png",
-    "readme": "https://github.com/raschy/ioBroker.deyeidc/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "tier": 2,
-    "type": "energy",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "adminUI": {
-      "config": "json"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=5.0.19"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=5.1.13"
-      }
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": {
+                    "en": "Information",
+                    "de": "Informationen",
+                    "ru": "Информация",
+                    "pt": "Informação",
+                    "nl": "Informatie",
+                    "fr": "Informations",
+                    "it": "Informazioni",
+                    "es": "Información",
+                    "pl": "Informacje",
+                    "uk": "Інформація",
+                    "zh-cn": "资料"
+                }
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": {
+                    "en": "Device or service connected",
+                    "de": "Gerät oder Service verbunden ",
+                    "ru": "Устройство или служба подключены",
+                    "pt": "Dispositivo ou serviço conectado",
+                    "nl": "Apparaat of dienst verbonden",
+                    "fr": "Appareil ou service connecté",
+                    "it": "Dispositivo o servizio collegato",
+                    "es": "Dispositivo o servicio conectado",
+                    "pl": "Przyłączone urządzenie lub usługa",
+                    "uk": "Пристрої або послуги підключені",
+                    "zh-cn": "设备或服务已连接"
+                },
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastUpdate",
+            "type": "state",
+            "common": {
+                "role": "date.end",
+                "name": {
+                    "en": "Last update",
+                    "de": "Letzte Aktualisierung",
+                    "ru": "Последнее обновление",
+                    "pt": "Última atualização",
+                    "nl": "Laatste update",
+                    "fr": "Dernière mise à jour",
+                    "it": "Ultimo aggiornamento",
+                    "es": "Última actualización",
+                    "pl": "Ostatnia aktualizacja",
+                    "uk": "Останнє оновлення",
+                    "zh-cn": "上次更新"
+                },
+                "type": "number",
+                "read": true,
+                "write": false,
+                "def": 0
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.status",
+            "type": "state",
+            "common": {
+                "role": "info.status",
+                "name": {
+                    "en": "Status",
+                    "de": "Status",
+                    "ru": "Статус",
+                    "pt": "Estado",
+                    "nl": "Status",
+                    "fr": "État",
+                    "it": "Stato",
+                    "es": "Situación",
+                    "pl": "Status",
+                    "uk": "Статус на сервери",
+                    "zh-cn": "状态"
+                },
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        }
     ]
-  },
-  "native": {
-    "ipaddress": "",
-    "port": 8899,
-    "logger": null,
-    "pollInterval": 330,
-    "registers": [
-      {
-        "registerStart": 59,
-        "registerEnd": 90
-      }
-    ],
-    "coils": [
-      {
-        "register": 86,
-        "rules": 3,
-        "key": "APo_t1",
-        "name": "Total AC Output Power (Active)",
-        "unit": "W",
-        "factor": 1,
-        "nullable": false
-      }
-    ],
-    "computes": [
-      {
-        "values": "DV1*DC1",
-        "key": "DP1",
-        "name": "DC Power PV1",
-        "unit": "W",
-        "factor": 0
-      }
-    ]
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastUpdate",
-      "type": "state",
-      "common": {
-        "role": "date.end",
-        "name": "Last update",
-        "type": "number",
-        "read": true,
-        "write": false,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.status",
-      "type": "state",
-      "common": {
-        "role": "info.status",
-        "name": "Status",
-        "type": "string",
-        "read": true,
-        "write": false,
-        "def": ""
-      },
-      "native": {}
-    }
-  ]
 }
