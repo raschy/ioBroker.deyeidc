@@ -20,7 +20,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.1.6",
+    "@iobroker/adapter-core": "^3.2.1",
     "websocket": "^1.0.35"
   },
   "devDependencies": {
