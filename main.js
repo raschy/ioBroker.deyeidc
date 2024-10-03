@@ -484,16 +484,18 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} data
 	 */
 	async updateData(data) {
-		for (const obj of data) {
-			if (obj.value != 'none') {
-				const elementIndex = this.memoryValues.findIndex((element => element.key == obj.key));
-				if (elementIndex == -1) { // new memory object
-					const jsonString = { key: obj.key, value: obj.value };
-					this.memoryValues.push(jsonString);
-				} else { // update memory object
-					this.memoryValues[elementIndex].value = obj.value;
+		if (data.length > 0) {
+			for (const obj of data) {
+				if (obj.value != 'none') {
+					const elementIndex = this.memoryValues.findIndex((element => element.key == obj.key));
+					if (elementIndex == -1) { // new memory object
+						const jsonString = { key: obj.key, value: obj.value };
+						this.memoryValues.push(jsonString);
+					} else { // update memory object
+						this.memoryValues[elementIndex].value = obj.value;
+					}
+					await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
 				}
-				await this.persistData(obj.key, obj.name, obj.value, 'value', obj.unit, false);
 			}
 		}
 	}
