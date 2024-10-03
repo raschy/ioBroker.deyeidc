@@ -484,7 +484,7 @@ class Deyeidc extends utils.Adapter {
 	 * @param {*} data
 	 */
 	async updateData(data) {
-		if (data.length > 0) {
+		if (data) {
 			for (const obj of data) {
 				if (obj.value != 'none') {
 					const elementIndex = this.memoryValues.findIndex((element => element.key == obj.key));
