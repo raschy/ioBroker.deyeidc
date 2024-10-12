@@ -55,8 +55,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.1.1 (2024-10-12)
 
 -   (raschy) Online check adjustable
 -   (raschy) Ignores unrequested messages
