@@ -59,6 +59,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### **WORK IN PROGRESS**
 
 -   (raschy) Online check adjustable
+-   (raschy) Ignores unrequested messages
 
 ### 0.1.0 (2024-08-06)
 

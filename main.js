@@ -164,20 +164,19 @@ class Deyeidc extends utils.Adapter {
 	async onData(data) {
 		try {
 			const mb = this.idc.checkDataFrame(data);
-			//this.mb = mb;	//###
-			// Preparation of the data
 			if (mb) {
 				if (mb.register == 0) { //checkOnlineDate
 					this.log.debug(`Response: (checkOnlineDate) ${JSON.stringify(mb)}`);
-					if (mb.modbus[3] == 0) await this.setOfflineDate();	// date/time check
+					if (mb.modbus[3] == 0) await this.setOfflineDate(); //modbus[3] = Date/Day
 				}
 				else if (mb.register > 0) { //payload
 					this.log.debug(`Response: (payload) ${JSON.stringify(mb)}`);
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;
+					console.log(this.numberRegisterSets, this.req);
 					if (this.req <= this.numberRegisterSets) {
 						this.requestData(this.req);
-					} else {
+					} else if (this.req == this.numberRegisterSets + 1) {
 						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 						await this.updateData(await this.computeData());
 						if (this.config.onlinecheck) await this.checkOnlineDate();
@@ -195,7 +194,6 @@ class Deyeidc extends utils.Adapter {
 			} else if (err.status == 'EFRAMECHK') {
 				this.log.silly(`${err.message}: Frame CheckSum faulty!`);
 			} else {
-				//this.log.warn(JSON.stringify(this.mb));
 				this.log.error(`${err} | ${err.stack}`);
 			}
 		}
@@ -225,69 +223,69 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async computeData() {
 		const jsonResult = [];
-		const computeConfig = this.config.computes;
+		if (this.config.computes.length < 1 || this.memoryValues.length < 1) return jsonResult;
 		let computeValue1 = 0;
 		let computeValue2 = 0;
 		let computeResult = 0;
-		if (computeConfig && Array.isArray(computeConfig)) {
-			for (const obj of computeConfig) {
-				this.log.debug(`[computeData]  ${JSON.stringify(obj)}`);
-				const response = mathOperation(obj.values);
-				if (response) {
-					const key1Index = this.memoryValues.findIndex((element => element.key == response.key1));
-					if (key1Index == -1) {
-						computeValue1 = parseFloat(response.key1);
-						if (isNaN(computeValue1)) {
-							this.log.warn(`Compute Key '${response.key1}' not found!`);
-							continue;
-						}
-					} else {
-						computeValue1 = parseFloat(this.memoryValues[key1Index].value);
+		//if (this.memoryValues.length > 0) {
+		for (const obj of this.config.computes) {
+			this.log.debug(`[computeData]  ${JSON.stringify(obj)}`);
+			const response = mathOperation(obj.values);
+			if (response) {
+				const key1Index = this.memoryValues.findIndex((element => element.key == response.key1));
+				if (key1Index == -1) {
+					computeValue1 = parseFloat(response.key1);
+					if (isNaN(computeValue1)) {
+						this.log.warn(`Compute Key1 '${response.key1}' not found!`);
+						continue;
 					}
-					//
-					const key2Index = this.memoryValues.findIndex((element => element.key == response.key2));
-					if (key2Index == -1) {
-						computeValue2 = parseFloat(response.key2);
-						if (isNaN(computeValue2)) {
-							this.log.warn(`Compute Key '${response.key2}' not found!`);
-							continue;
-						}
-					} else {
-						computeValue2 = parseFloat(this.memoryValues[key2Index].value);
-					}
-					//
-					const operation = response.operation;
-					switch (operation) {
-						case '+':
-							computeResult = computeValue1 + computeValue2;
-							break;
-						case '-':
-							computeResult = computeValue1 - computeValue2;
-							break;
-						case '*':
-							computeResult = computeValue1 * computeValue2;
-							break;
-						case '/':
-							if (computeValue2 == 0) {
-								this.log.warn(`Compute Division '${response.key2}' by zero!`);
-								continue;
-							} else {
-								computeResult = computeValue1 / computeValue2;
-							}
-							break;
-						default:
-							computeResult = -999;
-					}
-					//
-					const key0 = this.removeInvalidCharacters(obj.key.trim());
-					const result_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
-					const jsonObj = { key: key0, value: result_hr, unit: obj.unit, name: obj.name };
-					jsonResult.push(jsonObj);
+				} else {
+					computeValue1 = parseFloat(this.memoryValues[key1Index].value);
 				}
+				//
+				const key2Index = this.memoryValues.findIndex((element => element.key == response.key2));
+				if (key2Index == -1) {
+					computeValue2 = parseFloat(response.key2);
+					if (isNaN(computeValue2)) {
+						this.log.warn(`Compute Key2 '${response.key2}' not found!`);
+						continue;
+					}
+				} else {
+					computeValue2 = parseFloat(this.memoryValues[key2Index].value);
+				}
+				//
+				const operation = response.operation;
+				switch (operation) {
+					case '+':
+						computeResult = computeValue1 + computeValue2;
+						break;
+					case '-':
+						computeResult = computeValue1 - computeValue2;
+						break;
+					case '*':
+						computeResult = computeValue1 * computeValue2;
+						break;
+					case '/':
+						if (computeValue2 == 0) {
+							this.log.warn(`Compute Division '${response.key2}' by zero!`);
+							continue;
+						} else {
+							computeResult = computeValue1 / computeValue2;
+						}
+						break;
+					default:
+						computeResult = -999;
+				}
+				//
+				const key0 = this.removeInvalidCharacters(obj.key.trim());
+				const result_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
+				const jsonObj = { key: key0, value: result_hr, unit: obj.unit, name: obj.name };
+				jsonResult.push(jsonObj);
 			}
-			this.log.debug(`[computeData] ResultJson: ${JSON.stringify(jsonResult)}`);
-			return (jsonResult);
 		}
+		this.log.debug(`[computeData] ResultJson: ${JSON.stringify(jsonResult)}`);
+		return (jsonResult);
+
 		// -- Helper --
 		function mathOperation(computeString) {
 			const defMathOperators = ['*', '/', '+', '-'];
@@ -569,7 +567,21 @@ class Deyeidc extends utils.Adapter {
 		const loggerSn = String(this.config.logger);
 		await this.setObjectNotExistsAsync(loggerSn, {
 			type: 'channel',
-			common: { name: 'Values from device', desc: 'generated by Deyeidc' },
+			common: {
+				name: {
+					'en': 'Values from device',
+					'de': 'Werte vom Gerät',
+					'ru': 'Значения от устройства',
+					'pt': 'Valores do dispositivo',
+					'nl': 'aarden van het apparaat',
+					'fr': "Valeurs de l'appareil",
+					'it': 'Valori dal dispositivo',
+					'es': 'Valores desde el dispositivo',
+					'pl': 'Wartości z urządzenia',
+					'uk': 'Ціни від пристрою',
+					'zh-cn': '来自设备的值'
+				}, desc: 'generated by Deyeidc'
+			},
 			native: {},
 		});
 	}
