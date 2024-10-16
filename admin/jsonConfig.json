@@ -1,6 +1,9 @@
 {
 	"i18n": true,
 	"type": "tabs",
+	"tabsStyle": {
+		"width": "calc(100% - 100px)"
+	},
 	"items": {
 		"_configuration": {
 			"type": "panel",
@@ -14,36 +17,49 @@
 				},
 				"ipaddress": {
 					"type": "text",
+					"xs": 12,
 					"sm": 12,
 					"md": 6,
-					"lg": 6,
+					"lg": 4,
+					"xl": 4,
 					"label": "ipaddress"
 				},
 				"port": {
 					"type": "number",
+					"xs": 12,
 					"sm": 12,
 					"md": 6,
-					"lg": 6,
+					"lg": 4,
+					"xl": 4,
 					"label": "port"
 				},
 				"logger": {
 					"type": "number",
+					"xs": 12,
 					"sm": 12,
 					"md": 6,
-					"lg": 6,
+					"lg": 4,
+					"xl": 4,
 					"label": "serialNumber",
 					"tooltip": "serialNumberTooltip",
 					"newLine": true
 				},
 				"pollInterval": {
 					"type": "number",
+					"xs": 12,
 					"sm": 12,
 					"md": 6,
-					"lg": 6,
+					"lg": 4,
+					"xl": 4,
 					"label": "pollingRate"
 				},
 				"onlinecheck": {
 					"type": "checkbox",
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 4,
+					"xl": 4,
 					"label": "onlinecheck",
 					"tooltip": "onlinecheckTooltip",
 					"help": "onlinecheckHelptext",
@@ -64,21 +80,23 @@
 				},
 				"registers": {
 					"type": "table",
+					"xs": 12,
 					"sm": 12,
 					"md": 12,
 					"lg": 12,
+					"xl": 12,
 					"items": [
 						{
 							"type": "number",
 							"attr": "registerStart",
-							"width": "35%",
+							"width": "50%",
 							"title": "registerStart",
 							"default": ""
 						},
 						{
 							"type": "number",
 							"attr": "registerEnd",
-							"width": "35%",
+							"width": "50%",
 							"title": "registerEnd",
 							"default": ""
 						}
@@ -88,9 +106,11 @@
 					"newLine": true,
 					"type": "staticText",
 					"text": "registerHelptext",
+					"xs": 12,
 					"sm": 12,
-					"md": 4,
-					"lg": 4
+					"md": 12,
+					"lg": 12,
+					"xl": 12
 				}
 			}
 		},
@@ -106,14 +126,16 @@
 				},
 				"coils": {
 					"type": "table",
+					"xs": 12,
 					"sm": 12,
 					"md": 12,
 					"lg": 12,
+					"xl": 12,
 					"items": [
 						{
 							"type": "number",
 							"attr": "register",
-							"width": "15%",
+							"width": "10%",
 							"title": "registerNr",
 							"default": "",
 							"filter": true,
@@ -130,7 +152,7 @@
 							"type": "text",
 							"attr": "key",
 							"trim": true,
-							"width": "20%",
+							"width": "15%",
 							"title": "key",
 							"default": "",
 							"filter": true,
@@ -140,7 +162,7 @@
 							"type": "text",
 							"trim": true,
 							"attr": "name",
-							"width": "30%",
+							"width": "15%",
 							"title": "name",
 							"default": "",
 							"filter": true,
@@ -184,15 +206,17 @@
 				},
 				"computes": {
 					"type": "table",
+					"xs": 12,
 					"sm": 12,
 					"md": 12,
 					"lg": 12,
+					"xl": 12,
 					"items": [
 						{
 							"type": "text",
 							"trim": true,
 							"attr": "values",
-							"width": "15%",
+							"width": "20%",
 							"title": "values",
 							"default": "",
 							"filter": true,
@@ -212,7 +236,7 @@
 							"type": "text",
 							"trim": true,
 							"attr": "name",
-							"width": "30%",
+							"width": "20%",
 							"title": "name",
 							"default": ""
 						},
@@ -220,14 +244,14 @@
 							"type": "text",
 							"trim": true,
 							"attr": "unit",
-							"width": "15%",
+							"width": "20%",
 							"title": "unit",
 							"default": ""
 						},
 						{
 							"type": "number",
 							"attr": "factor",
-							"width": "15%",
+							"width": "20%",
 							"title": "factor",
 							"default": 0
 						}
@@ -237,9 +261,11 @@
 					"newLine": true,
 					"type": "staticText",
 					"text": "computeHelptext",
+					"xs": 12,
 					"sm": 12,
-					"md": 4,
-					"lg": 4
+					"md": 12,
+					"lg": 12,
+					"xl": 12
 				}
 			}
 		}
