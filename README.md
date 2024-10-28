@@ -59,6 +59,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### **WORK IN PROGRESS**
 
 -   (raschy) responsive-design customized
+-   (raschy) updated to adapter-core 3.2.2
 
 ### 0.1.1 (2024-10-12)
 

@@ -172,7 +172,6 @@ class Deyeidc extends utils.Adapter {
 					this.log.debug(`Response: (payload) ${JSON.stringify(mb)}`);
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;
-					console.log(this.numberRegisterSets, this.req);
 					if (this.req <= this.numberRegisterSets) {
 						this.requestData(this.req);
 					} else if (this.req == this.numberRegisterSets + 1) {
@@ -226,7 +225,6 @@ class Deyeidc extends utils.Adapter {
 		let computeValue1 = 0;
 		let computeValue2 = 0;
 		let computeResult = 0;
-		//if (this.memoryValues.length > 0) {
 		for (const obj of this.config.computes) {
 			this.log.debug(`[computeData]  ${JSON.stringify(obj)}`);
 			const response = mathOperation(obj.values);
