@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "responsive-design customized\nupdated to adapter-core 3.2.2",
+        "de": "responsive-design maßgeschneidert\naktualisiert auf adapter-kern 3.2.2",
+        "ru": "адаптивный дизайн\nобновленный к адаптер-ядерный 3.2.2",
+        "pt": "design responsivo personalizado\natualizado para adaptador-core 3.2.2",
+        "nl": "responsive-design aangepast\nbijgewerkt naar adapter-kern 3.2.2",
+        "fr": "design adapté personnalisé\nmise à jour au cœur de l'adaptateur 3.2.2",
+        "it": "responsive-design personalizzato\naggiornato a adattatore-core 3.2.2",
+        "es": "diseño de respuesta personalizado\nactualizado al adaptador-core 3.2.2",
+        "pl": "design odpowiedzialny dostosowany\nzaktualizowany do rdzenia adaptera 3.2.2",
+        "uk": "адаптивний дизайн\nоновлений до адаптера-core 3.2.2",
+        "zh-cn": "定制响应设计\n更新到适配器核心 3.2.2"
+      },
       "0.1.1": {
         "en": "Online check adjustable\nIgnores unrequested messages",
         "de": "Online-Check einstellbar\nIgnoriert nicht angeforderte Nachrichten",
@@ -80,19 +93,6 @@
         "pl": "Dialog do przetransferowania filtrów",
         "uk": "Діалог реле фільтрований",
         "zh-cn": "恢复过滤的对话"
-      },
-      "0.0.12": {
-        "en": "Changes in the connection setup\nRangeError fixed",
-        "de": "Änderungen im Verbindungsaufbau\nReichweite Fehler behoben",
-        "ru": "Изменения в настройках подключения\nАссортимент Исправлена ошибка",
-        "pt": "Alterações na configuração de conexão\nGama Erro corrigido",
-        "nl": "Verandering in de verbinding\nRang Error gemaakt",
-        "fr": "Changements dans la configuration de connexion\nGamme Erreur corrigée",
-        "it": "Modifiche nella configurazione della connessione\nAmpiezza Errore risolto",
-        "es": "Cambios en la configuración de conexión\nRango Error fijo",
-        "pl": "Zmiany w zbiorze połączeń\nRange Error",
-        "uk": "Зміна налаштування підключення\nР Виправлено помилку",
-        "zh-cn": "A. 建立联系的改变\nRange 固定地点"
       }
     },
     "titleLang": {
