@@ -1,22 +1,22 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: monthly
-      time: "04:00"
-      timezone: Europe/Berlin
-    open-pull-requests-limit: 5
-    assignees:
-      - rasyxh
-    versioning-strategy: increase
+    - package-ecosystem: npm
+      directory: '/'
+      schedule:
+          interval: monthly
+          time: '04:00'
+          timezone: Europe/Berlin
+      open-pull-requests-limit: 5
+      assignees:
+          - raschy
+      versioning-strategy: increase
 
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: monthly
-      time: "04:00"
-      timezone: Europe/Berlin
-    open-pull-requests-limit: 5
-    assignees:
-      - rasyxh
+    - package-ecosystem: github-actions
+      directory: '/'
+      schedule:
+          interval: monthly
+          time: '04:00'
+          timezone: Europe/Berlin
+      open-pull-requests-limit: 5
+      assignees:
+          - raschy
