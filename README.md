@@ -55,8 +55,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.1.3 (2025-01-02)
 
 - (raschy) Migration from ESLint 8.x to 9.x
 

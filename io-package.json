@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "news": {
+      "0.1.3": {
+        "en": "Migration from ESLint 8.x to 9.x",
+        "de": "Migration von ESLint 8.x auf 9.x",
+        "ru": "Миграция из ESLint 8.x в 9.x",
+        "pt": "Migração de ESLint 8.x a 9.x",
+        "nl": "Migratie van ESLint 8.x tot 9.x",
+        "fr": "Migration de ESLint 8.x vers 9.x",
+        "it": "Migrazione da ESLint 8.x a 9.x",
+        "es": "Migración de ESLint 8.x a 9.x",
+        "pl": "Migracja z ESLint 8.x do 9.x",
+        "uk": "Міграція від ESLint 8.x до 9.x",
+        "zh-cn": "从ESLint 8.x迁移到9.x"
+      },
       "0.1.2": {
         "en": "responsive-design customized\nupdated to adapter-core 3.2.2",
         "de": "responsive-design maßgeschneidert\naktualisiert auf adapter-kern 3.2.2",
@@ -80,19 +93,6 @@
         "pl": "Ścieżka serca również filtrowała",
         "uk": "Серця також відфільтровано",
         "zh-cn": "他还过滤"
-      },
-      "0.0.13": {
-        "en": "Dialogue to relay filtered",
-        "de": "Dialog zum Relais gefiltert",
-        "ru": "Диалог на эстафет",
-        "pt": "Diálogo para transmitir filtrado",
-        "nl": "Vertaling:",
-        "fr": "Dialogue à relayer",
-        "it": "Dialogo per relè filtrato",
-        "es": "Diálogo para relé filtrado",
-        "pl": "Dialog do przetransferowania filtrów",
-        "uk": "Діалог реле фільтрований",
-        "zh-cn": "恢复过滤的对话"
       }
     },
     "titleLang": {
