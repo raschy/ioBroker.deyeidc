@@ -182,9 +182,10 @@ class Deyeidc extends utils.Adapter {
 				if (mb.register == 0) {
 					//checkOnlineDate
 					this.log.debug(`Response: (checkOnlineDate) ${JSON.stringify(mb)}`);
+					//modbus[3] = Date/Day
 					if (mb.modbus[3] == 0) {
 						await this.setOfflineDate();
-					} //modbus[3] = Date/Day
+					}
 				} else if (mb.register > 0) {
 					//payload
 					this.log.debug(`Response: (payload) ${JSON.stringify(mb)}`);
@@ -520,12 +521,12 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * prepare data vor ioBroker
+	 * updateData
 	 *
-	 * @param data {array}
+	 * @param data Array with objects
 	 */
 	async updateData(data) {
-		if (data) {
+		if (Array.isArray(data)) {
 			for (const obj of data) {
 				if (obj.value != 'none') {
 					const elementIndex = this.memoryValues.findIndex(element => element.key == obj.key);
