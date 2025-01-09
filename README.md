@@ -59,6 +59,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### **WORK IN PROGRESS**
 
 - (raschy) Error message corrected
+- (raschy) Function nullable repaired
 
 ### 0.1.3 (2025-01-02)
 

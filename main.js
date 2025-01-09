@@ -230,6 +230,7 @@ class Deyeidc extends utils.Adapter {
 				const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 				this.log.silly(`Request to register set ${req} > ${this.idc.toHexString(request)}`); // human readable
 				this.client.write(request);
+				this.resetCounter = 0;
 			} catch (error) {
 				this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 			}
