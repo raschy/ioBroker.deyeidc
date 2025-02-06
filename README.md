@@ -55,6 +55,11 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (raschy) Set version from chai and types/chai fix
+
 ### 0.1.4 (2025-01-11)
 
 - (raschy) Error message corrected
