@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.1.4",
+    "version": "0.2.0",
     "news": {
+      "0.2.0": {
+        "en": "Dependabot run tracked manually",
+        "de": "Dependabot-Laufwerk manuell",
+        "ru": "Dependabot запускается вручную",
+        "pt": "Dependeabot executar rastreado manualmente",
+        "nl": "Dependabot uitvoeren handmatig gevolgd",
+        "fr": "Dépendabot exécuté suivi manuellement",
+        "it": "Dependabot eseguito monitorato manualmente",
+        "es": "Dependabot run tracked manualmente",
+        "pl": "Dependabot uruchom śledzony ręcznie",
+        "uk": "В залежності від ходової доріжки вручну",
+        "zh-cn": "依赖人工跟踪运行"
+      },
       "0.1.4": {
         "en": "Error message corrected\nFunction nullable repaired",
         "de": "Fehlermeldung korrigiert\nFunktion nullbar repariert",
@@ -80,19 +93,6 @@
         "pl": "Stabilizacja połączenia",
         "uk": "Стабілізація з'єднання",
         "zh-cn": "连接稳定"
-      },
-      "0.0.15": {
-        "en": "Minor code refactorings\nRevision of the calculation area\nNodeJS >= 18.x and js-controller >= 5 is required\nAllow http addresses",
-        "de": "Minor Code Refactorings\nRevision des Berechnungsbereichs\nNodeJS >= 18.x und js-Controller >= 5 ist erforderlich\nErlauben Sie http Adressen",
-        "ru": "Незначительный рефакторинг кода\nПересмотр района расчета\nNodeJS >= 18.x и js-контроллер >= 5 требуется\nРазрешить адреса",
-        "pt": "Refactorings de códigos menores\nRevisão da área de cálculo\nNodeJS >= 18.x e js-controller >= 5 é necessário\nPermitir endereços http",
-        "nl": "Minor code refactorings\nHerziening van het berekeningsgebied\nVoor de toepassing van de onderverdelingen 870190 tot en met 870290 wordt onder post 8702 verstaan: 5 is vereist\nHttp-adressen toestaan",
-        "fr": "Révisions mineures du code\nRévision de la zone de calcul\nNodeJS >= 18.x et js-controller >= 5 est nécessaire\nAutoriser les adresses http",
-        "it": "Refactorings minor codice\nRevisione dell'area di calcolo\nNodeJS >= 18.x e js-controller 5 è richiesto\nConsentire gli indirizzi http",
-        "es": "Refactorias de código menor\nRevisión del área de cálculo\nNodeJS >= 18.x y js-controller Se requiere 5\nPermitir direcciones http",
-        "pl": "Ogniwa wtórne o mniejszym kodzie\nPrzegląd obszaru obliczeniowego\nNodeJS > = 18.x i kontroler js- > = 5 jest wymagane\nZezwalaj na adresy http",
-        "uk": "Рефакторинг коду Мінор\nРевізія розрахункової зони\nNodeJS >= 18.x та js-controller >= 5 обов'язково\nДозволити адреси",
-        "zh-cn": "小代码重构\n修改计算区域\n节点JS18x和js控制器QQ 需要5个\n允许 http 地址"
       }
     },
     "titleLang": {
