@@ -59,6 +59,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### **WORK IN PROGRESS**
 
 - (raschy) Set version from chai and types/chai fix
+- (raschy) Dependabot run tracked manually
 
 ### 0.1.4 (2025-01-11)
 
