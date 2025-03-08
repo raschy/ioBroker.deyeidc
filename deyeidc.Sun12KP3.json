@@ -113,7 +113,7 @@
 		},
 		{
 			"register": 619,
-			"rules": 1,
+			"rules": 2,
 			"key": "P_GRID_CT_TOTAL",
 			"name": "P GRID CT TOTAL",
 			"unit": "W",
@@ -472,13 +472,6 @@
 			"key": "Day_Eigenverbrauch",
 			"name": "Day Eigenverbrauch",
 			"unit": "kWh",
-			"factor": 0
-		},
-		{
-			"values": "PV1_PV2_Leistung*2",
-			"key": "PV_Gesamt-Cluster",
-			"name": "PV_Gesamt-Cluster",
-			"unit": "W",
 			"factor": 0
 		}
 	]
