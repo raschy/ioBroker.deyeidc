@@ -76,14 +76,16 @@ class Deyeidc extends utils.Adapter {
 			this.internDataReady = false;
 			this.log.error(`[readCoilset] ${err}`);
 		}
-		// already
+		// alreadyF
 		if (this.internDataReady) {
 			// first request
 			this.req = 1;
+			console.log(`OnReady Request: ${this.req}`);
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
 				this.req = 1;
+				console.log(`onReady Request: ${this.req}`);
 				await this.requestData(this.req);
 			}, this.executionInterval * 1000);
 		} else {
@@ -188,9 +190,10 @@ class Deyeidc extends utils.Adapter {
 					}
 				} else if (mb.register > 0) {
 					//payload
-					this.log.debug(`Response: (payload) ${JSON.stringify(mb)}`);
+					this.log.debug(`Response: Request: ${this.req} Payload ${JSON.stringify(mb)}`);
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;
+					console.log(`onData Request: ${this.req}`);
 					if (this.req <= this.numberRegisterSets) {
 						this.requestData(this.req);
 					} else if (this.req == this.numberRegisterSets + 1) {
