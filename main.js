@@ -80,12 +80,10 @@ class Deyeidc extends utils.Adapter {
 		if (this.internDataReady) {
 			// first request
 			this.req = 1;
-			console.log(`OnReady Request: ${this.req}`);
 			await this.requestData(this.req);
 			// timed request
 			this.updateInterval = this.setInterval(async () => {
 				this.req = 1;
-				console.log(`onReady Request: ${this.req}`);
 				await this.requestData(this.req);
 			}, this.executionInterval * 1000);
 		} else {
@@ -193,11 +191,10 @@ class Deyeidc extends utils.Adapter {
 					this.log.debug(`Response: Request: ${this.req} Payload ${JSON.stringify(mb)}`);
 					await this.updateData(this.idc.readCoils(mb));
 					this.req++;
-					console.log(`onData Request: ${this.req}`);
 					if (this.req <= this.numberRegisterSets) {
 						this.requestData(this.req);
 					} else if (this.req == this.numberRegisterSets + 1) {
-						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
+						this.log.info(`Data reception for ${this.req - 1} registersets completed`);
 						await this.updateData(await this.computeData());
 						if (this.config.onlinecheck) {
 							await this.checkOnlineDate();
