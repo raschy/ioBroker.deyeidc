@@ -26,5 +26,8 @@
     "compute": "Calcolare",
     "calculatedValues": "Valori calcolati",
     "values": "Valori (formule)",
-    "computeHelptext": "Il modulo di calcolo può eseguire solo un'operazione per campo"
+    "computeHelptext": "Il modulo di calcolo può eseguire solo un'operazione per campo",
+    "extendedDebugging": "Abilita il debug esteso",
+    "extendedDebuggingHelptext": "Se questa casella di controllo viene attivata, viene generata una grande quantità di dati di registro.",
+    "extendedDebuggingTooltip": "Accendi solo se lo sviluppatore lo chiede."
 }

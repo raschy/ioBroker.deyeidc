@@ -26,5 +26,8 @@
     "compute": "Berechnen",
     "calculatedValues": "Berechnete Werte",
     "values": "Werte (Formeln)",
-    "computeHelptext": "Das Berechnungsmodul kann nur eine Operation pro Feld durchführen"
+    "computeHelptext": "Das Berechnungsmodul kann nur eine Operation pro Feld durchführen",
+    "extendedDebugging": "Aktivieren Sie erweitertes Debuggen",
+    "extendedDebuggingHelptext": "Wenn dieses Kontrollkästchen aktiviert ist, wird eine große Menge an Protokolldaten generiert.",
+    "extendedDebuggingTooltip": "Bitte schalten Sie nur ein, wenn der Entwickler danach fragt."
 }

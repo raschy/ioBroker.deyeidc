@@ -65,6 +65,19 @@
 					"help": "onlinecheckHelptext",
 					"default": false,
 					"newLine": true
+				},
+				"extendedDebugging": {
+					"type": "checkbox",
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 4,
+					"xl": 4,
+					"label": "extendedDebugging",
+					"tooltip": "extendedDebuggingTooltip",
+					"help": "extendedDebuggingHelptext",
+					"default": false,
+					"newLine": true
 				}
 			}
 		},

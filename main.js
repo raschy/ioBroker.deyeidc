@@ -24,7 +24,8 @@ class Deyeidc extends utils.Adapter {
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		//
-		this.idc = new idcCore(this.log);
+		//this.idc = new idcCore(this.log, this.extendDebugging);
+		this.idc = new idcCore(this.log, this.config.extendedDebugging);
 		this.client = null;
 		// -----------------  Timeout variables -----------------
 		this.executionInterval = 60;
@@ -37,6 +38,7 @@ class Deyeidc extends utils.Adapter {
 		this.memoryValues = [];
 		this.setWatchPoints = false;
 		this.resetCounter = 0;
+		this.extendDebugging = false;
 	}
 
 	/**
@@ -49,11 +51,11 @@ class Deyeidc extends utils.Adapter {
 		// is accessible via this.config:
 
 		// Initialize your adapter Here
-		this.idc = new idcCore(this.log);
+		this.idc = new idcCore(this.log, this.config.extendedDebugging);
 		// About User changes
 		await this.checkUserData();
 
-		// Loading the Register
+		// Loading the Register Sets
 		try {
 			const RegisterSets = this.config.registers;
 			if (RegisterSets && Array.isArray(RegisterSets)) {
@@ -128,7 +130,7 @@ class Deyeidc extends utils.Adapter {
 					val: this.connectionActive,
 					ack: true,
 				});
-				//client.set_Time_out(10000);
+				client.setTimeout(2000);
 				resolve(client); // Successful connection, return the socket
 			});
 			/*
@@ -199,6 +201,7 @@ class Deyeidc extends utils.Adapter {
 						if (this.config.onlinecheck) {
 							await this.checkOnlineDate();
 						}
+						this.resetCounter = 0; // successful data reception
 						this.subscribeWatchpoint();
 						this.setState('info.lastUpdate', { val: Date.now(), ack: true });
 						this.setState('info.status', { val: 'idle', ack: true });
@@ -229,9 +232,9 @@ class Deyeidc extends utils.Adapter {
 			try {
 				this.setState('info.status', { val: 'automatic request', ack: true });
 				const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
-				this.log.silly(`Request to register set ${req} > ${this.idc.toHexString(request)}`); // human readable
+				this.log.debug(`Request to register set ${req} > ${this.idc.toHexString(request)}`); // human readable /#silly
 				this.client.write(request);
-				this.resetCounter = 0;
+				this.offlineReset();
 			} catch (error) {
 				this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 			}
@@ -337,12 +340,12 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
-	 * OfflineReset, if 'EHOSTUNREACH' arrived
+	 * OfflineReset, if no response from inverter
 	 */
 	async offlineReset() {
 		// Counter for OfflineReset
 		this.resetCounter++;
-		const startReset = Math.floor(540 / this.config.pollInterval);
+		const startReset = Math.floor((this.numberRegisterSets * 540) / this.config.pollInterval);
 		this.log.debug(`[offlineReset] ${this.resetCounter} / ${startReset}`);
 		if (this.resetCounter == startReset) {
 			this.log.debug(`[offlineReset] Values will be nullable.`);

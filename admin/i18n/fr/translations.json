@@ -26,5 +26,8 @@
     "compute": "Calculer",
     "calculatedValues": "Valeurs calculées",
     "values": "Valeurs (formules)",
-    "computeHelptext": "Le module de calcul ne peut effectuer qu'une seule opération par champ"
+    "computeHelptext": "Le module de calcul ne peut effectuer qu'une seule opération par champ",
+    "extendedDebugging": "Activer le débogage prolongé",
+    "extendedDebuggingHelptext": "Si cette case à cocher est activée, une grande quantité de données de journal est générée.",
+    "extendedDebuggingTooltip": "Veuillez ne pas activer si le développeur le demande."
 }

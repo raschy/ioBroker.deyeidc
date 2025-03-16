@@ -26,5 +26,8 @@
     "compute": "Calcular",
     "calculatedValues": "Valores calculados",
     "values": "Valores (fórmulas)",
-    "computeHelptext": "El módulo de cálculo sólo puede realizar una operación por campo"
+    "computeHelptext": "El módulo de cálculo sólo puede realizar una operación por campo",
+    "extendedDebugging": "Habilitar la depuración extendida",
+    "extendedDebuggingHelptext": "Si se activa esta casilla de verificación, se genera una gran cantidad de datos de registro.",
+    "extendedDebuggingTooltip": "Solo encienda si el desarrollador lo pide."
 }

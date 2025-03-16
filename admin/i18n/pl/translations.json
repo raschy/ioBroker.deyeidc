@@ -26,5 +26,8 @@
     "compute": "Obliczać",
     "calculatedValues": "Obliczone wartości",
     "values": "Wartości (wzory)",
-    "computeHelptext": "Moduł obliczeniowy może wykonać tylko jedną operację na polu"
+    "computeHelptext": "Moduł obliczeniowy może wykonać tylko jedną operację na polu",
+    "extendedDebugging": "Włącz rozszerzone debugowanie",
+    "extendedDebuggingHelptext": "Jeśli to pole wyboru jest aktywowane, generowana jest duża ilość danych dziennika.",
+    "extendedDebuggingTooltip": "Proszę włączyć tylko wtedy, gdy programista o to poprosi."
 }

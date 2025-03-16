@@ -26,5 +26,8 @@
     "compute": "Calcular",
     "calculatedValues": "Valores calculados",
     "values": "Valores (Fórmulas)",
-    "computeHelptext": "O módulo de cálculo só pode realizar uma operação por campo"
+    "computeHelptext": "O módulo de cálculo só pode realizar uma operação por campo",
+    "extendedDebugging": "Ativar depuração estendida",
+    "extendedDebuggingHelptext": "Se esta caixa de seleção estiver ativada, uma grande quantidade de dados de log será gerada.",
+    "extendedDebuggingTooltip": "Por favor, ligue apenas se o desenvolvedor pedir."
 }

@@ -26,5 +26,8 @@
     "compute": "Berekenen",
     "calculatedValues": "Berekende waarden",
     "values": "Waarden (formules)",
-    "computeHelptext": "De rekenmodule kan slechts één bewerking per veld uitvoeren"
+    "computeHelptext": "De rekenmodule kan slechts één bewerking per veld uitvoeren",
+    "extendedDebugging": "Schakel uitgebreide foutopsporing in",
+    "extendedDebuggingHelptext": "Als dit selectievakje is geactiveerd, wordt een grote hoeveelheid loggegevens gegenereerd.",
+    "extendedDebuggingTooltip": "Schakel alleen maar aan als de ontwikkelaar erom vraagt."
 }

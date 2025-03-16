@@ -26,5 +26,8 @@
     "compute": "计算",
     "calculatedValues": "计算值",
     "values": "值（公式）",
-    "computeHelptext": "计算模块每个字段只能执行一次操作"
+    "computeHelptext": "计算模块每个字段只能执行一次操作",
+    "extendedDebugging": "启用扩展调试",
+    "extendedDebuggingHelptext": "如果激活此复选框，则会生成大量日志数据。",
+    "extendedDebuggingTooltip": "如果开发人员要求它，请仅打开。"
 }
