@@ -24,7 +24,6 @@ class Deyeidc extends utils.Adapter {
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		//
-		//this.idc = new idcCore(this.log, this.extendDebugging);
 		this.idc = new idcCore(this.log, this.config.extendedDebugging);
 		this.client = null;
 		// -----------------  Timeout variables -----------------
@@ -130,7 +129,7 @@ class Deyeidc extends utils.Adapter {
 					val: this.connectionActive,
 					ack: true,
 				});
-				client.setTimeout(2000);
+				//client.set_Timeout(2000);
 				resolve(client); // Successful connection, return the socket
 			});
 			/*
