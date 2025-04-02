@@ -233,7 +233,6 @@ class Deyeidc extends utils.Adapter {
 				const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 				this.log.debug(`Request to register set ${req} > ${this.idc.toHexString(request)}`); // human readable /#silly
 				this.client.write(request);
-				this.offlineReset();
 			} catch (error) {
 				this.log.error(`[requestData] error: ${error} stack: ${error.stack}`);
 			}
@@ -343,11 +342,8 @@ class Deyeidc extends utils.Adapter {
 	 */
 	async offlineReset() {
 		// Counter for OfflineReset
-		this.resetCounter++;
-		const startReset = Math.floor((this.numberRegisterSets * 540) / this.config.pollInterval);
-		this.log.debug(`[offlineReset] ${this.resetCounter} / ${startReset}`);
-		if (this.resetCounter == startReset) {
-			this.log.debug(`[offlineReset] Values will be nullable.`);
+		this.log.debug('[offlineReset] Values will be nullable.');
+		if (this.resetCounter == 0) {
 			for (const obj of this.config.coils) {
 				if (obj['nullable']) {
 					this.log.debug(`[offlineReset] ${obj.key}`);
@@ -355,8 +351,8 @@ class Deyeidc extends utils.Adapter {
 				}
 			}
 		}
+		this.resetCounter++;
 	}
-
 	/**
 	 * set actual date to inverter (for daily data-reset)
 	 */
