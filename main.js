@@ -530,6 +530,7 @@ class Deyeidc extends utils.Adapter {
 					const elementIndex = this.memoryValues.findIndex(element => element.key == obj.key);
 					if (elementIndex == -1) {
 						// new memory object
+						this.log.silly(`[updateData] new data:  ${JSON.stringify(data)}`);
 						const jsonString = { key: obj.key, value: obj.value };
 						this.memoryValues.push(jsonString);
 					} else {
@@ -585,6 +586,7 @@ class Deyeidc extends utils.Adapter {
 			return;
 		}
 		this.idc.setLoggerSn(this.config.logger);
+		this.log.debug(`This logger-sn [${this.config.logger}] will be used.`);
 		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
 		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 1) {
