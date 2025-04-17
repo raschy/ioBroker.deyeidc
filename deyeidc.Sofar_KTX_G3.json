@@ -1,0 +1,194 @@
+{
+	"ipaddress": "",
+	"port": 8899,
+	"logger": 0,
+	"pollInterval": 60,
+	"registers": [
+		{
+			"registerStart": 1156,
+			"registerEnd": 1212
+		},
+		{
+			"registerStart": 1412,
+			"registerEnd": 1417
+		},
+		{
+			"registerStart": 1668,
+			"registerEnd": 1683
+		}
+	],
+	"coils": [
+		{
+			"register": 1156,
+			"rules": 1,
+			"key": "Frequency_Grid",
+			"name": "Frequency_Grid",
+			"unit": "Hz",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1157,
+			"rules": 2,
+			"key": "ActivePower_Output_Total",
+			"name": "ActivePower_Output_Total",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1158,
+			"rules": 2,
+			"key": "ApparentPower_Output_Total",
+			"name": "ApparentPower_Output_Total",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1159,
+			"rules": 2,
+			"key": "ReactivePower_Output_Total",
+			"name": "ReactivePower_Output_Total",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1160,
+			"rules": 2,
+			"key": "ActivePower_PCC_Total",
+			"name": "ActivePower_PCC_Total",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1161,
+			"rules": 2,
+			"key": "ApparentPower_PCC_Total",
+			"name": "ApparentPower_PCC_Total",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1162,
+			"rules": 2,
+			"key": "ReactivePower_PCC_Total",
+			"name": "ReactivePower_PCC_Total",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1163,
+			"rules": 2,
+			"key": "GridOutput_Rsvd1",
+			"name": "GridOutput_Rsvd1",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 1164,
+			"rules": 2,
+			"key": "GridOutput_Rsvd2",
+			"name": "GridOutput_Rsvd2",
+			"unit": "",
+			"factor": 0,
+			"nullable": false
+		},
+		{
+			"register": 1412,
+			"rules": 1,
+			"key": "Voltage_PV1",
+			"name": "Voltage_PV1",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 1413,
+			"rules": 1,
+			"key": "Current_PV1",
+			"name": "Current_PV1",
+			"unit": "A",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1414,
+			"rules": 1,
+			"key": "Power_PV1",
+			"name": "Power_PV1",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1415,
+			"rules": 1,
+			"key": "Voltage_PV2",
+			"name": "Voltage_PV2",
+			"unit": "V",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 1416,
+			"rules": 1,
+			"key": "Current_PV2",
+			"name": "Current_PV2",
+			"unit": "A",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1417,
+			"rules": 1,
+			"key": "Power_PV2",
+			"name": "Power_PV2",
+			"unit": "kW",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1668,
+			"rules": 3,
+			"key": "PV_Generation_Today",
+			"name": "PV_Generation_Today",
+			"unit": "kWh",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1670,
+			"rules": 3,
+			"key": "PV_Generation_Total",
+			"name": "PV_Generation_Total",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		},
+		{
+			"register": 1672,
+			"rules": 3,
+			"key": "Load_Consumption_Today",
+			"name": "Load_Consumption_Today",
+			"unit": "kWh",
+			"factor": 2,
+			"nullable": false
+		},
+		{
+			"register": 1674,
+			"rules": 3,
+			"key": "Load_Consumption_Total",
+			"name": "Load_Consumption_Total",
+			"unit": "kWh",
+			"factor": 1,
+			"nullable": false
+		}
+	],
+	"computes": []
+}
