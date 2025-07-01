@@ -21,7 +21,7 @@
 	},
 	"dependencies": {
 		"@iobroker/adapter-core": "^3.2.3",
-		"iobroker.admin": "^7.6.18",
+		"iobroker.admin": "^7.7.1",
 		"websocket": "^1.0.35"
 	},
 	"devDependencies": {
