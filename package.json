@@ -1,64 +1,64 @@
 {
-	"name": "iobroker.deyeidc",
-	"version": "0.2.0",
-	"description": "Data collector for deye-compatible inverters",
-	"author": {
-		"name": "raschy",
-		"email": "raschy@gmx.de"
-	},
-	"homepage": "https://github.com/raschy/ioBroker.deyeidc",
-	"license": "MIT",
-	"keywords": [
-		"Deye Bosswerk Microinverter",
-		"ioBroker"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/raschy/ioBroker.deyeidc.git"
-	},
-	"engines": {
-		"node": ">= 20"
-	},
-	"dependencies": {
-		"@iobroker/adapter-core": "^3.3.2",
-		"iobroker.admin": "^7.6.17",
-		"websocket": "^1.0.35"
-	},
-	"devDependencies": {
-		"@alcalzone/release-script": "^3.8.0",
-		"@alcalzone/release-script-plugin-iobroker": "^3.7.2",
-		"@alcalzone/release-script-plugin-license": "^3.7.0",
-		"@alcalzone/release-script-plugin-manual-review": "^3.7.0",
-		"@iobroker/adapter-dev": "^1.4.0",
-		"@iobroker/eslint-config": "^2.0.3",
-		"@iobroker/testing": "^5.1.0",
-		"@types/node": "^22.15.3",
-		"typescript": "~5.7.3"
-	},
-	"main": "main.js",
-	"files": [
-		"admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).json",
-		"admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
-		"lib/",
-		"www/",
-		"io-package.json",
-		"LICENSE",
-		"main.js"
-	],
-	"scripts": {
-		"test:js": "mocha --config test/mocharc.custom.json \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
-		"test:package": "mocha test/package --exit",
-		"test:integration": "mocha test/integration --exit",
-		"test": "npm run test:js && npm run test:package",
-		"check": "tsc --noEmit -p tsconfig.check.json",
-		"lint": "eslint -c eslint.config.mjs .",
-		"translate": "translate-adapter",
-		"release": "release-script",
-		"release-minor": "release-script minor",
-		"release-major": "release-script major"
-	},
-	"bugs": {
-		"url": "https://github.com/raschy/ioBroker.deyeidc/issues"
-	},
-	"readmeFilename": "README.md"
+  "name": "iobroker.deyeidc",
+  "version": "0.3.0",
+  "description": "Data collector for deye-compatible inverters",
+  "author": {
+    "name": "raschy",
+    "email": "raschy@gmx.de"
+  },
+  "homepage": "https://github.com/raschy/ioBroker.deyeidc",
+  "license": "MIT",
+  "keywords": [
+    "Deye Bosswerk Microinverter",
+    "ioBroker"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raschy/ioBroker.deyeidc.git"
+  },
+  "engines": {
+    "node": ">= 20"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.3.2",
+    "iobroker.admin": "^7.6.17",
+    "websocket": "^1.0.35"
+  },
+  "devDependencies": {
+    "@alcalzone/release-script": "^3.8.0",
+    "@alcalzone/release-script-plugin-iobroker": "^3.7.2",
+    "@alcalzone/release-script-plugin-license": "^3.7.0",
+    "@alcalzone/release-script-plugin-manual-review": "^3.7.0",
+    "@iobroker/adapter-dev": "^1.4.0",
+    "@iobroker/eslint-config": "^2.0.3",
+    "@iobroker/testing": "^5.1.0",
+    "@types/node": "^22.15.3",
+    "typescript": "~5.7.3"
+  },
+  "main": "main.js",
+  "files": [
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).json",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "lib/",
+    "www/",
+    "io-package.json",
+    "LICENSE",
+    "main.js"
+  ],
+  "scripts": {
+    "test:js": "mocha --config test/mocharc.custom.json \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
+    "test:package": "mocha test/package --exit",
+    "test:integration": "mocha test/integration --exit",
+    "test": "npm run test:js && npm run test:package",
+    "check": "tsc --noEmit -p tsconfig.check.json",
+    "lint": "eslint -c eslint.config.mjs .",
+    "translate": "translate-adapter",
+    "release": "release-script",
+    "release-minor": "release-script minor",
+    "release-major": "release-script major"
+  },
+  "bugs": {
+    "url": "https://github.com/raschy/ioBroker.deyeidc/issues"
+  },
+  "readmeFilename": "README.md"
 }
