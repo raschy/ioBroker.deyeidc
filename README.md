@@ -58,6 +58,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 ### **WORK IN PROGRESS**
 
+- (raschy) Reduction of devDependencies
 - (raschy) The auxiliary functions chai and chai-as-promised have been tacked onto the executable version
 - (raschy) Control codes have been added for Modbus RTU requests
 - (raschy) Extended Debugging can be switched
