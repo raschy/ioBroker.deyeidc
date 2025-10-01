@@ -58,7 +58,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 ### **WORK IN PROGRESS**
 
-- (raschy) Reduction of info log output
+- (raschy) Reduction of info-log output
 
 ### 0.3.0 (2025-08-29)
 
