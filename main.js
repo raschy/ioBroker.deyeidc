@@ -195,7 +195,7 @@ class Deyeidc extends utils.Adapter {
 					if (this.req <= this.numberRegisterSets) {
 						this.requestData(this.req);
 					} else if (this.req == this.numberRegisterSets + 1) {
-						this.log.info(`Data reception for ${this.req - 1} registersets completed`);
+						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
 						await this.updateData(await this.computeData());
 						if (this.config.onlinecheck) {
 							await this.checkOnlineDate();
@@ -599,7 +599,6 @@ class Deyeidc extends utils.Adapter {
 		}
 		this.log.info(`Retrieving data from the inverter will be done every ${this.executionInterval} seconds`);
 		//
-		this.log.debug(`checkUserData is ready`);
 		return;
 		//
 		function validateIP(ip) {
