@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "deyeidc",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "news": {
+      "0.3.1": {
+        "en": "Reduction of info-log output",
+        "de": "Reduzierung der Info-Log-Ausgabe",
+        "ru": "Сокращение выхода info-log",
+        "pt": "Redução da saída de infolog",
+        "nl": "Vermindering van de informatielog-output",
+        "fr": "Réduction de la sortie info-log",
+        "it": "Riduzione dell'output info-log",
+        "es": "Reducción de la producción de info-log",
+        "pl": "Redukcja wyjścia systemu infolog",
+        "uk": "Зниження інформації-логового виходу",
+        "zh-cn": "信息记录产出减少"
+      },
       "0.3.0": {
         "en": "Reduction of devDependencies\nThe auxiliary functions chai and chai-as-promised have been tacked onto the executable version\nControl codes have been added for Modbus RTU requests\nExtended Debugging can be switched\nModified method for offlineReset",
         "de": "Verringerung der Abhängigkeiten\nDie Hilfsfunktionen chai und chai-as-promised wurden auf die ausführbare Version gestapelt\nKontrollcodes wurden für Modbus RTU-Anfragen hinzugefügt\nErweiterte Debugging kann geschaltet werden\nGeänderte Methode für offlineReset",
@@ -80,19 +93,6 @@
         "pl": "Kontrola online regulowana\nIgnoruje niewymagane wiadomości",
         "uk": "Онлайн-реєстрація\nІгнори непередбачувані повідомлення",
         "zh-cn": "可调整的在线检查\n忽略未请求的信件"
-      },
-      "0.1.0": {
-        "en": "Computing module stabilised\nTypo in error handling corrected",
-        "de": "Vergleichsmodul stabilisiert\nTypo in Fehlerbehebung korrigiert",
-        "ru": "Стабилизированный вычислительный модуль\nТайпо в исправленном режиме",
-        "pt": "Módulo de computação estabilizado\nTypo em manipulação de erros corrigido",
-        "nl": "Berekeningsmodule gestabiliseerd\nTypo in foutverwerking gecorrigeerd",
-        "fr": "Module informatique stabilisé\nTypo dans la gestion des erreurs corrigée",
-        "it": "Modulo di calcolo stabilizzato\nTypo nella gestione degli errori corretto",
-        "es": "Módulo de computación estabilizado\nTypo en el manejo de errores corregido",
-        "pl": "Stabilizacja modułu obliczeniowego\nTypo w obsłudze błędów poprawione",
-        "uk": "Порівняння стабілізації модуля\nТіпо у виправленні помилок",
-        "zh-cn": "计算模块稳定\nTypo 处理错误纠正"
       }
     },
     "titleLang": {
