@@ -161,6 +161,8 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 - (raschy) initial release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License
