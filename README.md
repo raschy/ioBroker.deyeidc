@@ -55,6 +55,13 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (raschy) NodeJS >= 22.x is required
+- (raschy) Any necessary adjustments for nodeJS 22.x
+- (raschy) translations i18n-short
+
 ### 0.3.1 (2025-10-01)
 
 - (raschy) Reduction of info-log output
@@ -160,6 +167,8 @@ All product and company names or logos are trademarks™ or registered® tradema
 ### 0.0.2 (2023-03-21)
 
 - (raschy) initial release
+
+[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 

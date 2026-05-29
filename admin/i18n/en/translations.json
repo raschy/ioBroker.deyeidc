@@ -6,7 +6,7 @@
 	"serialNumber": "Serialnumber from data logger",
 	"serialNumberTooltip": "Make sure you enter the 'correct' logger serial number !",
 	"pollingRate": "Polling rate (in sec)",
-	"onlineCheck": "Checking the date/time of the inverter",
+	"onlinecheck": "Checking the date/time of the inverter",
 	"onlinecheckHelptext": "Only necessary if the inverter is operated in offline mode.",
 	"onlinecheckTooltip": "If switched on, the internal clock is set in offline mode",
 	"extendedDebugging": "Enable extended debugging",
