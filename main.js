@@ -579,7 +579,7 @@ class Deyeidc extends utils.Adapter {
 			this.internDataReady = false;
 			return;
 		}
-		if (this.config.logger < 2 * 10 ** 9) {
+		if (this.config.logger < 10 ** 7) {
 			this.log.warn(`Logger number seems to be wrong [${this.config.logger}].`);
 			this.internDataReady = false;
 			return;

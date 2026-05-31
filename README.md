@@ -58,6 +58,7 @@ All product and company names or logos are trademarks™ or registered® tradema
 
 ### **WORK IN PROGRESS**
 
+- (raschy) Less restrictive serial number check
 - (raschy) NodeJS >= 22.x is required
 - (raschy) Any necessary adjustments for nodeJS 22.x
 - (raschy) translations i18n-short
