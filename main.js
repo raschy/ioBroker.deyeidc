@@ -656,7 +656,7 @@ class Deyeidc extends utils.Adapter {
 			this.log.debug('[onUnload] cleaned everything up...');
 			// Here you must clear all timeouts or intervals that may still be active
 			//
-			this.updateInterval && clearInterval(this.updateInterval);
+			this.updateInterval && this.clearInterval(this.updateInterval);
 			//
 			this.client.destroy();
 			this.setState('info.connection', { val: false, ack: true });
