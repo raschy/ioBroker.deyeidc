@@ -240,7 +240,9 @@ class Deyeidc extends utils.Adapter {
 
 	/**
 	 * Calculate data that cannot be read,
-	 * the necessary values must be calulated by formula
+	 * the necessary values must be calculated by formula.
+	 * Supports expressions with multiple operands and operators, e.g. "A + B - C * D".
+	 * Operator precedence: * and / are evaluated before + and -.
 	 *
 	 * @returns jsonResult
 	 */
@@ -249,90 +251,85 @@ class Deyeidc extends utils.Adapter {
 		if (this.config.computes.length < 1 || this.memoryValues.length < 1) {
 			return jsonResult;
 		}
-		let computeValue1 = 0;
-		let computeValue2 = 0;
-		let computeResult = 0;
 		for (const obj of this.config.computes) {
 			this.log.debug(`[computeData]  ${JSON.stringify(obj)}`);
-			const response = mathOperation(obj.values);
-			if (response) {
-				const key1Index = this.memoryValues.findIndex(element => element.key == response.key1);
-				if (key1Index == -1) {
-					computeValue1 = parseFloat(response.key1);
-					if (isNaN(computeValue1)) {
-						this.log.warn(`Compute Key1 '${response.key1}' not found!`);
-						continue;
-					}
-				} else {
-					computeValue1 = parseFloat(this.memoryValues[key1Index].value);
-				}
-				//
-				const key2Index = this.memoryValues.findIndex(element => element.key == response.key2);
-				if (key2Index == -1) {
-					computeValue2 = parseFloat(response.key2);
-					if (isNaN(computeValue2)) {
-						this.log.warn(`Compute Key2 '${response.key2}' not found!`);
-						continue;
-					}
-				} else {
-					computeValue2 = parseFloat(this.memoryValues[key2Index].value);
-				}
-				//
-				const operation = response.operation;
-				switch (operation) {
-					case '+':
-						computeResult = computeValue1 + computeValue2;
-						break;
-					case '-':
-						computeResult = computeValue1 - computeValue2;
-						break;
-					case '*':
-						computeResult = computeValue1 * computeValue2;
-						break;
-					case '/':
-						if (computeValue2 == 0) {
-							this.log.warn(`Compute Division '${response.key2}' by zero!`);
-							continue;
-						} else {
-							computeResult = computeValue1 / computeValue2;
-						}
-						break;
-					default:
-						computeResult = -999;
-				}
-				//
-				const key0 = this.removeInvalidCharacters(obj.key.trim());
-				const result_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
-				const jsonObj = {
-					key: key0,
-					value: result_hr,
-					unit: obj.unit,
-					name: obj.name,
-				};
-				jsonResult.push(jsonObj);
+			const tokens = tokenize(obj.values);
+			if (!tokens) {
+				this.log.warn(`[computeData] Invalid expression '${obj.values}'`);
+				continue;
 			}
+			const computeResult = evaluate(tokens, this.memoryValues, this.log);
+			if (computeResult === null) {
+				continue;
+			}
+			const key0 = this.removeInvalidCharacters(obj.key.trim());
+			const result_hr = (computeResult * 10 ** -obj.factor).toFixed(2);
+			const jsonObj = {
+				key: key0,
+				value: result_hr,
+				unit: obj.unit,
+				name: obj.name,
+			};
+			jsonResult.push(jsonObj);
 		}
 		this.log.debug(`[computeData] ResultJson: ${JSON.stringify(jsonResult)}`);
 		return jsonResult;
 
-		// -- Helper --
-		function mathOperation(computeString) {
-			const defMathOperators = ['*', '/', '+', '-'];
-			for (let i = 0; i < defMathOperators.length; i++) {
-				const zeichen = defMathOperators[i];
-				const position = computeString.indexOf(zeichen);
-				if (position > 0) {
-					i = defMathOperators.length;
-					const key1 = computeString.slice(0, position).trim();
-					const key2 = computeString.slice(position + 1).trim();
-					const jsonString = {
-						operation: computeString[position],
-						key1: key1,
-						key2: key2,
-					};
-					return jsonString;
+		// -- Helper: split expression into alternating [operand, operator, operand, ...] tokens --
+		function tokenize(expr) {
+			const tokens = expr.split(/([+\-*/])/).map(p => p.trim()).filter(p => p.length > 0);
+			// Must have at least 3 tokens and an odd count: operand op operand [op operand ...]
+			if (tokens.length < 3 || tokens.length % 2 === 0) {
+				return null;
+			}
+			return tokens;
+		}
+
+		// -- Helper: evaluate tokens with operator precedence (* / before + -) --
+		function evaluate(tokens, memValues, log) {
+			// Resolve all operands to numeric values
+			const values = [];
+			const ops = [];
+			for (let i = 0; i < tokens.length; i++) {
+				if (i % 2 === 0) {
+					const token = tokens[i];
+					const idx = memValues.findIndex(e => e.key === token);
+					let val;
+					if (idx === -1) {
+						val = parseFloat(token);
+						if (isNaN(val)) {
+							log.warn(`Compute operand '${token}' not found!`);
+							return null;
+						}
+					} else {
+						val = parseFloat(memValues[idx].value);
+					}
+					values.push(val);
+				} else {
+					ops.push(tokens[i]);
 				}
 			}
+			// First pass: evaluate * and / left-to-right
+			let i = 0;
+			while (i < ops.length) {
+				if (ops[i] === '*' || ops[i] === '/') {
+					if (ops[i] === '/' && values[i + 1] === 0) {
+						log.warn(`Compute division by zero in expression!`);
+						return null;
+					}
+					const result = ops[i] === '*' ? values[i] * values[i + 1] : values[i] / values[i + 1];
+					values.splice(i, 2, result);
+					ops.splice(i, 1);
+				} else {
+					i++;
+				}
+			}
+			// Second pass: evaluate + and - left-to-right
+			let result = values[0];
+			for (let j = 0; j < ops.length; j++) {
+				result = ops[j] === '+' ? result + values[j + 1] : result - values[j + 1];
+			}
+			return result;
 		}
 	}
 
