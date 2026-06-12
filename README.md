@@ -55,6 +55,11 @@ All product and company names or logos are trademarks™ or registered® tradema
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (raschy) Compute module redesigned and expanded (PR XHunter74)
+
 ### 0.3.2 (2026-05-31)
 
 - (raschy) Less restrictive serial number check
