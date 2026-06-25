@@ -42,8 +42,9 @@ The following applies here:
 
 The documentation also shows whether the decimal point must be shifted by one or two digits. The entry "Factor" serves this purpose. Herewith no further meaningful calculations can be made.
 
-Certain values are not supplied by the inverter and must be calculated independently. For this purpose, two values per line can be entered in the table 'compute', which are then calculated.
-A typical example is "DV1 \* DC1", where the result is then stored in "Key" with the corresponding unit in the data tree. Please note that only one basic calculation type can be processed per line. Bracket rules are therefore not possible and are not supported.
+Certain values are not provided by the inverter and must be calculated separately. Up to version 0.3.2, only two values were possible here. Starting with version 0.4.0, expressions with multiple operands and operators—such as “A + B – C _ D”—can be entered in the “Calculate” table for each target object, which are then evaluated. Of course, the standard order of operations is followed (_ and / are evaluated before + and –) (thanks to XHunter74). Parentheses rules are still not supported.
+
+A typical example is the output of a solar module. This must be calculated using the values “DV1 \* DC1,” and the result ("PV1") is then stored in the data tree under ‘Key’ along with the corresponding unit.
 
 ### DISCLAIMER
 

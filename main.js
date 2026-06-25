@@ -277,7 +277,10 @@ class Deyeidc extends utils.Adapter {
 
 		// -- Helper: split expression into alternating [operand, operator, operand, ...] tokens --
 		function tokenize(expr) {
-			const tokens = expr.split(/([+\-*/])/).map(p => p.trim()).filter(p => p.length > 0);
+			const tokens = expr
+				.split(/([+\-*/])/)
+				.map(p => p.trim())
+				.filter(p => p.length > 0);
 			// Must have at least 3 tokens and an odd count: operand op operand [op operand ...]
 			if (tokens.length < 3 || tokens.length % 2 === 0) {
 				return null;
