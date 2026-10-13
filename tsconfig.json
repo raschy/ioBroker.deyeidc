@@ -21,6 +21,10 @@
 		// "noUnusedLocals": true,
 		// "noUnusedParameters": true,
 		"useUnknownInCatchVariables": false,
+		"types": [
+			"node",
+			"mocha"
+		],
 	},
 	"include": [
 		"**/*.js",
