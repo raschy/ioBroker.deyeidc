@@ -3,6 +3,11 @@
     "coils": "Cewki",
     "compute": "Obliczać",
     "computeHelptext": "Moduł obliczeniowy może wykonać tylko jedną operację na polu",
+    "connectionType": "Typ połączenia",
+    "connectionTypeLogger": "Rejestrator danych (Solarman V5)",
+    "connectionTypeRtu": "Konwerter RS485 (Modbus RTU przez TCP)",
+    "deviceId": "ID urządzenia",
+    "deviceIdTooltip": "Dowolna nazwa dla struktury stanów (np. numer seryjny falownika)",
     "deyeidc adapter settings": "Ustawienia adaptera dla Deye-IDC",
     "extendedDebugging": "Włącz rozszerzone debugowanie",
     "extendedDebuggingHelptext": "Jeśli to pole wyboru jest aktywowane, generowana jest duża ilość danych dziennika.",
@@ -28,6 +33,7 @@
     "serialNumber": "Numer seryjny z rejestratora danych",
     "serialNumberTooltip": "Upewnij się, że wprowadziłeś „poprawny” numer seryjny rejestratora!",
     "settings": "Ustawienia",
+    "slaveId": "Slave ID (adres Modbus)",
     "unit": "Jednostka",
     "values": "Wartości (wzory)"
 }

@@ -37,6 +37,26 @@ class Deyeidc extends utils.Adapter {
 		this.setWatchPoints = false;
 		this.resetCounter = 0;
 		this.extendDebugging = false;
+		this.rxBuffer = Buffer.alloc(0);
+		this.rtuTimer = null;
+	}
+
+	/**
+	 * Modbus RTU over TCP (RS485 converter) instead of a Solarman data logger
+	 *
+	 * @returns boolean
+	 */
+	isRtu() {
+		return this.config.connectionType === 'rtu';
+	}
+
+	/**
+	 * Name of the device channel: logger serial number or device id (RS485)
+	 *
+	 * @returns string
+	 */
+	deviceName() {
+		return this.isRtu() ? String(this.config.deviceId) : String(this.config.logger);
 	}
 
 	/**
@@ -176,6 +196,10 @@ class Deyeidc extends utils.Adapter {
 	 * @param data {Buffer}
 	 */
 	async onData(data) {
+		if (this.isRtu()) {
+			await this.onRtuData(data);
+			return;
+		}
 		try {
 			const mb = this.idc.checkDataFrame(data);
 			if (mb) {
@@ -187,23 +211,7 @@ class Deyeidc extends utils.Adapter {
 						await this.setOfflineDate();
 					}
 				} else if (mb.register > 0) {
-					//payload
-					this.log.debug(`Response: Request: ${this.req} Payload ${JSON.stringify(mb)}`);
-					await this.updateData(this.idc.readCoils(mb));
-					this.req++;
-					if (this.req <= this.numberRegisterSets) {
-						this.requestData(this.req);
-					} else if (this.req == this.numberRegisterSets + 1) {
-						this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
-						await this.updateData(await this.computeData());
-						if (this.config.onlinecheck) {
-							await this.checkOnlineDate();
-						}
-						this.resetCounter = 0; // successful data reception
-						this.subscribeWatchpoint();
-						this.setState('info.lastUpdate', { val: Date.now(), ack: true });
-						this.setState('info.status', { val: 'idle', ack: true });
-					}
+					await this.handlePayload(mb);
 				} else {
 					//other messages
 					this.log.silly(`RESPONSE ${JSON.stringify(mb)}`); // human readable ALL Responses
@@ -221,6 +229,70 @@ class Deyeidc extends utils.Adapter {
 	}
 
 	/**
+	 * onRtuData: Modbus RTU over TCP, the stream may split or join frames
+	 *
+	 * @param data {Buffer}
+	 */
+	async onRtuData(data) {
+		try {
+			this.rxBuffer = Buffer.concat([this.rxBuffer, data]);
+			let frame;
+			while (this.rxBuffer.length > 0 && (frame = this.idc.extractRtuFrame(this.rxBuffer))) {
+				this.rxBuffer = this.rxBuffer.subarray(frame.consumed);
+				if (frame.error) {
+					this.log.debug(`[onRtuData] ${frame.error}`);
+				} else if (!frame.write) {
+					this.clearRtuTimer();
+					await this.handlePayload({ register: this.req, modbus: frame.modbus });
+				}
+			}
+		} catch (err) {
+			this.log.error(`${err} | ${err.stack}`);
+		}
+	}
+
+	/**
+	 * handlePayload: process a response for the register set `this.req`, then request the next one
+	 *
+	 * @param mb {{register: number, modbus: Buffer}}
+	 */
+	async handlePayload(mb) {
+		this.log.debug(`Response: Request: ${this.req} Payload ${JSON.stringify(mb)}`);
+		await this.updateData(this.idc.readCoils(mb));
+		await this.nextRequest();
+	}
+
+	/**
+	 * nextRequest: request the next register set or finish the cycle
+	 */
+	async nextRequest() {
+		this.req++;
+		if (this.req <= this.numberRegisterSets) {
+			this.requestData(this.req);
+		} else if (this.req == this.numberRegisterSets + 1) {
+			this.log.debug(`Data reception for ${this.req - 1} registersets completed`);
+			await this.updateData(await this.computeData());
+			if (this.config.onlinecheck && !this.isRtu()) {
+				await this.checkOnlineDate();
+			}
+			this.resetCounter = 0; // successful data reception
+			this.subscribeWatchpoint();
+			this.setState('info.lastUpdate', { val: Date.now(), ack: true });
+			this.setState('info.status', { val: 'idle', ack: true });
+		}
+	}
+
+	/**
+	 * stop the response timeout (Modbus RTU only)
+	 */
+	clearRtuTimer() {
+		if (this.rtuTimer) {
+			this.clearTimeout(this.rtuTimer);
+			this.rtuTimer = null;
+		}
+	}
+
+	/**
 	 * requestData (do the next request for registerset)
 	 *
 	 * @param req {number}
@@ -229,6 +301,24 @@ class Deyeidc extends utils.Adapter {
 		if (await this.checkConnected()) {
 			try {
 				this.setState('info.status', { val: 'automatic request', ack: true });
+				if (this.isRtu()) {
+					if (req == 1) {
+						this.rxBuffer = Buffer.alloc(0);
+					}
+					const request = this.idc.modbusFrame(req);
+					this.log.debug(`Request to register set ${req} > ${this.idc.toHexString(request)}`);
+					this.clearRtuTimer();
+					this.rtuTimer = this.setTimeout(async () => {
+						this.rtuTimer = null;
+						this.log.debug(`No response to register set ${req}, skipped`);
+						this.rxBuffer = Buffer.alloc(0);
+						if (this.req === req) {
+							await this.nextRequest();
+						}
+					}, 5000);
+					this.client.write(request);
+					return;
+				}
 				const request = this.idc.requestFrame(req, this.idc.modbusFrame(req));
 				this.log.debug(`Request to register set ${req} > ${this.idc.toHexString(request)}`); // human readable /#silly
 				this.client.write(request);
@@ -401,7 +491,7 @@ class Deyeidc extends utils.Adapter {
 		if (this.setWatchPoints) {
 			return;
 		}
-		const watch = `${this.config.logger}.Power_Set`;
+		const watch = `${this.deviceName()}.Power_Set`;
 		this.subscribeStates(watch);
 		this.log.debug(`[subscribeWatchpoint] set to ${watch}`);
 		this.setWatchPoints = true;
@@ -442,7 +532,8 @@ class Deyeidc extends utils.Adapter {
 				data[0] = state.val;
 			}
 			this.log.debug(`[setPower] Power set to ${data[0]}%`);
-			const request = this.idc.requestFrame(req, this.idc.modbusWriteFrame(powerControlRegister, data));
+			const frame = this.idc.modbusWriteFrame(powerControlRegister, data);
+			const request = this.isRtu() ? frame : this.idc.requestFrame(req, frame);
 			this.client.write(request);
 			this.setState(id, { val: data[0], ack: true });
 		}
@@ -459,7 +550,7 @@ class Deyeidc extends utils.Adapter {
 	 * @param nullable (nullable for ioBroker)
 	 */
 	async persistData(key, name, value, role, unit, nullable) {
-		const dp_Device = this.removeInvalidCharacters(String(this.config.logger));
+		const dp_Device = this.removeInvalidCharacters(this.deviceName());
 		const dp_Value = `${dp_Device}.${this.removeInvalidCharacters(key)}`;
 		//
 		await this.setObjectNotExists(dp_Device, {
@@ -574,18 +665,34 @@ class Deyeidc extends utils.Adapter {
 		}
 		// __________________
 		// InverterNr is plausible
-		if (!this.config.logger) {
-			this.log.warn(`No logger number specified [${this.config.logger}].`);
-			this.internDataReady = false;
-			return;
+		if (this.isRtu()) {
+			if (!this.config.deviceId || !String(this.config.deviceId).trim()) {
+				this.log.warn(`No device id specified [${this.config.deviceId}].`);
+				this.internDataReady = false;
+				return;
+			}
+			const slaveId = Number(this.config.slaveId ?? 1);
+			if (!Number.isInteger(slaveId) || slaveId < 1 || slaveId > 247) {
+				this.log.warn(`Slave ID seems to be wrong [${this.config.slaveId}].`);
+				this.internDataReady = false;
+				return;
+			}
+			this.idc.setSlaveId(slaveId);
+			this.log.debug(`Modbus RTU over TCP, device id [${this.config.deviceId}], slave id [${slaveId}].`);
+		} else {
+			if (!this.config.logger) {
+				this.log.warn(`No logger number specified [${this.config.logger}].`);
+				this.internDataReady = false;
+				return;
+			}
+			if (this.config.logger < 10 ** 7) {
+				this.log.warn(`Logger number seems to be wrong [${this.config.logger}].`);
+				this.internDataReady = false;
+				return;
+			}
+			this.idc.setLoggerSn(this.config.logger);
+			this.log.debug(`This logger-sn [${this.config.logger}] will be used.`);
 		}
-		if (this.config.logger < 10 ** 7) {
-			this.log.warn(`Logger number seems to be wrong [${this.config.logger}].`);
-			this.internDataReady = false;
-			return;
-		}
-		this.idc.setLoggerSn(this.config.logger);
-		this.log.debug(`This logger-sn [${this.config.logger}] will be used.`);
 		// __________________
 		// check if the sync time is a number, if not, the string is parsed to a number
 		if (isNaN(this.config.pollInterval) || this.config.pollInterval < 1) {
@@ -658,7 +765,8 @@ class Deyeidc extends utils.Adapter {
 			//
 			this.updateInterval && this.clearInterval(this.updateInterval);
 			//
-			this.client.destroy();
+			this.clearRtuTimer();
+			this.client && this.client.destroy();
 			this.setState('info.connection', { val: false, ack: true });
 			this.setState(`info.status`, { val: 'offline', ack: true });
 			callback();

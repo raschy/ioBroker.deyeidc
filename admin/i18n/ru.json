@@ -3,6 +3,11 @@
     "coils": "Катушки",
     "compute": "Вычислить",
     "computeHelptext": "Модуль расчета может выполнять только одну операцию на поле.",
+    "connectionType": "Тип подключения",
+    "connectionTypeLogger": "Логгер (Solarman V5)",
+    "connectionTypeRtu": "RS485-конвертер (Modbus RTU over TCP)",
+    "deviceId": "Идентификатор устройства",
+    "deviceIdTooltip": "Произвольное имя для структуры состояний (например, серийный номер инвертора)",
     "deyeidc adapter settings": "Настройки адаптера для Deye-IDC",
     "extendedDebugging": "Включить расширенную отладку",
     "extendedDebuggingHelptext": "Если этот флажок активирован, генерируется большой объем данных журнала.",
@@ -28,6 +33,7 @@
     "serialNumber": "Серийный номер из регистратора данных",
     "serialNumberTooltip": "Убедитесь, что вы вводите «правильный» серийный номер регистратора!",
     "settings": "Настройки",
+    "slaveId": "Slave ID (адрес Modbus)",
     "unit": "Единица",
     "values": "Значения (формулы)"
 }

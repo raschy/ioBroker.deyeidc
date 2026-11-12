@@ -15,7 +15,22 @@
 					"text": "settings",
 					"size": 2
 				},
+				"connectionType": {
+					"type": "select",
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 4,
+					"xl": 4,
+					"label": "connectionType",
+					"default": "logger",
+					"options": [
+						{ "label": "connectionTypeLogger", "value": "logger" },
+						{ "label": "connectionTypeRtu", "value": "rtu" }
+					]
+				},
 				"ipaddress": {
+					"newLine": true,
 					"type": "text",
 					"xs": 12,
 					"sm": 12,
@@ -42,7 +57,33 @@
 					"xl": 4,
 					"label": "serialNumber",
 					"tooltip": "serialNumberTooltip",
+					"hidden": "data.connectionType === 'rtu'",
 					"newLine": true
+				},
+				"deviceId": {
+					"type": "text",
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 4,
+					"xl": 4,
+					"label": "deviceId",
+					"tooltip": "deviceIdTooltip",
+					"hidden": "data.connectionType !== 'rtu'",
+					"newLine": true
+				},
+				"slaveId": {
+					"type": "number",
+					"min": 1,
+					"max": 247,
+					"xs": 12,
+					"sm": 12,
+					"md": 6,
+					"lg": 4,
+					"xl": 4,
+					"label": "slaveId",
+					"hidden": "data.connectionType !== 'rtu'",
+					"default": 1
 				},
 				"pollInterval": {
 					"type": "number",
@@ -63,6 +104,7 @@
 					"label": "onlinecheck",
 					"tooltip": "onlinecheckTooltip",
 					"help": "onlinecheckHelptext",
+					"hidden": "data.connectionType === 'rtu'",
 					"default": false,
 					"newLine": true
 				},

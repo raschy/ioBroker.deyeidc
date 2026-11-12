@@ -3,6 +3,11 @@
     "coils": "Spoelen",
     "compute": "Berekenen",
     "computeHelptext": "De rekenmodule kan slechts één bewerking per veld uitvoeren",
+    "connectionType": "Verbindingstype",
+    "connectionTypeLogger": "Datalogger (Solarman V5)",
+    "connectionTypeRtu": "RS485-converter (Modbus RTU over TCP)",
+    "deviceId": "Apparaat-ID",
+    "deviceIdTooltip": "Vrije naam voor de statusstructuur (bijv. het serienummer van de omvormer)",
     "deyeidc adapter settings": "Adapterinstellingen voor Deye-IDC",
     "extendedDebugging": "Schakel uitgebreide foutopsporing in",
     "extendedDebuggingHelptext": "Als dit selectievakje is geactiveerd, wordt een grote hoeveelheid loggegevens gegenereerd.",
@@ -28,6 +33,7 @@
     "serialNumber": "Serienummer uit datalogger",
     "serialNumberTooltip": "Zorg ervoor dat u het 'juiste' serienummer van de logger invoert!",
     "settings": "Instellingen",
+    "slaveId": "Slave-ID (Modbus-adres)",
     "unit": "Eenheid",
     "values": "Waarden (formules)"
 }

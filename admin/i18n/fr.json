@@ -3,6 +3,11 @@
     "coils": "Bobines",
     "compute": "Calculer",
     "computeHelptext": "Le module de calcul ne peut effectuer qu'une seule opération par champ",
+    "connectionType": "Type de connexion",
+    "connectionTypeLogger": "Enregistreur de données (Solarman V5)",
+    "connectionTypeRtu": "Convertisseur RS485 (Modbus RTU sur TCP)",
+    "deviceId": "ID de l'appareil",
+    "deviceIdTooltip": "Nom libre pour la structure des états (p. ex. le numéro de série de l'onduleur)",
     "deyeidc adapter settings": "Paramètres de l'adaptateur pour Deye-IDC",
     "extendedDebugging": "Activer le débogage prolongé",
     "extendedDebuggingHelptext": "Si cette case à cocher est activée, une grande quantité de données de journal est générée.",
@@ -28,6 +33,7 @@
     "serialNumber": "Numéro de série de l'enregistreur de données",
     "serialNumberTooltip": "Assurez-vous d'entrer le numéro de série « correct » de l'enregistreur !",
     "settings": "Paramètres",
+    "slaveId": "Slave ID (adresse Modbus)",
     "unit": "Unité",
     "values": "Valeurs (formules)"
 }

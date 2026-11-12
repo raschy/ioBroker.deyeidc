@@ -3,6 +3,11 @@
     "coils": "Bobinas",
     "compute": "Calcular",
     "computeHelptext": "El módulo de cálculo sólo puede realizar una operación por campo",
+    "connectionType": "Tipo de conexión",
+    "connectionTypeLogger": "Registrador de datos (Solarman V5)",
+    "connectionTypeRtu": "Convertidor RS485 (Modbus RTU sobre TCP)",
+    "deviceId": "ID del dispositivo",
+    "deviceIdTooltip": "Nombre libre para la estructura de estados (p. ej. el número de serie del inversor)",
     "deyeidc adapter settings": "Configuración del adaptador para Deye-IDC",
     "extendedDebugging": "Habilitar la depuración extendida",
     "extendedDebuggingHelptext": "Si se activa esta casilla de verificación, se genera una gran cantidad de datos de registro.",
@@ -28,6 +33,7 @@
     "serialNumber": "Número de serie del registrador de datos",
     "serialNumberTooltip": "¡Asegúrese de ingresar el número de serie del registrador \"correcto\"!",
     "settings": "Ajustes",
+    "slaveId": "Slave ID (dirección Modbus)",
     "unit": "Unidad",
     "values": "Valores (fórmulas)"
 }
